@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard | Eventia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css?v=1">
+    <link rel="stylesheet" href="dashboard.css?v=1">
+    <link rel="stylesheet" href="organizer.css?v=1">
+    <link rel="stylesheet" href="vendor.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/logo_fixed.png" alt="Eventia" class="sidebar-logo">
+            <span class="sidebar-brand">EVENTIA</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="overview">
+                <i class="fa-solid fa-grid-2"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-view="create-event">
+                <i class="fa-solid fa-circle-plus"></i> Create Event
+            </a>
+            <a href="#" class="nav-item" data-view="events-list">
+                <i class="fa-regular fa-calendar-days"></i> Events List
+            </a>
+            <a href="#" class="nav-item" data-view="vendors">
+                <i class="fa-solid fa-store"></i> Vendors
+            </a>
+            <a href="#" class="nav-item" data-view="requests">
+                <i class="fa-solid fa-paper-plane"></i> Requests
+            </a>
+            <a href="#" class="nav-item" data-view="analytics">
+                <i class="fa-solid fa-chart-pie"></i> Analytics
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="login.html" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <div class="header-left" style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fa-solid fa-bars mobile-toggle" id="sidebar-toggle"></i>
+                <div class="header-title">
+                    <h1 id="page-title">Dashboard Overview</h1>
+                </div>
+            </div>
+
+            <div class="header-profile">
+                <div class="profile-info">
+                    <span class="profile-name">Abdulrahman</span>
+                    <span class="profile-role"
+                        style="font-size: 0.8rem; color: var(--text-muted); display: block;">Organizer</span>
+                </div>
+                <div class="profile-avatar">A</div>
+            </div>
+        </header>
+
+        <!-- VIEW: DASHBOARD OVERVIEW -->
+        <section id="view-overview" class="content-section active">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-events">0</h3>
+                        <p>Total Events</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-upcoming">0</h3>
+                        <p>Upcoming</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(255, 152, 0, 0.15); color: #ff9800;"><i
+                            class="fa-solid fa-clock"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-pending">0</h3>
+                        <p>Pending Approval</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity / Quick List -->
+            <div class="section-header">
+                <h2>Recent Events</h2>
+                <a href="#" class="btn btn-outline btn-sm" onclick="switchView('events-list')">View All</a>
+            </div>
+            <div id="recent-events-list">
+                <!-- Populated via JS -->
+                <p class="text-muted" style="text-align: center; padding: 2rem;">No events created yet.</p>
+            </div>
+        </section>
+
+        <!-- VIEW: CREATE EVENT -->
+        <section id="view-create-event" class="content-section">
+
+            <form id="create-event-form" class="create-event-form">
+
+                <!-- Basic Info Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fa-solid fa-info-circle"></i> Basic Information</h3>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Event Title *</label>
+                            <input type="text" id="event-title" placeholder="e.g. Annual Tech Summit 2026" required>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-tags"></i> Category *</label>
+                            <select id="event-category" required>
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="Tech">Tech</option>
+                                <option value="Art">Art</option>
+                                <option value="Business">Business</option>
+                                <option value="Music">Music</option>
+                                <option value="Education">Education</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date & Location Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fa-solid fa-calendar-days"></i> Date & Location</h3>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label><i class="fa-regular fa-calendar"></i> Date *</label>
+                            <input type="date" id="event-date" required>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fa-regular fa-clock"></i> Time *</label>
+                            <input type="time" id="event-time" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-location-dot"></i> Venue / Location *</label>
+                        <input type="text" id="event-location" placeholder="e.g. Riyadh Front Exhibition Center, Hall A"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Details Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fa-solid fa-align-left"></i> Event Details</h3>
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-pen"></i> Description *</label>
+                        <textarea id="event-description" rows="5"
+                            placeholder="Describe your event, what attendees can expect, key highlights, speakers, etc..."
+                            required></textarea>
+                    </div>
+                </div>
+
+                <!-- Policies Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fa-solid fa-shield-halved"></i> Withdrawal Policies</h3>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-store" style="margin-right: 0.3rem;"></i> Vendor Policy
+                                *</label>
+                            <select id="event-withdrawal-policy" required>
+                                <option value="" disabled selected>Choose vendor policy...</option>
+                                <option value="flexible">Flexible — Vendors can withdraw until event start</option>
+                                <option value="moderate">Moderate — Up to 7 days before event</option>
+                                <option value="strict">Strict — Up to 14 days before event</option>
+                                <option value="non-refundable">Non-refundable — No withdrawal allowed</option>
+                            </select>
+                            <small
+                                style="color: var(--text-muted); display: block; margin-top: 0.5rem; font-size: 0.8rem;">
+                                Applies to vendors participating in the event.
+                            </small>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fa-solid fa-users" style="margin-right: 0.3rem;"></i> Attendee Policy
+                                *</label>
+                            <select id="event-attendee-withdrawal-policy" required>
+                                <option value="" disabled selected>Choose attendee policy...</option>
+                                <option value="flexible">Flexible — Full refund up to 1 day before</option>
+                                <option value="moderate">Moderate — Full refund up to 7 days before</option>
+                                <option value="strict">Strict — Full refund up to 30 days before</option>
+                                <option value="non-refundable">Non-refundable — No refunds allowed</option>
+                            </select>
+                            <small
+                                style="color: var(--text-muted); display: block; margin-top: 0.5rem; font-size: 0.8rem;">
+                                Applies to attendees buying tickets to the event.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing & Media Section -->
+                <div class="form-section">
+                    <h3 class="form-section-title"><i class="fa-solid fa-ticket"></i> Tickets</h3>
+                    <!-- Ticket Categories (Full Width) -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-ticket"></i> Ticket Categories *</label>
+                        <div id="ticket-categories-container">
+                            <!-- Dynamic Ticket Rows will be added here -->
+                            <div class="ticket-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <input type="text" class="ticket-name" placeholder="Name (e.g. General)"
+                                    value="Standard" required style="flex: 2;">
+                                <input type="number" class="ticket-price" placeholder="Price (SR)" min="0" required
+                                    style="flex: 1;">
+                                <input type="number" class="ticket-capacity" placeholder="Max Attendees" min="1"
+                                    style="flex: 1;">
+                                <button type="button" class="btn btn-sm btn-outline remove-ticket-btn"
+                                    style="color: var(--danger-color); border-color: var(--danger-color);"><i
+                                        class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-ticket-btn" class="btn btn-sm btn-outline"
+                            style="margin-top: 10px; width: 100%;">
+                            <i class="fa-solid fa-plus"></i> Add Another Category
+                        </button>
+                    </div>
+
+                    <!-- Event Banner (Moved below) -->
+                    <div class="input-group">
+                        <label><i class="fa-solid fa-image"></i> Event Banner</label>
+                        <div class="file-upload-area">
+                            <div style="padding: 2rem 0; text-align: center;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span style="display: block; margin: 0.5rem 0;">Click or drag to upload</span>
+                                <small style="display: block;">PNG, JPG up to 5MB</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="switchView('overview')">
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-rocket"></i> Publish Event
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- VIEW: EVENTS LIST -->
+        <section id="view-events-list" class="content-section">
+            <div class="section-header">
+                <div class="section-actions">
+                    <select id="event-filter-select">
+                        <option value="all">All Status</option>
+                        <option value="Pending">Pending Approval</option>
+                        <option value="Upcoming">Upcoming</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Past">Past</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <input type="text" placeholder="Search events...">
+                    <button class="btn btn-primary btn-sm" onclick="switchView('create-event')">+ Create</button>
+                </div>
+            </div>
+
+            <!-- Events List Header -->
+            <div class="events-list-header"
+                style="display: grid; grid-template-columns: 80px 1fr 140px 120px; gap: 1.5rem; padding: 1rem 1.5rem; background: #f8f9fa; border-radius: 12px; margin-bottom: 1rem; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">
+                <span>Date</span>
+                <span>Event Details</span>
+                <span style="text-align: center;">SCEGA Approval</span>
+                <span style="text-align: center;">Actions</span>
+            </div>
+
+            <div id="all-events-container">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW: VENDORS MARKETPLACE -->
+        <section id="view-vendors" class="content-section">
+
+            <!-- Search Hero Section -->
+            <div
+                style="background: linear-gradient(135deg, #004e92, #4dabf7); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; color: white;">
+                <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 600;">
+                    <i class="fa-solid fa-search" style="margin-right: 0.5rem; opacity: 0.9;"></i>Find Your Perfect
+                    Vendors
+                </h2>
+                <p style="margin: 0 0 1rem 0; opacity: 0.85; font-size: 0.9rem;">Explore categories, compare options,
+                    and send requests to top-rated vendors</p>
+
+                <!-- Search Bar -->
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; position: relative;">
+                        <i class="fa-solid fa-search"
+                            style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+                        <input type="text" id="vendor-search" placeholder="Search vendors by name or service..."
+                            style="width: 100%; padding: 12px 12px 12px 42px; border: none; border-radius: 10px; font-size: 0.95rem; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    </div>
+                    <select id="vendor-location-filter"
+                        style="padding: 10px 16px; border: none; border-radius: 20px; font-size: 0.9rem; font-weight: 500; cursor: pointer; background: rgba(255,255,255,0.95); min-width: 130px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=\'%23333\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\'><path d=\'M7 10l5 5 5-5z\'/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px;">
+                        <option value="all">All Locations</option>
+                        <option value="Riyadh">Riyadh</option>
+                        <option value="Jeddah">Jeddah</option>
+                        <option value="Dammam">Dammam</option>
+                        <option value="Mecca">Mecca</option>
+                        <option value="Al Ula">Al Ula</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Category Pills - Scrollable -->
+            <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Categories:</span>
+                    <button id="show-all-categories"
+                        style="padding: 6px 14px; background: linear-gradient(135deg, #004e92, #4dabf7); border: none; color: white; font-size: 0.8rem; cursor: pointer; font-weight: 500; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0, 78, 146, 0.25);">
+                        <i class="fa-solid fa-grid-2"></i>View All
+                    </button>
+                </div>
+
+                <div id="category-pills"
+                    style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin;">
+                    <button class="category-pill active" data-category="all"
+                        style="padding: 8px 18px; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: #004e92; color: white;">
+                        All
+                    </button>
+                    <button class="category-pill" data-category="Catering"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Catering
+                    </button>
+                    <button class="category-pill" data-category="Venue"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Venues
+                    </button>
+                    <button class="category-pill" data-category="Photography"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Photography
+                    </button>
+                    <button class="category-pill" data-category="Decoration"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Decoration
+                    </button>
+                    <button class="category-pill" data-category="AV Equipment"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        AV & Sound
+                    </button>
+                    <button class="category-pill" data-category="Entertainment"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Entertainment
+                    </button>
+                    <button class="category-pill" data-category="Security"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Security
+                    </button>
+                    <button class="category-pill" data-category="Transportation"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Transport
+                    </button>
+                    <button class="category-pill" data-category="Floral Design"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Floral
+                    </button>
+                    <button class="category-pill" data-category="Traditional Music"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Traditional
+                    </button>
+                    <button class="category-pill" data-category="Government Permits"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;">
+                        Government
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <div style="margin-bottom: 1rem;">
+                <span id="vendor-results-count" style="font-size: 0.9rem; color: #666;"></span>
+            </div>
+
+            <!-- Vendor Cards Grid -->
+            <div id="vendors-grid" class="vendors-grid">
+                <!-- Populated via JS -->
+            </div>
+
+            <!-- Hidden Full Category Select for "View All" Modal -->
+            <select id="vendor-category-select" style="display: none;">
+                <option value="all">All Categories</option>
+                <option value="Catering">Catering</option>
+                <option value="Bakery & Desserts">Bakery & Desserts</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Food Trucks">Food Trucks</option>
+                <option value="Venue">Venue</option>
+                <option value="Conference Hall">Conference Hall</option>
+                <option value="Outdoor Venue">Outdoor Venue</option>
+                <option value="AV Equipment">AV Equipment</option>
+                <option value="LED Screens">LED Screens</option>
+                <option value="Stage & Rigging">Stage & Rigging</option>
+                <option value="Live Streaming">Live Streaming</option>
+                <option value="Decoration">Decoration</option>
+                <option value="Floral Design">Floral Design</option>
+                <option value="Balloon Decor">Balloon Decor</option>
+                <option value="Event Lighting">Event Lighting</option>
+                <option value="Photography">Photography</option>
+                <option value="Aerial Photography">Aerial Photography</option>
+                <option value="Photo Booth">Photo Booth</option>
+                <option value="DJ Services">DJ Services</option>
+                <option value="Live Entertainment">Live Entertainment</option>
+                <option value="Kids Entertainment">Kids Entertainment</option>
+                <option value="Traditional Music">Traditional Music</option>
+                <option value="Fireworks & Pyro">Fireworks & Pyro</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Shuttle Services">Shuttle Services</option>
+                <option value="Valet Parking">Valet Parking</option>
+                <option value="Security">Security</option>
+                <option value="VIP Security">VIP Security</option>
+                <option value="Medical Services">Medical Services</option>
+                <option value="Event Staff">Event Staff</option>
+                <option value="Translation">Translation</option>
+                <option value="MC & Hosting">MC & Hosting</option>
+                <option value="Tent Rentals">Tent Rentals</option>
+                <option value="Furniture Rentals">Furniture Rentals</option>
+                <option value="Table/Chair Rentals">Table/Chair Rentals</option>
+                <option value="Power Supply">Power Supply</option>
+                <option value="Printing">Printing</option>
+                <option value="Social Media Marketing">Social Media Marketing</option>
+                <option value="Influencer Marketing">Influencer Marketing</option>
+                <option value="Government Permits">Government Permits</option>
+                <option value="Safety Permits">Safety Permits</option>
+                <option value="Sponsors">Sponsors</option>
+                <option value="Brand Partners">Brand Partners</option>
+                <option value="Henna Artists">Henna Artists</option>
+                <option value="Falconry Shows">Falconry Shows</option>
+                <option value="Horse Shows">Horse Shows</option>
+                <option value="Arabian Perfumes">Arabian Perfumes</option>
+                <option value="Arabic Calligraphy">Arabic Calligraphy</option>
+                <option value="VR/AR Experiences">VR/AR Experiences</option>
+                <option value="Eco-Friendly Services">Eco-Friendly Services</option>
+                <option value="Gifts & Giveaways">Gifts & Giveaways</option>
+            </select>
+        </section>
+
+        <!-- VIEW: REQUESTS MANAGEMENT -->
+        <section id="view-requests" class="content-section">
+
+            <!-- Tab Cards (No hero - page header is enough) -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <!-- Outgoing Tab Card -->
+                <button class="request-tab active" data-tab="outgoing"
+                    style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border: none; border-radius: 12px; background: linear-gradient(135deg, #1565c0, #0d47a1); cursor: pointer; transition: all 0.3s ease; text-align: left; box-shadow: 0 4px 15px rgba(21, 101, 192, 0.3);">
+                    <div
+                        style="width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-paper-plane" style="color: white; font-size: 1.3rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 1rem; color: white; margin-bottom: 3px;">Outgoing
+                            Requests</div>
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">Sent to vendors</div>
+                    </div>
+                </button>
+
+                <!-- Incoming Tab Card -->
+                <button class="request-tab" data-tab="incoming"
+                    style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border: 2px solid #e0e0e0; border-radius: 12px; background: white; cursor: pointer; transition: all 0.3s ease; text-align: left; position: relative;">
+                    <div
+                        style="width: 50px; height: 50px; background: linear-gradient(135deg, #f0f4f8, #e3e8ed); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-inbox" style="color: #1565c0; font-size: 1.3rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 1rem; color: #333; margin-bottom: 3px;">Incoming
+                            Requests</div>
+                        <div style="font-size: 0.85rem; color: #666;">From vendors</div>
+                    </div>
+                    <span id="incoming-badge"
+                        style="display: none; position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);">0</span>
+                </button>
+            </div>
+
+            <!-- OUTGOING REQUESTS SECTION -->
+            <div id="outgoing-requests-section" class="request-section">
+                <div class="req-filter-bar">
+                    <label class="req-filter-label">Show requests for:</label>
+                    <select id="request-event-filter" class="req-filter-select">
+                        <option value="all">All Events</option>
+                        <!-- Populated via JS -->
+                    </select>
+                    <select id="request-status-filter" class="req-filter-select">
+                        <option value="all">All Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <span id="outgoing-count" class="req-count-label"></span>
+                </div>
+                <div id="outgoing-requests-tables" class="req-tables-container"></div>
+                <div id="no-requests-msg" class="req-empty-state" style="display: none;">
+                    <div class="req-empty-icon"><i class="fa-regular fa-paper-plane"></i></div>
+                    <h4>No outgoing requests yet</h4>
+                    <p>Browse the Vendor Marketplace to find and invite vendors to your events</p>
+                    <button class="btn btn-primary" onclick="switchView('vendors')">
+                        <i class="fa-solid fa-store"></i> Browse Vendors
+                    </button>
+                </div>
+            </div>
+
+            <!-- INCOMING REQUESTS SECTION -->
+            <div id="incoming-requests-section" class="request-section" style="display: none;">
+                <div class="req-filter-bar">
+                    <label class="req-filter-label">Show requests for:</label>
+                    <select id="incoming-event-filter" class="req-filter-select">
+                        <option value="all">All Events</option>
+                        <!-- Populated via JS -->
+                    </select>
+                    <select id="incoming-status-filter" class="req-filter-select">
+                        <option value="all">All Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                    <span id="incoming-count" class="req-count-label"></span>
+                </div>
+                <div id="incoming-requests-tables" class="req-tables-container"></div>
+                <div id="no-incoming-requests-msg" class="req-empty-state" style="display: none;">
+                    <div class="req-empty-icon"><i class="fa-regular fa-envelope"></i></div>
+                    <h4>No incoming requests</h4>
+                    <p>Vendors will appear here when they apply to join your events</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL: REQUEST DETAIL (View - card style) -->
+        <div id="request-detail-modal" class="modal-overlay hidden" style="z-index: 1001;">
+            <div class="modal req-detail-modal-box" style="max-width: 520px;">
+                <div class="req-detail-modal-header">
+                    <div class="req-detail-modal-header-inner">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span id="request-detail-modal-title">Request Details</span>
+                    </div>
+                    <button type="button" class="req-detail-close" onclick="closeRequestDetailModal()"
+                        aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="req-detail-modal-body">
+                    <h2 id="request-detail-event-title" class="req-detail-event-title"></h2>
+                    <span id="request-detail-event-category" class="req-detail-category-pill"></span>
+                    <div id="request-detail-vendor-wrap" class="req-detail-vendor-wrap" style="display: none;">
+                        <div class="req-detail-section-label"><i class="fa-solid fa-store"></i> Vendor</div>
+                        <div class="req-detail-vendor-box">
+                            <div class="req-detail-vendor-row"><strong>Name:</strong> <span
+                                    id="request-detail-vendor-name"></span></div>
+                            <div class="req-detail-vendor-row"><strong>Email:</strong> <span
+                                    id="request-detail-vendor-email"></span></div>
+                            <div class="req-detail-vendor-row"><strong>Service:</strong> <span
+                                    id="request-detail-vendor-service" class="req-detail-vendor-service-pill"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="req-detail-chips" id="request-detail-chips"></div>
+                    <div class="req-detail-divider"></div>
+                    <div class="req-detail-section">
+                        <div class="req-detail-section-label" id="request-detail-message-label"></div>
+                        <p id="request-detail-message" class="req-detail-message-text"></p>
+                    </div>
+                    <div id="request-detail-attachment-wrap" class="req-detail-section req-detail-attachment-section"
+                        style="display: none;">
+                        <div class="req-detail-section-label"><i class="fa-solid fa-paperclip"></i> Vendor attachment
+                        </div>
+                        <div class="req-detail-attachment-card">
+                            <div class="req-detail-attachment-head">
+                                <div class="req-detail-attachment-icon-wrap" id="request-detail-attachment-icon-wrap">
+                                    <i class="fa-solid fa-file-lines" id="request-detail-attachment-icon"></i>
+                                </div>
+                                <div class="req-detail-attachment-meta">
+                                    <span class="req-detail-attachment-filename"
+                                        id="request-detail-attachment-name">filename.pdf</span>
+                                    <p class="req-detail-attachment-desc">Company brochure or details shared by the
+                                        vendor</p>
+                                </div>
+                            </div>
+                            <div class="req-detail-attachment-actions">
+                                <a id="request-detail-attachment-view" href="#" target="_blank" rel="noopener"
+                                    class="req-detail-attachment-btn req-detail-attachment-btn-view">
+                                    <i class="fa-solid fa-external-link-alt"></i> View
+                                </a>
+                                <a id="request-detail-attachment-download" href="#" download
+                                    class="req-detail-attachment-btn req-detail-attachment-btn-download">
+                                    <i class="fa-solid fa-download"></i> Download
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="request-detail-rejection-wrap" class="req-detail-rejection-wrap" style="display: none;">
+                        <div class="req-detail-section-label"><i class="fa-solid fa-circle-xmark"></i> Rejection reason
+                            (from vendor)</div>
+                        <p id="request-detail-rejection" class="req-detail-rejection-text"></p>
+                    </div>
+                    <div class="req-detail-footer">
+                        <span id="request-detail-status" class="status-badge"></span>
+                        <button type="button" class="btn btn-primary" onclick="closeRequestDetailModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: SEND REQUEST -->
+        <div id="request-modal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Send Request</h3>
+                    <button class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body">
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                        You are sending a request to <strong id="modal-vendor-name"
+                            style="color: var(--text-main);">Vendor Name</strong>.
+                    </p>
+
+                    <form id="send-request-form">
+                        <input type="hidden" id="request-vendor-id">
+
+                        <div class="input-group">
+                            <label>Select Event *</label>
+                            <select id="request-event-select" required>
+                                <option value="" disabled selected>Choose an event...</option>
+                                <!-- Populated via JS -->
+                            </select>
+                            <small
+                                style="color: var(--text-muted); display: block; margin-top: 0.5rem; font-size: 0.8rem;">
+                                Choose the event you want to link this request to.
+                            </small>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Message *</label>
+                            <textarea id="request-message" rows="4"
+                                placeholder="Describe your requirements (e.g. guest count, dates, preferences)..."
+                                required></textarea>
+                        </div>
+
+                        <div class="form-actions" style="justify-content: flex-end; gap: 1rem;">
+                            <button type="button" class="btn btn-outline close-modal-btn">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Send Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL: VIEW MESSAGE -->
+        <div id="message-modal" class="modal-overlay hidden" style="z-index: 1000;">
+            <div class="modal" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>Full Message</h3>
+                    <button class="close-modal-btn" onclick="closeMessageModal()"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div
+                        style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                        <p id="full-message-content"
+                            style="white-space: pre-wrap; color: #334155; line-height: 1.6; margin: 0; font-size: 0.95rem;">
+                        </p>
+                    </div>
+                    <div class="form-actions" style="justify-content: flex-end;">
+                        <button type="button" class="btn btn-primary" onclick="closeMessageModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- VIEW: ANALYTICS (Future) -->
+        <section id="view-analytics" class="content-section">
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <i class="fa-solid fa-chart-pie"
+                    style="font-size: 4rem; color: var(--primary-light); margin-bottom: 1.5rem; opacity: 0.5;"></i>
+                <h2>Event Analytics</h2>
+                <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem;">
+                    Deep insights into your event performance, attendee demographics, and ticket sales.
+                </p>
+                <div class="stats-grid" style="opacity: 0.5; pointer-events: none; margin-top: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>--</h3>
+                            <p>Page Views</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>--</h3>
+                            <p>Conversion</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>--</h3>
+                            <p>Revenue</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: REJECTION REASON -->
+    <div id="rejection-modal" class="modal-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+        <div class="modal"
+            style="background: white; padding: 0; border-radius: 16px; width: 90%; max-width: 480px; box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; animation: modalSlideIn 0.3s ease;">
+
+            <!-- Modal Header with Icon -->
+            <div style="background: linear-gradient(135deg, #ff6b6b, #c62828); padding: 2rem; text-align: center;">
+                <div
+                    style="width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.8rem; color: white;"></i>
+                </div>
+                <h3 style="color: white; font-size: 1.5rem; margin: 0;">Reject Request</h3>
+                <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 0; font-size: 0.9rem;">This action will notify
+                    the vendor</p>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="padding: 2rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-message" style="margin-right: 0.5rem; color: #666;"></i>
+                    Rejection Reason <span style="color: #999; font-weight: 400;">(optional)</span>
+                </label>
+                <textarea id="rejection-reason" rows="4"
+                    style="width: 100%; border: 2px solid #e0e0e0; padding: 1rem; border-radius: 12px; font-size: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.2s; outline: none;"
+                    placeholder="Enter the reason for rejection..." onfocus="this.style.borderColor='#c62828'"
+                    onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                <p style="color: #999; font-size: 0.8rem; margin-top: 0.5rem;">
+                    <i class="fa-solid fa-info-circle"></i> The vendor will see this message.
+                </p>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn btn-outline" onclick="closeRejectionModal()" style="flex: 1; padding: 0.8rem;">
+                        Cancel
+                    </button>
+                    <button class="btn btn-danger" onclick="confirmRejection()"
+                        style="flex: 1; padding: 0.8rem; background: #c62828; color: white; border: none;">
+                        <i class="fa-solid fa-xmark"></i> Reject
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script src="dummy_data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initDashboard === 'function') {
+                initDashboard();
+            }
+        });
+    </script>
+</body>
+
+</html>

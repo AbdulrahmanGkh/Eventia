@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Log In | Eventia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css?v=1">
+    <link rel="stylesheet" href="auth.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="auth-page">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo" id="nav-logo">
+                <img src="assets/logo_fixed.png" alt="Eventia Logo" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="btn-text">Home</a>
+                <a href="signup-business.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+
+        <!-- Background Decoration -->
+        <div class="auth-bg-decor">
+            <div class="auth-shape auth-s1"></div>
+            <div class="auth-shape auth-s2"></div>
+            <div class="auth-shape auth-s3"></div>
+        </div>
+
+        <!-- BUSINESS LOGIN FORM -->
+        <div id="login-form-container" class="auth-form-container">
+            <div class="form-header">
+                <h2>Business Login</h2>
+                <p>Access your vendor or organizer dashboard</p>
+            </div>
+
+            <!-- Role Selector for Business Login -->
+            <div class="role-selector">
+                <label>I am a(n):</label>
+                <div class="role-tabs">
+                    <div class="role-tab active" data-target="login" data-role="organizer">Organizer</div>
+                    <div class="role-tab" data-target="login" data-role="vendor">Vendor</div>
+                </div>
+            </div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">Email Address or Phone Number</label>
+                    <input type="email" id="login-email" placeholder="" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-actions">
+                    <label class="checkbox-container">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="password-recovery.html" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Sign In as <span class="current-role-text">Organizer</span>
+                </button>
+            </form>
+
+            <div class="attendee-link">
+                <p>Just looking to attend events?</p>
+                <a href="login.html" class="btn btn-outline btn-sm">Sign in as Attendee</a>
+            </div>
+
+            <div class="form-footer">
+                <p>New to Eventia? <a href="signup-business.html" id="link-to-signup">Create a business account</a></p>
+                <a href="index.html" class="back-to-home">Back to Home</a>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="app.js?v=2"></script>
+</body>
+
+</html>

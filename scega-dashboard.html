@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCEGA Admin Dashboard | Eventia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css?v=1">
+    <link rel="stylesheet" href="dashboard.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar scega-header" id="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/logo_fixed.png" alt="Eventia" class="sidebar-logo">
+            <span class="sidebar-brand">SCEGA ADMIN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="overview">
+                <i class="fa-solid fa-grid-2"></i> Dashboard
+            </a>
+            <!-- Event Requests Merged into Dashboard -->
+            <a href="#" class="nav-item" data-view="history">
+                <i class="fa-solid fa-clock-rotate-left"></i> History
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="login.html" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <div class="header-left" style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fa-solid fa-bars mobile-toggle" id="sidebar-toggle"></i>
+                <div class="header-title">
+                    <h1 id="page-title">Admin Dashboard</h1>
+                </div>
+            </div>
+
+            <div class="header-profile">
+                <div class="profile-info">
+                    <span class="profile-name">SCEGA Admin</span>
+                    <span class="profile-role"
+                        style="font-size: 0.8rem; color: var(--text-muted); display: block;">Administrator</span>
+                </div>
+                <div class="profile-avatar" style="background-color: #1e3c72;">S</div>
+            </div>
+        </header>
+
+        <!-- VIEW: DASHBOARD OVERVIEW -->
+        <section id="view-overview" class="content-section active">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-left: 4px solid #ff9800;">
+                    <div class="stat-icon" style="background: rgba(255, 152, 0, 0.15); color: #ff9800;">
+                        <i class="fa-solid fa-hourglass-start"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-pending" style="color: #ff9800;">0</h3>
+                        <p>Pending Requests</p>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-left: 4px solid #2e7d32;">
+                    <div class="stat-icon" style="background: rgba(46, 125, 50, 0.15); color: #2e7d32;">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-approved" style="color: #2e7d32;">0</h3>
+                        <p>Approved Events</p>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-left: 4px solid #c62828;">
+                    <div class="stat-icon" style="background: rgba(198, 40, 40, 0.15); color: #c62828;">
+                        <i class="fa-solid fa-ban"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-rejected" style="color: #c62828;">0</h3>
+                        <p>Rejected Events</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Events Queue - Card Layout -->
+            <div class="section-header" style="margin-top: 2rem;">
+                <h2>Pending Events Queue</h2>
+            </div>
+
+            <div id="pending-events-cards" style="display: grid; gap: 1rem;">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW: HISTORY -->
+        <section id="view-history" class="content-section">
+            <!-- Filter Tabs -->
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <button class="history-filter-btn active" data-filter="all"
+                    style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s ease;">All</button>
+                <button class="history-filter-btn" data-filter="approved"
+                    style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s ease;">Approved</button>
+                <button class="history-filter-btn" data-filter="rejected"
+                    style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.2s ease;">Rejected</button>
+            </div>
+
+            <div id="history-events-cards" style="display: grid; gap: 0.75rem;">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: REJECTION REASON -->
+    <div id="rejection-modal" class="modal-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+        <div class="modal"
+            style="background: white; padding: 0; border-radius: 16px; width: 90%; max-width: 480px; box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; animation: modalSlideIn 0.3s ease;">
+
+            <!-- Modal Header with Icon -->
+            <div style="background: linear-gradient(135deg, #ff6b6b, #c62828); padding: 2rem; text-align: center;">
+                <div
+                    style="width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.8rem; color: white;"></i>
+                </div>
+                <h3 style="color: white; font-size: 1.5rem; margin: 0;">Reject Event</h3>
+                <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 0; font-size: 0.9rem;">This action will notify
+                    the organizer</p>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="padding: 2rem;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-message" style="margin-right: 0.5rem; color: #666;"></i>
+                    Rejection Reason <span style="color: #999; font-weight: 400;">(optional)</span>
+                </label>
+                <textarea id="rejection-reason" rows="4"
+                    style="width: 100%; border: 2px solid #e0e0e0; padding: 1rem; border-radius: 12px; font-size: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.2s; outline: none;"
+                    placeholder="Enter the reason for rejection..." onfocus="this.style.borderColor='#c62828'"
+                    onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                <p style="color: #999; font-size: 0.8rem; margin-top: 0.5rem;">
+                    <i class="fa-solid fa-info-circle"></i> The organizer will see this message in their dashboard.
+                </p>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn btn-outline" onclick="closeRejectionModal()" style="flex: 1; padding: 0.8rem;">
+                        Cancel
+                    </button>
+                    <button class="btn btn-danger" onclick="confirmRejection()"
+                        style="flex: 1; padding: 0.8rem; background: #c62828; color: white; border: none;">
+                        <i class="fa-solid fa-xmark"></i> Reject Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <!-- MODAL: EVENT DETAILS -->
+    <div id="event-details-modal" class="modal-overlay hidden"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="modal"
+            style="background: white; padding: 2rem; border-radius: 8px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header" style="margin-bottom: 1rem; display: flex; justify-content: space-between;">
+                <h3>Event Details</h3>
+                <button class="btn btn-sm btn-outline"
+                    onclick="document.getElementById('event-details-modal').style.display='none'"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="event-details-content">
+                <!-- Details injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="dummy_data.js"></script>
+    <script src="scega-logic.js"></script>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Init SCEGA Dashboard functionality
+            if (typeof initScegaDashboard === 'function') {
+                initScegaDashboard();
+            } else {
+                console.error("Error: initScegaDashboard is not a function. scega-logic.js might not have loaded.");
+            }
+        });
+    </script>
+</body>
+
+</html>

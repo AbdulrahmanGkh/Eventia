@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Sign Up | Eventia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css?v=1">
+    <link rel="stylesheet" href="auth.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="auth-page">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo" id="nav-logo">
+                <img src="assets/logo_fixed.png" alt="Eventia Logo" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="btn-text">Home</a>
+                <a href="login.html" class="btn btn-outline">Log In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-content"
+        style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem 0;">
+
+        <!-- Background Decoration -->
+        <div class="auth-bg-decor">
+            <div class="auth-shape auth-s1"></div>
+            <div class="auth-shape auth-s2"></div>
+            <div class="auth-shape auth-s3"></div>
+        </div>
+
+        <!-- BUSINESS SIGNUP FORM -->
+        <div id="signup-form-container" class="auth-form-container">
+            <div class="form-header">
+                <h2>Business Account</h2>
+                <p>Register as a Vendor or Organizer</p>
+            </div>
+
+            <!-- Role Selector for Business Signup -->
+            <div class="role-selector">
+                <label>Register as:</label>
+                <div class="role-tabs">
+                    <div class="role-tab active" data-target="signup" data-role="organizer">Organizer</div>
+                    <div class="role-tab" data-target="signup" data-role="vendor">Vendor</div>
+                </div>
+            </div>
+
+            <form id="signup-form">
+
+                <!-- Dynamic Fields -->
+                <div id="signup-dynamic-fields">
+                    <!-- Injected via JS -->
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Sign Up as <span class="current-role-text">Organizer</span>
+                </button>
+            </form>
+
+            <div class="attendee-link">
+                <p>Just want to attend events?</p>
+                <a href="signup.html" class="btn btn-outline btn-sm">Sign up as Attendee</a>
+            </div>
+
+            <div class="form-footer">
+                <p>Already have an account? <a href="login.html" id="link-to-login">Log in</a></p>
+                <a href="index.html" class="back-to-home">Back to Home</a>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="app.js?v=2"></script>
+</body>
+
+</html>

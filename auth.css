@@ -1,0 +1,248 @@
+/* ================================================================
+   AUTH STYLES
+   Login & signup page styles: backgrounds, form containers,
+   role selector, auth decorations, password policy
+   ================================================================ */
+
+/* --- Auth Page Layout --- */
+.auth-card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 4rem;
+    min-height: 80vh;
+}
+
+.auth-page {
+    background: linear-gradient(135deg, #eef2f3 0%, #dbdde6 100%);
+    min-height: 100vh;
+    position: relative;
+}
+
+.auth-bg-decor {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.auth-page .main-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Auth Form Container --- */
+.auth-form-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 100%;
+    max-width: 480px;
+    animation: slideUp 0.4s ease;
+    position: relative;
+    z-index: 10;
+}
+
+.auth-form-container.hidden {
+    display: none;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Auth Decorative Shapes --- */
+.auth-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+}
+
+.auth-s1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(77, 171, 247, 0.25), transparent 70%);
+    top: -15%;
+    right: -10%;
+    animation: authFloat 12s ease-in-out infinite;
+}
+
+.auth-s2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(108, 92, 231, 0.2), transparent 70%);
+    bottom: -15%;
+    left: -10%;
+    animation: authFloat 10s ease-in-out infinite reverse;
+}
+
+.auth-s3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 184, 148, 0.15), transparent 70%);
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: authFloat 14s ease-in-out infinite 2s;
+}
+
+@keyframes authFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-30px);
+    }
+}
+
+/* --- Form Header & Footer --- */
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+.form-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.forgot-password,
+.back-to-home {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-to-home {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* --- Role Selector Tabs --- */
+.role-selector {
+    margin-bottom: 1.5rem;
+}
+
+.role-selector label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.role-tabs {
+    display: flex;
+    background: #f1f3f5;
+    padding: 4px;
+    border-radius: var(--radius-md);
+}
+
+.role-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+}
+
+.role-tab.active {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Password Policy --- */
+.password-policy-text {
+    font-size: 0.75rem;
+    color: black;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    line-height: 1.3;
+}
+
+/* --- Cross-Role Links --- */
+.vendor-organizer-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, rgba(0, 78, 146, 0.05), rgba(77, 171, 247, 0.08));
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--primary-light);
+}
+
+.vendor-organizer-link p {
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.vendor-organizer-link .btn {
+    margin-top: 0.25rem;
+}
+
+.attendee-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, rgba(0, 78, 146, 0.05), rgba(77, 171, 247, 0.08));
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--primary-light);
+}
+
+.attendee-link p {
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.attendee-link .btn {
+    margin-top: 0.25rem;
+}
+
+/* --- Auth Responsive --- */
+@media (max-width: 768px) {
+    .auth-card-wrapper {
+        padding-top: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .auth-form-container {
+        padding: 1.5rem;
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In | Eventia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css?v=1">
+    <link rel="stylesheet" href="auth.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="auth-page">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo" id="nav-logo">
+                <img src="assets/eventia_logo_new.png" alt="Eventia Logo" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="btn-text">Home</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+
+        <!-- Background Decoration -->
+        <div class="auth-bg-decor">
+            <div class="auth-shape auth-s1"></div>
+            <div class="auth-shape auth-s2"></div>
+            <div class="auth-shape auth-s3"></div>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="login-form-container" class="auth-form-container">
+            <div class="form-header">
+                <h2>Welcome Back</h2>
+                <p>Login as an Attendee</p>
+            </div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">Email Address or Phone Number</label>
+                    <input type="email" id="login-email" placeholder="" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-actions">
+                    <label class="checkbox-container">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="password-recovery.html" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="vendor-organizer-link">
+                <p>Are you a vendor or organizer?</p>
+                <a href="login-business.html" class="btn btn-outline btn-sm">Sign in as Vendor or Organizer</a>
+            </div>
+
+            <div class="form-footer">
+                <p>New to Eventia? <a href="signup.html" id="link-to-signup">Create an account</a></p>
+                <a href="index.html" class="back-to-home">Back to Home</a>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="app.js?v=2"></script>
+</body>
+
+</html>

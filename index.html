@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventia | Events Management Platform</title>
+    <meta name="description"
+        content="Discover and manage exceptional events in Saudi Arabia. Connect with organizers, vendors, and attendees.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="base.css?v=1">
+    <link rel="stylesheet" href="landing.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="landing-body">
+
+    <!-- Navigation -->
+    <nav class="navbar landing-nav" id="landing-navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo" id="nav-logo">
+                <img src="assets/eventia_logo_new.png" alt="Eventia Logo" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="login.html" class="btn btn-outline" id="nav-login-btn">Log In</a>
+                <a href="signup.html" class="btn btn-primary" id="nav-signup-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-landing" id="hero">
+        <!-- Animated Background -->
+        <div class="hero-bg">
+            <div class="hero-gradient"></div>
+            <div class="hero-particles">
+                <span class="particle p1"></span>
+                <span class="particle p2"></span>
+                <span class="particle p3"></span>
+                <span class="particle p4"></span>
+                <span class="particle p5"></span>
+                <span class="particle p6"></span>
+                <span class="particle p7"></span>
+                <span class="particle p8"></span>
+            </div>
+            <div class="hero-wave">
+                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,70 1440,60 L1440,120 L0,120 Z" fill="#f0f4f8" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+
+            <h1 class="hero-title">
+                Discover & Manage
+                <span class="hero-title-gradient">Exceptional Events</span>
+            </h1>
+            <div class="hero-tagline">
+                <div class="hero-tagline-line"></div>
+                <p>Find events. Book tickets. Enjoy the experience.</p>
+                <div class="hero-tagline-line"></div>
+            </div>
+            <div class="hero-buttons">
+                <a href="#events-section" class="btn btn-primary btn-lg hero-cta">
+                    <i class="fa-solid fa-compass"></i> Explore Events
+                </a>
+                <a href="signup.html" class="btn btn-outline btn-lg hero-cta hero-cta-outline">
+                    <i class="fa-solid fa-arrow-right"></i> Join Now
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Decorative Floating Shapes -->
+        <div class="hero-shapes">
+            <div class="hero-shape hs-1"></div>
+            <div class="hero-shape hs-2"></div>
+            <div class="hero-shape hs-3"></div>
+            <div class="hero-shape hs-4"></div>
+            <div class="hero-shape hs-5"></div>
+        </div>
+    </section>
+
+    <!-- SEARCH & FILTER SECTION -->
+    <section class="search-section" id="events-section">
+        <div class="container">
+            <div class="search-bar-wrapper">
+                <div class="search-input-group">
+                    <i class="fa-solid fa-search search-icon"></i>
+                    <input type="text" id="landing-search" placeholder="Search for events, workshops, conferences..."
+                        class="search-input">
+                </div>
+                <select id="landing-location-filter" class="search-select">
+                    <option value="all">All Cities</option>
+                    <option value="Riyadh">Riyadh</option>
+                    <option value="Jeddah">Jeddah</option>
+                    <option value="Dammam">Dammam</option>
+                    <option value="Mecca">Mecca</option>
+                    <option value="Al Ula">Al Ula</option>
+                </select>
+                <button class="btn btn-primary search-btn" id="landing-search-btn">
+                    <i class="fa-solid fa-search"></i> Search
+                </button>
+            </div>
+            <div class="category-pills-row" id="landing-category-pills">
+                <button class="cat-pill active" data-category="all">
+                    <i class="fa-solid fa-fire"></i> All Events
+                </button>
+                <button class="cat-pill" data-category="Tech">
+                    <i class="fa-solid fa-laptop-code"></i> Tech
+                </button>
+                <button class="cat-pill" data-category="Art">
+                    <i class="fa-solid fa-palette"></i> Art
+                </button>
+                <button class="cat-pill" data-category="Business">
+                    <i class="fa-solid fa-briefcase"></i> Business
+                </button>
+                <button class="cat-pill" data-category="Music">
+                    <i class="fa-solid fa-music"></i> Music
+                </button>
+                <button class="cat-pill" data-category="Education">
+                    <i class="fa-solid fa-graduation-cap"></i> Education
+                </button>
+                <button class="cat-pill" data-category="Sports">
+                    <i class="fa-solid fa-futbol"></i> Sports
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENTS GRID -->
+    <section class="landing-events">
+        <div class="container">
+            <div class="section-heading">
+                <h2><i class="fa-solid fa-sparkles"></i> Upcoming Events</h2>
+                <p class="section-desc">Don't miss out on these exciting upcoming events across Saudi Arabia</p>
+            </div>
+            <div class="landing-events-grid" id="landing-events-grid">
+
+                <!-- Event Card 1 -->
+                <div class="lp-event-card" data-category="Tech">
+                    <div class="lp-card-image" style="background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);">
+                        <i class="fa-solid fa-laptop-code"></i>
+                        <div class="lp-card-badge">Tech</div>
+                        <div class="lp-card-price">From 150 SR</div>
+                    </div>
+                    <div class="lp-card-body">
+                        <h3 class="lp-card-title">Future Tech Summit 2026</h3>
+                        <div class="lp-card-meta">
+                            <span><i class="fa-regular fa-calendar"></i> Oct 15, 2026</span>
+                            <span><i class="fa-solid fa-location-dot"></i> Riyadh Front</span>
+                        </div>
+                        <p class="lp-card-desc">Explore cutting-edge innovations in AI, cloud computing, and
+                            cybersecurity with industry leaders.</p>
+                        <div class="lp-card-footer">
+                            <button class="btn btn-primary btn-sm lp-view-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="lp-event-card" data-category="Art">
+                    <div class="lp-card-image" style="background: linear-gradient(135deg, #8E2DE2, #4A00E0);">
+                        <i class="fa-solid fa-palette"></i>
+                        <div class="lp-card-badge">Art</div>
+                        <div class="lp-card-price">Free</div>
+                    </div>
+                    <div class="lp-card-body">
+                        <h3 class="lp-card-title">Riyadh Art Week</h3>
+                        <div class="lp-card-meta">
+                            <span><i class="fa-regular fa-calendar"></i> Nov 02, 2026</span>
+                            <span><i class="fa-solid fa-location-dot"></i> JAX District</span>
+                        </div>
+                        <p class="lp-card-desc">Immerse yourself in stunning art installations and live performances
+                            from Saudi and international artists.</p>
+                        <div class="lp-card-footer">
+                            <button class="btn btn-primary btn-sm lp-view-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="lp-event-card" data-category="Business">
+                    <div class="lp-card-image" style="background: linear-gradient(135deg, #0F2027, #203A43, #2C5364);">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <div class="lp-card-badge">Business</div>
+                        <div class="lp-card-price">From 500 SR</div>
+                    </div>
+                    <div class="lp-card-body">
+                        <h3 class="lp-card-title">Global Investors Forum</h3>
+                        <div class="lp-card-meta">
+                            <span><i class="fa-regular fa-calendar"></i> Dec 10, 2026</span>
+                            <span><i class="fa-solid fa-location-dot"></i> KAFD, Riyadh</span>
+                        </div>
+                        <p class="lp-card-desc">Connect with top investors, venture capitalists, and entrepreneurs at
+                            Saudi Arabia's premier business event.</p>
+                        <div class="lp-card-footer">
+                            <button class="btn btn-primary btn-sm lp-view-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 4 -->
+                <div class="lp-event-card" data-category="Music">
+                    <div class="lp-card-image" style="background: linear-gradient(135deg, #eb3349, #f45c43);">
+                        <i class="fa-solid fa-music"></i>
+                        <div class="lp-card-badge">Music</div>
+                        <div class="lp-card-price">From 200 SR</div>
+                    </div>
+                    <div class="lp-card-body">
+                        <h3 class="lp-card-title">Soundstorm Festival</h3>
+                        <div class="lp-card-meta">
+                            <span><i class="fa-regular fa-calendar"></i> Dec 19, 2026</span>
+                            <span><i class="fa-solid fa-location-dot"></i> Banban, Riyadh</span>
+                        </div>
+                        <p class="lp-card-desc">Experience world-class music performances, DJ sets, and live
+                            entertainment at the biggest music festival.</p>
+                        <div class="lp-card-footer">
+                            <button class="btn btn-primary btn-sm lp-view-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 5 -->
+                <div class="lp-event-card" data-category="Education">
+                    <div class="lp-card-image" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <div class="lp-card-badge">Education</div>
+                        <div class="lp-card-price">Free</div>
+                    </div>
+                    <div class="lp-card-body">
+                        <h3 class="lp-card-title">EdTech Innovation Day</h3>
+                        <div class="lp-card-meta">
+                            <span><i class="fa-regular fa-calendar"></i> Jan 20, 2027</span>
+                            <span><i class="fa-solid fa-location-dot"></i> KAUST, Jeddah</span>
+                        </div>
+                        <p class="lp-card-desc">Discover the future of education technology with hands-on workshops,
+                            keynotes, and networking sessions.</p>
+                        <div class="lp-card-footer">
+                            <button class="btn btn-primary btn-sm lp-view-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 6 -->
+                <div class="lp-event-card" data-category="Sports">
+                    <div class="lp-card-image" style="background: linear-gradient(135deg, #fc4a1a, #f7b733);">
+                        <i class="fa-solid fa-futbol"></i>
+                        <div class="lp-card-badge">Sports</div>
+                        <div class="lp-card-price">From 80 SR</div>
+                    </div>
+                    <div class="lp-card-body">
+                        <h3 class="lp-card-title">Riyadh Marathon 2027</h3>
+                        <div class="lp-card-meta">
+                            <span><i class="fa-regular fa-calendar"></i> Feb 14, 2027</span>
+                            <span><i class="fa-solid fa-location-dot"></i> King Fahd Road</span>
+                        </div>
+                        <p class="lp-card-desc">Join 10,000+ runners in one of the largest marathons in the Middle East,
+                            with 5K, 10K and full marathon options.</p>
+                        <div class="lp-card-footer">
+                            <button class="btn btn-primary btn-sm lp-view-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="load-more-wrapper">
+                <button class="btn btn-outline btn-lg" id="load-more-events">
+                    <i class="fa-solid fa-arrow-down"></i> Load More Events
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-heading">
+                <h2><i class="fa-solid fa-lightbulb"></i> Get Started in 3 Steps</h2>
+                <p class="section-desc">From browsing to attending — it's that easy</p>
+            </div>
+            <div class="hiw-grid">
+                <div class="hiw-card">
+                    <div class="hiw-step">1</div>
+                    <div class="hiw-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <h3>Discover</h3>
+                    <p>Browse hundreds of events across Saudi Arabia — from tech summits to art exhibitions and beyond.
+                    </p>
+                </div>
+                <div class="hiw-connector"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="hiw-card">
+                    <div class="hiw-step">2</div>
+                    <div class="hiw-icon hiw-icon-teal"><i class="fa-solid fa-ticket"></i></div>
+                    <h3>Register</h3>
+                    <p>Choose your ticket tier, secure your spot, and get instant confirmation delivered to your inbox.
+                    </p>
+                </div>
+                <div class="hiw-connector"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="hiw-card">
+                    <div class="hiw-step">3</div>
+                    <div class="hiw-icon hiw-icon-purple"><i class="fa-solid fa-people-group"></i></div>
+                    <h3>Attend</h3>
+                    <p>Show up, enjoy the event, network with like-minded people, and create memorable experiences.</p>
+                </div>
+            </div>
+            <div class="hiw-cta">
+                <p>Ready to discover your next event?</p>
+                <a href="signup.html" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Create Free
+                    Account</a>
+                <span class="hiw-cta-note">Already have an account? <a href="login.html">Log in</a></span>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <div class="cta-content">
+                    <h2>Ready to Create Your Own Event?</h2>
+                    <p>Join hundreds of organizers who trust Eventia to manage everything from small meetups to
+                        large-scale conferences.</p>
+                    <div class="cta-buttons">
+                        <a href="signup-business.html" class="btn btn-primary btn-lg"><i class="fa-solid fa-rocket"></i>
+                            Start
+                            Organizing</a>
+                        <a href="signup-business.html" class="btn btn-outline btn-lg"
+                            style="border-color: rgba(255,255,255,0.3); color: white;"><i class="fa-solid fa-store"></i>
+                            Become a Vendor</a>
+                    </div>
+                </div>
+                <div class="cta-decoration">
+                    <div class="cta-float cta-f1"><i class="fa-solid fa-calendar-star"></i></div>
+                    <div class="cta-float cta-f2"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="cta-float cta-f3"><i class="fa-solid fa-rocket"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="assets/logo_fixed.png" alt="Eventia" class="footer-logo">
+                    <p>Saudi Arabia's leading event management platform. Connecting organizers, vendors, and attendees
+                        for exceptional experiences.</p>
+
+                </div>
+                <div class="footer-links-col">
+                    <h4>Platform</h4>
+                    <a href="#events-section">Browse Events</a>
+                    <a href="signup.html">Create Account</a>
+                    <a href="login-business.html">For Organizers</a>
+                    <a href="login-business.html">For Vendors</a>
+                </div>
+
+                <div class="footer-links-col">
+                    <h4>Cities</h4>
+                    <a href="#">Riyadh</a>
+                    <a href="#">Jeddah</a>
+                    <a href="#">Dammam</a>
+                    <a href="#">Al Ula</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Eventia. All rights reserved.</p>
+                <p>Made with <i class="fa-solid fa-heart" style="color: #00a650;"></i> in Saudi Arabia
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js?v=3"></script>
+    <script>
+        // Smooth scroll for nav links
+        document.querySelectorAll('.nav-scroll-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('landing-navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('nav-scrolled');
+            } else {
+                nav.classList.remove('nav-scrolled');
+            }
+        });
+
+        // Category pill toggle
+        document.querySelectorAll('.cat-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                const cat = pill.dataset.category;
+                document.querySelectorAll('.lp-event-card').forEach(card => {
+                    if (cat === 'all' || card.dataset.category === cat) {
+                        card.style.display = '';
+                        card.style.animation = 'fadeInUp 0.4s ease forwards';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Save/heart toggle
+        document.querySelectorAll('.lp-card-save').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const icon = btn.querySelector('i');
+                icon.classList.toggle('fa-regular');
+                icon.classList.toggle('fa-solid');
+                btn.classList.toggle('saved');
+            });
+        });
+
+        // Scroll reveal animation
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.lp-event-card, .hiw-card, .pstat, .cta-card').forEach(el => {
+            el.classList.add('reveal-on-scroll');
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

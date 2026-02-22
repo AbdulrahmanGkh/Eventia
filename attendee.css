@@ -1,0 +1,478 @@
+/* ================================================================
+   ATTENDEE STYLES
+   Attendee dashboard: view switching, navbar links, modal
+   animations, ticket cards
+   ================================================================ */
+
+/* --- View Switching --- */
+.attendee-view {
+    display: block;
+}
+
+/* --- Attendee Navbar Links --- */
+.att-nav-link {
+    border-radius: 20px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.att-nav-link.active {
+    background: #004e92 !important;
+    color: white !important;
+    border-color: #004e92 !important;
+}
+
+/* --- Ticket Card --- */
+.ticket-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ticket-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 78, 146, 0.1);
+}
+
+.ticket-card-header {
+    padding: 1.25rem 1.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.ticket-card-header-gradient {
+    position: relative;
+    color: white;
+}
+
+.ticket-card-header-inner {
+    flex: 1;
+    min-width: 0;
+}
+
+.ticket-card-category-pill {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    backdrop-filter: blur(4px);
+}
+
+.ticket-card-header-gradient .ticket-card-title {
+    color: white;
+    margin: 0 0 0.5rem;
+}
+
+.ticket-card-header-gradient .ticket-card-meta {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.ticket-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.25rem;
+    line-height: 1.3;
+}
+
+.ticket-card-meta {
+    font-size: 0.85rem;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.ticket-card-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ticket-card-meta i {
+    color: #004e92;
+    font-size: 0.78rem;
+    width: 14px;
+}
+
+.ticket-card-body {
+    padding: 0 1.5rem 1.25rem;
+    border-top: 1px dashed #e2e8f0;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+}
+
+.ticket-card-footer {
+    padding: 0.85rem 1.5rem;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+/* --- History Card --- */
+.history-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.history-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.history-card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(0, 78, 146, 0.1), rgba(77, 171, 247, 0.15));
+    color: #004e92;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.history-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.history-card-title {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-card-date {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* --- Ticket card barcode --- */
+.ticket-barcode-box {
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.ticket-barcode-canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.ticket-show-badge-btn {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* --- Badge modal (centered, good size) --- */
+.badge-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    animation: modalSlideIn 0.25s ease;
+}
+
+.badge-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+}
+
+.badge-modal-box {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-width: 320px;
+    max-width: 520px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    animation: modalSlideIn 0.3s ease;
+    max-height: calc(100vh - 3rem);
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: #1e293b;
+    color: white;
+}
+
+.badge-modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.badge-modal-header h3 i {
+    margin-right: 8px;
+    opacity: 0.9;
+}
+
+.badge-modal-close {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: background 0.2s;
+}
+
+.badge-modal-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.badge-content {
+    padding: 2rem 1.75rem;
+    color: white;
+    text-align: center;
+    flex: 1;
+    min-height: 280px;
+}
+
+.badge-event-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.badge-event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1rem;
+    font-size: 0.8rem;
+    opacity: 0.95;
+    margin-bottom: 1.25rem;
+}
+
+.badge-event-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-divider {
+    height: 2px;
+    background: rgba(255, 255, 255, 0.35);
+    margin: 1rem 0;
+    border-radius: 1px;
+}
+
+.badge-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.25rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.badge-job-title {
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.95;
+    margin-bottom: 0.75rem;
+}
+
+.badge-ticket-type {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+}
+
+.badge-barcode-wrap {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.badge-barcode-wrap canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.badge-code-text {
+    font-size: 0.75rem;
+    font-family: monospace;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+/* Badge modal actions (Print / Send to email) */
+.badge-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.badge-action-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.badge-action-print {
+    background: #004e92;
+    color: white;
+}
+
+.badge-action-print:hover {
+    background: #003d73;
+    color: white;
+}
+
+.badge-action-email {
+    background: white;
+    color: #004e92;
+    border: 2px solid #004e92;
+}
+
+.badge-action-email:hover {
+    background: #e8f4fc;
+    color: #004e92;
+}
+
+/* Ticket card: ticket type only (no price) */
+.ticket-card-type-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.ticket-card-type-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.ticket-card-type-value {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Print: show only badge, centered, good size */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body.badge-print-active>*:not(#badge-modal) {
+        display: none !important;
+    }
+
+    body.badge-print-active .badge-modal-overlay {
+        position: static !important;
+        display: block;
+        background: white;
+        padding: 0;
+    }
+
+    body.badge-print-active .badge-modal-backdrop {
+        display: none;
+    }
+
+    body.badge-print-active .badge-modal-box {
+        width: 105mm;
+        /* Standard A6 badge width */
+        height: 148mm;
+        /* Standard A6 badge height */
+        max-width: none;
+        box-shadow: none;
+        margin: 0 auto;
+        border: 1px dashed #cbd5e1;
+        /* Dashed line as a cutting guide */
+        border-radius: 0;
+        /* Square edges for easy cutting */
+    }
+
+    body.badge-print-active .no-print {
+        display: none !important;
+    }
+
+    body.badge-print-active .badge-content-print {
+        min-height: auto;
+    }
+}
+
+/* --- Modal Animations --- */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

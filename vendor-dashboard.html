@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard | Eventia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css?v=1">
+    <link rel="stylesheet" href="dashboard.css?v=1">
+    <link rel="stylesheet" href="vendor.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/eventia_logo_new.png" alt="Eventia" class="sidebar-logo">
+            <span class="sidebar-brand">EVENTIA VENDOR</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="overview">
+                <i class="fa-solid fa-grid-2"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-view="invitations">
+                <i class="fa-solid fa-envelope-open-text"></i> Invitations
+                <span id="sidebar-invite-badge"
+                    style="background: var(--danger-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: auto; display: none;">0</span>
+            </a>
+            <a href="#" class="nav-item" data-view="browse-events">
+                <i class="fa-solid fa-earth-americas"></i> Browse Events
+            </a>
+            <a href="#" class="nav-item" data-view="my-events">
+                <i class="fa-solid fa-calendar-check"></i> My Events
+            </a>
+            <a href="#" class="nav-item" data-view="profile">
+                <i class="fa-solid fa-user-gear"></i> Profile
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="#" class="nav-item" onclick="logoutVendor()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <div class="header-left" style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fa-solid fa-bars mobile-toggle" id="sidebar-toggle"></i>
+                <div class="header-title">
+                    <h1 id="page-title">Vendor Dashboard</h1>
+                </div>
+            </div>
+
+            <div class="header-profile">
+                <div class="profile-info">
+                    <span class="profile-name" id="vendor-name-display">Luxe Catering Co.</span>
+                    <span class="profile-role"
+                        style="font-size: 0.8rem; color: var(--text-muted); display: block;">Vendor</span>
+                </div>
+                <div class="profile-avatar"><i class="fa-solid fa-store"></i></div>
+            </div>
+        </header>
+
+        <!-- VIEW: DASHBOARD OVERVIEW -->
+        <section id="view-overview" class="content-section active">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(255, 152, 0, 0.15); color: #ff9800;"><i
+                            class="fa-solid fa-bell"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-pending-invites">0</h3>
+                        <p>Pending Invites</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-calendar-day"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-active-events">0</h3>
+                        <p>Active Events</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(76, 175, 80, 0.15); color: #4caf50;"><i
+                            class="fa-solid fa-check-double"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-completed-events">0</h3>
+                        <p>Completed Events</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="section-header" style="margin-top: 2rem;">
+                <h2>My Upcoming Events</h2>
+                <a href="#" class="btn btn-outline btn-sm" onclick="switchView('my-events')">View All</a>
+            </div>
+            <div id="upcoming-events-container" style="display: grid; gap: 1rem;">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW: INVITATIONS (two-tab: My Applications + Invitations) -->
+        <section id="view-invitations" class="content-section">
+
+            <!-- Tab Cards (same design as organizer Requests) -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <!-- My Applications Tab Card (outgoing - active by default) -->
+                <button class="request-tab active" data-tab="applications"
+                    style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border: none; border-radius: 12px; background: linear-gradient(135deg, #1565c0, #0d47a1); cursor: pointer; transition: all 0.3s ease; text-align: left; box-shadow: 0 4px 15px rgba(21, 101, 192, 0.3);">
+                    <div
+                        style="width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-paper-plane" style="color: white; font-size: 1.3rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 1rem; color: white; margin-bottom: 3px;">My
+                            Applications</div>
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.8);">Sent to organizers</div>
+                    </div>
+                </button>
+
+                <!-- Invitations Tab Card (incoming) -->
+                <button class="request-tab" data-tab="invitations"
+                    style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border: 2px solid #e0e0e0; border-radius: 12px; background: white; cursor: pointer; transition: all 0.3s ease; text-align: left; position: relative;">
+                    <div
+                        style="width: 50px; height: 50px; background: linear-gradient(135deg, #f0f4f8, #e3e8ed); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-inbox" style="color: #1565c0; font-size: 1.3rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 1rem; color: #333; margin-bottom: 3px;">Invitations
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666;">From organizers</div>
+                    </div>
+                    <span id="invitations-tab-badge"
+                        style="display: none; position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);">0</span>
+                </button>
+            </div>
+
+            <!-- MY APPLICATIONS SECTION (outgoing) -->
+            <div id="my-applications-section" class="request-section">
+                <div class="section-header" style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Filter by Status:</span>
+                        <select id="applications-status-filter"
+                            style="padding: 10px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; background: white; min-width: 160px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=\'%23666\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\'><path d=\'M7 10l5 5 5-5z\'/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 20px; padding-right: 40px; transition: all 0.2s ease; outline: none;"
+                            onfocus="this.style.borderColor='#1565c0'; this.style.boxShadow='0 0 0 3px rgba(21, 101, 192, 0.1)'"
+                            onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+                            <option value="all">All Applications</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="applications-table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Organizer</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applications-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="no-applications-msg" style="text-align: center; padding: 3rem; display: none;">
+                    <i class="fa-regular fa-paper-plane"
+                        style="font-size: 2.5rem; color: #ccc; margin-bottom: 1rem; display: block;"></i>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #333;">No applications yet</h4>
+                    <p style="margin: 0 0 1rem 0; color: #888; font-size: 0.9rem;">Browse events and send proposals to
+                        organizers</p>
+                    <button class="btn btn-primary" onclick="switchView('browse-events')">
+                        <i class="fa-solid fa-earth-americas"></i> Browse Events
+                    </button>
+                </div>
+            </div>
+
+            <!-- INVITATIONS SECTION (incoming) -->
+            <div id="invitations-section" class="request-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Filter by Status:</span>
+                        <select id="invite-filter"
+                            style="padding: 10px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; background: white; min-width: 160px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=\'%23666\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\'><path d=\'M7 10l5 5 5-5z\'/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 20px; padding-right: 40px; transition: all 0.2s ease; outline: none;"
+                            onfocus="this.style.borderColor='#1565c0'; this.style.boxShadow='0 0 0 3px rgba(21, 101, 192, 0.1)'"
+                            onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+                            <option value="all">All Invitations</option>
+                            <option value="Pending" selected>Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="invitations-cards-container" style="display: grid; gap: 1rem;">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: BROWSE EVENTS -->
+        <section id="view-browse-events" class="content-section">
+
+            <!-- Search Hero Section (same design as organizer Vendors) -->
+            <div
+                style="background: linear-gradient(135deg, #004e92, #4dabf7); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; color: white;">
+                <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 600;">
+                    <i class="fa-solid fa-search" style="margin-right: 0.5rem; opacity: 0.9;"></i>Find Events to Apply
+                    To
+                </h2>
+                <p style="margin: 0 0 1rem 0; opacity: 0.85; font-size: 0.9rem;">Explore upcoming events, filter by
+                    category, and send your proposals to organizers</p>
+
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; position: relative;">
+                        <i class="fa-solid fa-search"
+                            style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+                        <input type="text" id="browse-events-search" placeholder="Search events by name or location..."
+                            style="width: 100%; padding: 12px 12px 12px 42px; border: none; border-radius: 10px; font-size: 0.95rem; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Categories:</span>
+                    <button id="show-all-event-categories"
+                        style="padding: 6px 14px; background: linear-gradient(135deg, #004e92, #4dabf7); border: none; color: white; font-size: 0.8rem; cursor: pointer; font-weight: 500; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0, 78, 146, 0.25);">
+                        <i class="fa-solid fa-grid-2"></i>View All
+                    </button>
+                </div>
+                <div id="browse-category-pills"
+                    style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin;">
+                    <button class="browse-category-pill active" data-category="all"
+                        style="padding: 8px 18px; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: #004e92; color: white;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        All
+                    </button>
+                    <button class="browse-category-pill" data-category="Tech"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Tech
+                    </button>
+                    <button class="browse-category-pill" data-category="Art"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Art
+                    </button>
+                    <button class="browse-category-pill" data-category="Business"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Business
+                    </button>
+                    <button class="browse-category-pill" data-category="Music"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Music
+                    </button>
+                    <button class="browse-category-pill" data-category="Education"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Education
+                    </button>
+                    <button class="browse-category-pill" data-category="Sports"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Sports
+                    </button>
+                    <button class="browse-category-pill" data-category="Food"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Food & Beverage
+                    </button>
+                    <button class="browse-category-pill" data-category="Entertainment"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Entertainment
+                    </button>
+                    <button class="browse-category-pill" data-category="Health"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Health & Wellness
+                    </button>
+                    <button class="browse-category-pill" data-category="Culture"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Culture
+                    </button>
+                    <button class="browse-category-pill" data-category="Fashion"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Fashion
+                    </button>
+                    <button class="browse-category-pill" data-category="Charity"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Charity
+                    </button>
+                    <button class="browse-category-pill" data-category="Other"
+                        style="padding: 8px 18px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease; background: white; color: #333;"
+                        onmouseenter="if(!this.classList.contains('active')) { this.style.background='#f0f4f8'; this.style.borderColor='#004e92'; }"
+                        onmouseleave="if(!this.classList.contains('active')) { this.style.background='white'; this.style.borderColor='#e0e0e0'; }">
+                        Other
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <div style="margin-bottom: 1rem;">
+                <span id="browse-events-results-count" style="font-size: 0.9rem; color: #666;"></span>
+            </div>
+
+            <select id="browse-events-filter" style="display: none;">
+                <option value="all">All Categories</option>
+                <option value="Tech">Tech</option>
+                <option value="Innovation">Innovation</option>
+                <option value="Startup">Startup</option>
+                <option value="Art">Art</option>
+                <option value="Culture">Culture</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Design">Design</option>
+                <option value="Business">Business</option>
+                <option value="Conference">Conference</option>
+                <option value="Networking">Networking</option>
+                <option value="Trade Show">Trade Show</option>
+                <option value="Music">Music</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Concert">Concert</option>
+                <option value="Festival">Festival</option>
+                <option value="Theater">Theater</option>
+                <option value="Education">Education</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Training">Training</option>
+                <option value="Seminar">Seminar</option>
+                <option value="Sports">Sports</option>
+                <option value="Marathon">Marathon</option>
+                <option value="Tournament">Tournament</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Food">Food</option>
+                <option value="Culinary">Culinary</option>
+                <option value="Wine Tasting">Wine Tasting</option>
+                <option value="Food Festival">Food Festival</option>
+                <option value="Health">Health</option>
+                <option value="Wellness">Wellness</option>
+                <option value="Yoga">Yoga</option>
+                <option value="Meditation">Meditation</option>
+                <option value="Charity">Charity</option>
+                <option value="Fundraising">Fundraising</option>
+                <option value="Community">Community</option>
+                <option value="Social">Social</option>
+                <option value="Other">Other</option>
+                <option value="Expo">Expo</option>
+                <option value="Fair">Fair</option>
+                <option value="Celebration">Celebration</option>
+            </select>
+
+            <div id="browse-events-container"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW: MY EVENTS -->
+        <section id="view-my-events" class="content-section">
+            <!-- Hero -->
+            <div class="vendor-my-events-hero">
+                <h2 class="vendor-my-events-hero-title">
+                    <i class="fa-solid fa-calendar-check"></i> My Events
+                </h2>
+                <p class="vendor-my-events-hero-desc">Events you’re confirmed for. Manage your schedule and withdraw if
+                    needed.</p>
+                <div class="vendor-my-events-search-wrap">
+                    <i class="fa-solid fa-search vendor-my-events-search-icon"></i>
+                    <input type="text" id="my-events-search" class="vendor-my-events-search-input"
+                        placeholder="Search by event name or location...">
+                </div>
+            </div>
+
+            <!-- List header -->
+            <div class="vendor-my-events-list-header">
+                <span class="vendor-my-events-col-date">Date</span>
+                <span class="vendor-my-events-col-details">Event Details</span>
+                <span class="vendor-my-events-col-status">Status</span>
+                <span class="vendor-my-events-col-actions">Actions</span>
+            </div>
+
+            <div id="my-events-container" class="vendor-my-events-list">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW: PROFILE (Placeholder) -->
+        <section id="view-profile" class="content-section">
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <i class="fa-solid fa-user-gear"
+                    style="font-size: 4rem; color: var(--primary-light); margin-bottom: 1.5rem; opacity: 0.5;"></i>
+                <h2>Vendor Profile</h2>
+                <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem;">
+                    Manage your service listing, pricing, and gallery.
+                </p>
+                <button class="btn btn-primary" onclick="alert('Profile management coming soon!')">Edit Profile</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: REJECT INVITATION -->
+    <div id="reject-modal" class="modal-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+        <div class="modal"
+            style="background: white; padding: 0; border-radius: 16px; width: 90%; max-width: 480px; box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; animation: modalSlideIn 0.3s ease;">
+
+            <!-- Modal Header with Icon -->
+            <div style="background: linear-gradient(135deg, #ff6b6b, #c62828); padding: 2rem; text-align: center;">
+                <div
+                    style="width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fa-solid fa-xmark-circle" style="font-size: 1.8rem; color: white;"></i>
+                </div>
+                <h3 style="color: white; font-size: 1.5rem; margin: 0;">Reject Invitation</h3>
+                <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 0; font-size: 0.9rem;">This action will notify
+                    the organizer</p>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="padding: 2rem;">
+                <form id="reject-form">
+                    <input type="hidden" id="reject-request-id">
+                    <input type="hidden" id="reject-event-title">
+
+                    <div
+                        style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;">
+                        <div style="display: flex; gap: 0.75rem; align-items: start;">
+                            <i class="fa-solid fa-info-circle"
+                                style="color: #856404; font-size: 1.1rem; margin-top: 2px;"></i>
+                            <div>
+                                <strong style="color: #856404; display: block; margin-bottom: 4px;">Important
+                                    Notice</strong>
+                                <p style="margin: 0; color: #856404; font-size: 0.85rem; line-height: 1.5;">
+                                    You are about to reject the invitation for: <strong id="reject-event-name-display"
+                                        style="display: block; margin-top: 4px;">Event Name</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-message" style="margin-right: 0.5rem; color: #666;"></i>
+                        Reason for Rejection <span style="color: #c62828;">*</span>
+                    </label>
+                    <textarea id="reject-reason" rows="4" required
+                        style="width: 100%; border: 2px solid #e0e0e0; padding: 1rem; border-radius: 12px; font-size: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.2s; outline: none;"
+                        placeholder="Please provide a reason for rejection..."
+                        onfocus="this.style.borderColor='#c62828'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                    <p style="color: #999; font-size: 0.8rem; margin-top: 0.5rem;">
+                        <i class="fa-solid fa-info-circle"></i> The organizer will see this message in their dashboard.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="button" class="btn btn-outline" onclick="closeRejectModal()"
+                            style="flex: 1; padding: 0.8rem;">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger"
+                            style="flex: 1; padding: 0.8rem; background: #c62828; color: white; border: none;">
+                            <i class="fa-solid fa-xmark"></i> Reject Invitation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: WITHDRAW FROM EVENT -->
+    <div id="withdraw-modal" class="modal-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+        <div class="modal"
+            style="background: white; padding: 0; border-radius: 16px; width: 90%; max-width: 480px; box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; animation: modalSlideIn 0.3s ease;">
+
+            <!-- Modal Header with Icon -->
+            <div style="background: linear-gradient(135deg, #ff6b6b, #c62828); padding: 2rem; text-align: center;">
+                <div
+                    style="width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.8rem; color: white;"></i>
+                </div>
+                <h3 style="color: white; font-size: 1.5rem; margin: 0;">Withdraw from Event</h3>
+                <p style="color: rgba(255,255,255,0.8); margin: 0.5rem 0 0; font-size: 0.9rem;">This action will notify
+                    the organizer</p>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="padding: 2rem;">
+                <form id="withdraw-form">
+                    <input type="hidden" id="withdraw-request-id">
+                    <input type="hidden" id="withdraw-event-title">
+
+                    <div
+                        style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+                        <div style="display: flex; gap: 0.75rem; align-items: start;">
+                            <i class="fa-solid fa-info-circle"
+                                style="color: #856404; font-size: 1.1rem; margin-top: 2px;"></i>
+                            <div>
+                                <strong style="color: #856404; display: block; margin-bottom: 4px;">Important
+                                    Notice</strong>
+                                <p style="margin: 0; color: #856404; font-size: 0.85rem; line-height: 1.5;">
+                                    You are about to withdraw from: <strong id="withdraw-event-name-display"
+                                        style="display: block; margin-top: 4px;">Event Name</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Withdrawal Policy Banner (populated by JS) -->
+                    <div id="withdraw-policy-banner"
+                        style="display: none; border-left: 4px solid #666; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;">
+                    </div>
+
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-message" style="margin-right: 0.5rem; color: #666;"></i>
+                        Reason for Withdrawal <span style="color: #c62828;">*</span>
+                    </label>
+                    <textarea id="withdraw-reason" rows="4" required
+                        style="width: 100%; border: 2px solid #e0e0e0; padding: 1rem; border-radius: 12px; font-size: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.2s; outline: none;"
+                        placeholder="Please provide a reason for your withdrawal..."
+                        onfocus="this.style.borderColor='#c62828'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                    <p style="color: #999; font-size: 0.8rem; margin-top: 0.5rem;">
+                        <i class="fa-solid fa-info-circle"></i> The organizer will see this message in their dashboard.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="button" class="btn btn-outline" onclick="closeWithdrawModal()"
+                            style="flex: 1; padding: 0.8rem;">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger"
+                            style="flex: 1; padding: 0.8rem; background: #c62828; color: white; border: none;">
+                            <i class="fa-solid fa-xmark"></i> Confirm Withdrawal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <!-- MODAL: APPLY FOR EVENT -->
+    <div id="apply-modal" class="modal-overlay hidden">
+        <div class="modal apply-modal-card">
+            <div class="apply-modal-header">
+                <div class="apply-modal-header-icon">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </div>
+                <h3 class="apply-modal-title">Apply for Event</h3>
+                <p class="apply-modal-subtitle">Send a proposal to the organizer with your services and details.</p>
+                <button type="button" class="apply-modal-close" onclick="closeApplyModal()" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="apply-modal-body">
+                <form id="apply-form">
+                    <input type="hidden" id="apply-event-id">
+
+                    <div id="apply-policy-banner"
+                        style="display: none; border-left: 4px solid; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;">
+                    </div>
+
+                    <div class="apply-input-group">
+                        <label class="apply-label">Your Service Type</label>
+                        <select id="apply-service-type" class="apply-select" required>
+                            <option value="Catering">Catering</option>
+                            <option value="Venue">Venue</option>
+                            <option value="Photography">Photography</option>
+                            <option value="Decoration">Decoration</option>
+                            <option value="AV Equipment">AV Equipment</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="apply-input-group">
+                        <label class="apply-label">Message / Proposal</label>
+                        <textarea id="apply-message" class="apply-textarea" rows="4"
+                            placeholder="Describe what you can offer, pricing, and why you're a good fit..."
+                            required></textarea>
+                    </div>
+
+                    <div class="apply-input-group apply-attachment-group">
+                        <label class="apply-label"><i class="fa-solid fa-paperclip"></i> Attachment (optional)</label>
+                        <p class="apply-hint">PDF, Word, or images — company brochure or details (max 5MB).</p>
+                        <div class="apply-attachment-row">
+                            <input type="file" id="apply-attachment" name="attachment"
+                                accept=".pdf,application/pdf,.doc,.docx,image/*" class="apply-file-input">
+                            <div id="apply-attachment-preview" class="apply-attachment-preview" style="display: none;">
+                                <span class="apply-attachment-filename" id="apply-attachment-filename"></span>
+                                <button type="button" class="apply-remove-attachment-btn"
+                                    id="apply-remove-attachment-btn" onclick="clearApplyAttachment()"
+                                    title="Remove attachment">
+                                    <i class="fa-solid fa-trash-can"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                        <div id="apply-attachment-error" class="apply-attachment-error" style="display: none;"></div>
+                    </div>
+
+                    <div class="apply-form-actions">
+                        <button type="button" class="btn btn-outline apply-btn-cancel"
+                            onclick="closeApplyModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary apply-btn-submit">
+                            <i class="fa-solid fa-paper-plane"></i> Send Proposal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: VIEW MESSAGE -->
+    <div id="message-modal" class="modal-overlay hidden" style="z-index: 1000;">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Full Message</h3>
+                <button class="close-modal-btn" onclick="closeMessageModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div
+                    style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                    <p id="full-message-content"
+                        style="white-space: pre-wrap; color: #334155; line-height: 1.6; margin: 0; font-size: 0.95rem;">
+                    </p>
+                </div>
+                <div class="form-actions" style="justify-content: flex-end;">
+                    <button type="button" class="btn btn-primary" onclick="closeMessageModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dummy_data.js"></script>
+    <script src="vendor-logic.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Vendor Dashboard
+            if (typeof initVendorDashboard === 'function') {
+                initVendorDashboard();
+            }
+        });
+
+        function logoutVendor() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>
