@@ -28,8 +28,8 @@
                     style="border-radius: 20px; font-size: 0.85rem;">
                     <i class="fa-solid fa-compass"></i> Browse
                 </a>
-                <a href="#" class="btn btn-outline btn-sm att-nav-link" data-view="home" data-scroll="my-tickets-section"
-                    style="border-radius: 20px; font-size: 0.85rem;">
+                <a href="#" class="btn btn-outline btn-sm att-nav-link" data-view="home"
+                    data-scroll="my-tickets-section" style="border-radius: 20px; font-size: 0.85rem;">
                     <i class="fa-solid fa-ticket"></i> My Tickets
                 </a>
                 <a href="#" class="btn btn-outline btn-sm att-nav-link" data-view="history"
@@ -40,6 +40,18 @@
                     style="border-radius: 20px; font-size: 0.85rem;">
                     <i class="fa-solid fa-user"></i> Profile
                 </a>
+                <!-- Notification Bell -->
+                <div id="notif-bell-wrapper" style="position: relative;">
+                    <button id="notif-bell-btn" onclick="switchAttendeeViewPublic('notifications')"
+                        title="Notifications"
+                        style="position:relative;background:transparent;border:2px solid rgba(255,255,255,0.6);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:1rem;transition:all 0.2s;"
+                        onmouseenter="this.style.background='rgba(255,255,255,0.15)'"
+                        onmouseleave="this.style.background='transparent'">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="notif-badge"
+                            style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;font-size:0.65rem;font-weight:700;display:none;align-items:center;justify-content:center;border:2px solid white;">0</span>
+                    </button>
+                </div>
                 <a href="login.html" class="btn btn-primary btn-sm" style="border-radius: 20px; font-size: 0.85rem;">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </a>
@@ -47,251 +59,330 @@
         </div>
     </nav>
 
+    <!-- ==================== VIEW: NOTIFICATIONS ==================== -->
+    <div id="view-notifications" class="attendee-view" style="display:none;">
+
+        <!-- Hero Header -->
+        <section
+            style="background:linear-gradient(135deg,#004e92,#4dabf7);padding:6rem 0 3rem;color:white;text-align:center;">
+            <div class="container">
+                <div
+                    style="width:72px;height:72px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                    <i class="fa-solid fa-bell" style="font-size:2rem;"></i>
+                </div>
+                <h1 style="margin:0 0 0.5rem;font-size:2rem;font-weight:700;">Notifications</h1>
+                <p style="margin:0;opacity:0.8;font-size:1rem;">Updates and broadcasts from your event organizers</p>
+            </div>
+        </section>
+
+        <!-- Notifications Content -->
+        <section style="background:#f0f4f8;min-height:40vh;padding:2.5rem 0;">
+            <div class="container">
+                <div style="max-width:780px;margin:0 auto;">
+                    <!-- Toolbar -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+                        <div id="notif-count-label" style="font-size:0.875rem;color:#666;"></div>
+                        <button onclick="markAllNotifsRead()" id="mark-all-btn"
+                            style="background:white;border:2px solid #004e92;color:#004e92;border-radius:10px;padding:7px 16px;cursor:pointer;font-size:0.82rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:all 0.2s;"
+                            onmouseenter="this.style.background='#004e92';this.style.color='white'"
+                            onmouseleave="this.style.background='white';this.style.color='#004e92'">
+                            <i class="fa-solid fa-check-double"></i> Mark all as read
+                        </button>
+                    </div>
+                    <!-- Cards -->
+                    <div id="notif-list"></div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /view-notifications -->
+
     <!-- ==================== VIEW: HOME ==================== -->
     <div id="view-home" class="attendee-view">
 
-    <!-- HERO SECTION (Attendee Version) -->
-    <section class="hero-landing" id="hero">
-        <div class="hero-bg">
-            <div class="hero-gradient"></div>
-            <div class="hero-particles">
-                <span class="particle p1"></span>
-                <span class="particle p2"></span>
-                <span class="particle p3"></span>
-                <span class="particle p4"></span>
-                <span class="particle p5"></span>
-                <span class="particle p6"></span>
-                <span class="particle p7"></span>
-                <span class="particle p8"></span>
-            </div>
-            <div class="hero-wave">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,70 1440,60 L1440,120 L0,120 Z"
-                        fill="#f0f4f8" />
-                </svg>
-            </div>
-        </div>
-
-        <div class="hero-content">
-            <p style="color: rgba(255,255,255,0.7); font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: 2px; text-transform: uppercase;">
-                Welcome back
-            </p>
-            <h1 class="hero-title" style="font-size: clamp(2rem, 4vw, 3.2rem); white-space: nowrap;">Hello, <span class="hero-title-gradient" id="attendee-hero-name">Attendee</span></h1>
-            <div class="hero-tagline">
-                <div class="hero-tagline-line"></div>
-                <p>Discover events. Book tickets. Enjoy the experience.</p>
-                <div class="hero-tagline-line"></div>
-            </div>
-            <div class="hero-buttons">
-                <a href="#events-section" class="btn btn-primary btn-lg hero-cta nav-scroll-link">
-                    <i class="fa-solid fa-compass"></i> Explore Events
-                </a>
-                <a href="#my-tickets-section" class="btn btn-outline btn-lg hero-cta hero-cta-outline nav-scroll-link">
-                    <i class="fa-solid fa-ticket"></i> My Tickets
-                </a>
-            </div>
-
-        </div>
-
-        <div class="hero-shapes">
-            <div class="hero-shape hs-1"></div>
-            <div class="hero-shape hs-2"></div>
-            <div class="hero-shape hs-3"></div>
-            <div class="hero-shape hs-4"></div>
-            <div class="hero-shape hs-5"></div>
-        </div>
-    </section>
-
-    <!-- SEARCH & FILTER SECTION -->
-    <section class="search-section" id="events-section">
-        <div class="container">
-            <div class="search-bar-wrapper">
-                <div class="search-input-group">
-                    <i class="fa-solid fa-search search-icon"></i>
-                    <input type="text" id="landing-search" placeholder="Search for events, workshops, conferences..."
-                        class="search-input">
+        <!-- HERO SECTION (Attendee Version) -->
+        <section class="hero-landing" id="hero">
+            <div class="hero-bg">
+                <div class="hero-gradient"></div>
+                <div class="hero-particles">
+                    <span class="particle p1"></span>
+                    <span class="particle p2"></span>
+                    <span class="particle p3"></span>
+                    <span class="particle p4"></span>
+                    <span class="particle p5"></span>
+                    <span class="particle p6"></span>
+                    <span class="particle p7"></span>
+                    <span class="particle p8"></span>
                 </div>
-                <select id="landing-location-filter" class="search-select">
-                    <option value="all">All Cities</option>
-                    <option value="Riyadh">Riyadh</option>
-                    <option value="Jeddah">Jeddah</option>
-                    <option value="Dammam">Dammam</option>
-                    <option value="Mecca">Mecca</option>
-                    <option value="Al Ula">Al Ula</option>
-                </select>
-                <button class="btn btn-primary search-btn" id="landing-search-btn">
-                    <i class="fa-solid fa-search"></i> Search
-                </button>
+                <div class="hero-wave">
+                    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                        <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,70 1440,60 L1440,120 L0,120 Z"
+                            fill="#f0f4f8" />
+                    </svg>
+                </div>
             </div>
-            <div class="category-pills-row" id="landing-category-pills">
-                <button class="cat-pill active" data-category="all">
-                    <i class="fa-solid fa-fire"></i> All Events
-                </button>
-                <button class="cat-pill" data-category="Tech">
-                    <i class="fa-solid fa-laptop-code"></i> Tech
-                </button>
-                <button class="cat-pill" data-category="Art">
-                    <i class="fa-solid fa-palette"></i> Art
-                </button>
-                <button class="cat-pill" data-category="Business">
-                    <i class="fa-solid fa-briefcase"></i> Business
-                </button>
-                <button class="cat-pill" data-category="Music">
-                    <i class="fa-solid fa-music"></i> Music
-                </button>
-                <button class="cat-pill" data-category="Education">
-                    <i class="fa-solid fa-graduation-cap"></i> Education
-                </button>
-                <button class="cat-pill" data-category="Sports">
-                    <i class="fa-solid fa-futbol"></i> Sports
-                </button>
-            </div>
-        </div>
-    </section>
 
-    <!-- EVENTS GRID (Dynamic) -->
-    <section class="landing-events">
-        <div class="container">
-            <div class="section-heading">
-                <h2><i class="fa-solid fa-sparkles"></i> Upcoming Events</h2>
-                <p class="section-desc">Don't miss out on these exciting upcoming events across Saudi Arabia</p>
-            </div>
-            <div class="landing-events-grid" id="landing-events-grid">
-                <!-- Populated dynamically via JS -->
-            </div>
-        </div>
-    </section>
+            <div class="hero-content">
+                <p
+                    style="color: rgba(255,255,255,0.7); font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: 2px; text-transform: uppercase;">
+                    Welcome back
+                </p>
+                <h1 class="hero-title" style="font-size: clamp(2rem, 4vw, 3.2rem); white-space: nowrap;">Hello, <span
+                        class="hero-title-gradient" id="attendee-hero-name">Attendee</span></h1>
+                <div class="hero-tagline">
+                    <div class="hero-tagline-line"></div>
+                    <p>Discover events. Book tickets. Enjoy the experience.</p>
+                    <div class="hero-tagline-line"></div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#events-section" class="btn btn-primary btn-lg hero-cta nav-scroll-link">
+                        <i class="fa-solid fa-compass"></i> Explore Events
+                    </a>
+                    <a href="#my-tickets-section"
+                        class="btn btn-outline btn-lg hero-cta hero-cta-outline nav-scroll-link">
+                        <i class="fa-solid fa-ticket"></i> My Tickets
+                    </a>
+                </div>
 
-    <!-- MY TICKETS SECTION -->
-    <section class="landing-events" id="my-tickets-section" style="background: white;">
-        <div class="container">
-            <div class="section-heading">
-                <h2><i class="fa-solid fa-ticket"></i> My Tickets</h2>
-                <p class="section-desc">Your registered events and digital tickets</p>
             </div>
-            <div id="my-tickets-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;">
-                <!-- Populated dynamically via JS -->
+
+            <div class="hero-shapes">
+                <div class="hero-shape hs-1"></div>
+                <div class="hero-shape hs-2"></div>
+                <div class="hero-shape hs-3"></div>
+                <div class="hero-shape hs-4"></div>
+                <div class="hero-shape hs-5"></div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- SEARCH & FILTER SECTION -->
+        <section class="search-section" id="events-section">
+            <div class="container">
+                <div class="search-bar-wrapper">
+                    <div class="search-input-group">
+                        <i class="fa-solid fa-search search-icon"></i>
+                        <input type="text" id="landing-search"
+                            placeholder="Search for events, workshops, conferences..." class="search-input">
+                    </div>
+                    <select id="landing-location-filter" class="search-select">
+                        <option value="all">All Cities</option>
+                        <option value="Riyadh">Riyadh</option>
+                        <option value="Jeddah">Jeddah</option>
+                        <option value="Dammam">Dammam</option>
+                        <option value="Mecca">Mecca</option>
+                        <option value="Al Ula">Al Ula</option>
+                    </select>
+                    <button class="btn btn-primary search-btn" id="landing-search-btn">
+                        <i class="fa-solid fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="category-pills-row" id="landing-category-pills">
+                    <button class="cat-pill active" data-category="all">
+                        <i class="fa-solid fa-fire"></i> All Events
+                    </button>
+                    <button class="cat-pill" data-category="Tech">
+                        <i class="fa-solid fa-laptop-code"></i> Tech
+                    </button>
+                    <button class="cat-pill" data-category="Art">
+                        <i class="fa-solid fa-palette"></i> Art
+                    </button>
+                    <button class="cat-pill" data-category="Business">
+                        <i class="fa-solid fa-briefcase"></i> Business
+                    </button>
+                    <button class="cat-pill" data-category="Music">
+                        <i class="fa-solid fa-music"></i> Music
+                    </button>
+                    <button class="cat-pill" data-category="Education">
+                        <i class="fa-solid fa-graduation-cap"></i> Education
+                    </button>
+                    <button class="cat-pill" data-category="Sports">
+                        <i class="fa-solid fa-futbol"></i> Sports
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- EVENTS GRID (Dynamic) -->
+        <section class="landing-events">
+            <div class="container">
+                <div class="section-heading">
+                    <h2><i class="fa-solid fa-sparkles"></i> Upcoming Events</h2>
+                    <p class="section-desc">Don't miss out on these exciting upcoming events across Saudi Arabia</p>
+                </div>
+                <div class="landing-events-grid" id="landing-events-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- MY TICKETS SECTION -->
+        <section class="landing-events" id="my-tickets-section" style="background: white;">
+            <div class="container">
+                <div class="section-heading">
+                    <h2><i class="fa-solid fa-ticket"></i> My Tickets</h2>
+                    <p class="section-desc">Your registered events and digital tickets</p>
+                </div>
+                <div id="my-tickets-container"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
 
     </div><!-- /view-home -->
 
     <!-- ==================== VIEW: HISTORY ==================== -->
     <div id="view-history" class="attendee-view" style="display: none;">
 
-    <!-- History Page Header -->
-    <section style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 6rem 0 3rem; color: white; text-align: center;">
-        <div class="container">
-            <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                <i class="fa-solid fa-clock-rotate-left" style="font-size: 2rem;"></i>
+        <!-- History Page Header -->
+        <section
+            style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 6rem 0 3rem; color: white; text-align: center;">
+            <div class="container">
+                <div
+                    style="width: 72px; height: 72px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fa-solid fa-clock-rotate-left" style="font-size: 2rem;"></i>
+                </div>
+                <h1 style="margin: 0 0 0.5rem; font-size: 2rem; font-weight: 700;">Event History</h1>
+                <p style="margin: 0; opacity: 0.8; font-size: 1rem;">Past events you attended with your ratings and
+                    feedback</p>
             </div>
-            <h1 style="margin: 0 0 0.5rem; font-size: 2rem; font-weight: 700;">Event History</h1>
-            <p style="margin: 0; opacity: 0.8; font-size: 1rem;">Past events you attended with your ratings and feedback</p>
-        </div>
-    </section>
+        </section>
 
-    <section class="landing-events" id="history-section" style="background: #f0f4f8; min-height: 40vh;">
-        <div class="container">
-            <div id="history-container" style="display: grid; gap: 1rem; max-width: 900px; margin: 0 auto;">
-                <!-- Populated dynamically via JS -->
+        <section class="landing-events" id="history-section" style="background: #f0f4f8; min-height: 40vh;">
+            <div class="container">
+                <div id="history-container" style="display: grid; gap: 1rem; max-width: 900px; margin: 0 auto;">
+                    <!-- Populated dynamically via JS -->
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     </div><!-- /view-history -->
 
     <!-- ==================== VIEW: PROFILE ==================== -->
     <div id="view-profile" class="attendee-view" style="display: none;">
 
-    <!-- Profile Page Header -->
-    <section style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 6rem 0 3rem; color: white; text-align: center;">
-        <div class="container">
-            <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                <i class="fa-solid fa-user-gear" style="font-size: 2rem;"></i>
+        <!-- Profile Page Header -->
+        <section
+            style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 6rem 0 3rem; color: white; text-align: center;">
+            <div class="container">
+                <div
+                    style="width: 72px; height: 72px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fa-solid fa-user-gear" style="font-size: 2rem;"></i>
+                </div>
+                <h1 style="margin: 0 0 0.5rem; font-size: 2rem; font-weight: 700;">My Profile</h1>
+                <p style="margin: 0; opacity: 0.8; font-size: 1rem;">Manage your personal information and preferences
+                </p>
             </div>
-            <h1 style="margin: 0 0 0.5rem; font-size: 2rem; font-weight: 700;">My Profile</h1>
-            <p style="margin: 0; opacity: 0.8; font-size: 1rem;">Manage your personal information and preferences</p>
-        </div>
-    </section>
+        </section>
 
-    <section class="landing-events" id="profile-section" style="background: white; min-height: 40vh;">
-        <div class="container">
-            <div style="max-width: 700px; margin: 0 auto;">
-                <div style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid #e8e8e8;">
-                    <!-- Profile Header -->
-                    <div style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 2rem; text-align: center; position: relative;">
-                        <div id="profile-avatar" style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 4px solid white; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2.5rem; color: white; font-weight: 700; cursor: pointer; position: relative; overflow: hidden;"
-                            onclick="document.getElementById('pfp-upload').click()" title="Click to change photo">
-                            <span id="profile-avatar-text">A</span>
-                            <img id="profile-avatar-img" style="position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;" alt="Profile">
-                            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 0.65rem; padding: 4px; text-align: center;">
-                                <i class="fa-solid fa-camera"></i>
+        <section class="landing-events" id="profile-section" style="background: white; min-height: 40vh;">
+            <div class="container">
+                <div style="max-width: 700px; margin: 0 auto;">
+                    <div
+                        style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid #e8e8e8;">
+                        <!-- Profile Header -->
+                        <div
+                            style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 2rem; text-align: center; position: relative;">
+                            <div id="profile-avatar"
+                                style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 4px solid white; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2.5rem; color: white; font-weight: 700; cursor: pointer; position: relative; overflow: hidden;"
+                                onclick="document.getElementById('pfp-upload').click()" title="Click to change photo">
+                                <span id="profile-avatar-text">A</span>
+                                <img id="profile-avatar-img"
+                                    style="position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;"
+                                    alt="Profile">
+                                <div
+                                    style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 0.65rem; padding: 4px; text-align: center;">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
                             </div>
+                            <input type="file" id="pfp-upload" accept="image/*" style="display: none;">
+                            <h3 id="profile-display-name" style="color: white; margin: 0; font-size: 1.4rem;">Attendee
+                            </h3>
+                            <p style="color: rgba(255,255,255,0.8); margin: 0.25rem 0 0; font-size: 0.9rem;">Eventia
+                                Member</p>
                         </div>
-                        <input type="file" id="pfp-upload" accept="image/*" style="display: none;">
-                        <h3 id="profile-display-name" style="color: white; margin: 0; font-size: 1.4rem;">Attendee</h3>
-                        <p style="color: rgba(255,255,255,0.8); margin: 0.25rem 0 0; font-size: 0.9rem;">Eventia Member</p>
-                    </div>
 
-                    <!-- Profile Form -->
-                    <div style="padding: 2rem;">
-                        <form id="profile-form">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">First Name</label>
-                                    <input type="text" id="profile-firstname" value="Ahmed" required
-                                        style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
-                                        onfocus="this.style.borderColor='#004e92'" onblur="this.style.borderColor='#e0e0e0'">
+                        <!-- Profile Form -->
+                        <div style="padding: 2rem;">
+                            <form id="profile-form">
+                                <div
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                    <div>
+                                        <label
+                                            style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">First
+                                            Name</label>
+                                        <input type="text" id="profile-firstname" value="Ahmed" required
+                                            style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                            onfocus="this.style.borderColor='#004e92'"
+                                            onblur="this.style.borderColor='#e0e0e0'">
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Last
+                                            Name</label>
+                                        <input type="text" id="profile-lastname" value="Al-Rashid" required
+                                            style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                            onfocus="this.style.borderColor='#004e92'"
+                                            onblur="this.style.borderColor='#e0e0e0'">
+                                    </div>
                                 </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Last Name</label>
-                                    <input type="text" id="profile-lastname" value="Al-Rashid" required
+                                <div style="margin-bottom: 1rem;">
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Email
+                                        Address</label>
+                                    <input type="email" id="profile-email" value="ahmed@example.com" required
                                         style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
-                                        onfocus="this.style.borderColor='#004e92'" onblur="this.style.borderColor='#e0e0e0'">
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
                                 </div>
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Email Address</label>
-                                <input type="email" id="profile-email" value="ahmed@example.com" required
-                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
-                                    onfocus="this.style.borderColor='#004e92'" onblur="this.style.borderColor='#e0e0e0'">
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Phone Number</label>
-                                <input type="tel" id="profile-phone" value="+966 55 123 4567" required
-                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
-                                    onfocus="this.style.borderColor='#004e92'" onblur="this.style.borderColor='#e0e0e0'">
-                            </div>
-                            <div style="margin-bottom: 1rem;">
-                                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Job Title <span style="color: #888; font-weight: 400;">(optional)</span></label>
-                                <input type="text" id="profile-jobtitle" placeholder="e.g. Software Engineer"
-                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
-                                    onfocus="this.style.borderColor='#004e92'" onblur="this.style.borderColor='#e0e0e0'">
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                                <div>
-                                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Password</label>
-                                    <input type="password" id="profile-password" value="********"
+                                <div style="margin-bottom: 1rem;">
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Phone
+                                        Number</label>
+                                    <input type="tel" id="profile-phone" value="+966 55 123 4567" required
                                         style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
-                                        onfocus="this.style.borderColor='#004e92'" onblur="this.style.borderColor='#e0e0e0'">
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
                                 </div>
-                                <div>
-                                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Confirm Password</label>
-                                    <input type="password" id="profile-password-confirm" value="********"
+                                <div style="margin-bottom: 1rem;">
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Job
+                                        Title <span style="color: #888; font-weight: 400;">(optional)</span></label>
+                                    <input type="text" id="profile-jobtitle" placeholder="e.g. Software Engineer"
                                         style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
-                                        onfocus="this.style.borderColor='#004e92'" onblur="this.style.borderColor='#e0e0e0'">
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
                                 </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;">
-                                <i class="fa-solid fa-floppy-disk"></i> Save Changes
-                            </button>
-                        </form>
+                                <div
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                    <div>
+                                        <label
+                                            style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Password</label>
+                                        <input type="password" id="profile-password" value="********"
+                                            style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                            onfocus="this.style.borderColor='#004e92'"
+                                            onblur="this.style.borderColor='#e0e0e0'">
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Confirm
+                                            Password</label>
+                                        <input type="password" id="profile-password-confirm" value="********"
+                                            style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                            onfocus="this.style.borderColor='#004e92'"
+                                            onblur="this.style.borderColor='#e0e0e0'">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary"
+                                    style="width: 100%; padding: 12px; font-size: 1rem;">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     </div><!-- /view-profile -->
 

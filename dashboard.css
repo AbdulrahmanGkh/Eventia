@@ -204,9 +204,17 @@
     border-left: 4px solid transparent;
 }
 
-.stat-card:nth-child(1) { border-left-color: var(--accent-teal); }
-.stat-card:nth-child(2) { border-left-color: var(--accent-purple); }
-.stat-card:nth-child(3) { border-left-color: #e17055; }
+.stat-card:nth-child(1) {
+    border-left-color: var(--accent-teal);
+}
+
+.stat-card:nth-child(2) {
+    border-left-color: var(--accent-purple);
+}
+
+.stat-card:nth-child(3) {
+    border-left-color: #e17055;
+}
 
 .stat-card:hover {
     transform: translateY(-5px);
@@ -268,8 +276,15 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .section-header {
@@ -711,8 +726,13 @@
     margin-bottom: 0.5rem;
 }
 
-.req-card--outgoing .req-card-message-label { color: #4f46e5; }
-.req-card--incoming .req-card-message-label { color: #d97706; }
+.req-card--outgoing .req-card-message-label {
+    color: #4f46e5;
+}
+
+.req-card--incoming .req-card-message-label {
+    color: #d97706;
+}
 
 .req-card-message-text {
     background: #f8fafc;
@@ -727,8 +747,13 @@
     font-style: italic;
 }
 
-.req-card--outgoing .req-card-message-text { border-left-color: #4f46e5; }
-.req-card--incoming .req-card-message-text { border-left-color: #f39c12; }
+.req-card--outgoing .req-card-message-text {
+    border-left-color: #4f46e5;
+}
+
+.req-card--incoming .req-card-message-text {
+    border-left-color: #f39c12;
+}
 
 /* Action Footer */
 .req-card-actions {

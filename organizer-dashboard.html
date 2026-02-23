@@ -291,7 +291,352 @@
             </div>
         </section>
 
-        <!-- VIEW: VENDORS MARKETPLACE -->
+        <!-- VIEW: EVENT MANAGEMENT -->
+        <section id="view-event-manage" class="content-section">
+            <!-- Header Bar -->
+            <div class="em-header">
+                <button class="em-back-btn" onclick="switchView('events-list')">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="em-header-info">
+                    <h2 id="em-event-title">Event Title</h2>
+                </div>
+            </div>
+
+            <!-- Status Bar (below header) -->
+            <div class="em-status-bar">
+                <div class="em-status-item">
+                    <span class="em-status-label">Event Status</span>
+                    <span id="em-event-state-badge" class="em-badge"></span>
+                </div>
+                <div class="em-status-item">
+                    <span class="em-status-label">SCEGA Approval</span>
+                    <span id="em-scega-badge" class="em-badge"></span>
+                </div>
+            </div>
+
+            <!-- Quick Stats Row -->
+            <div class="em-stats-row">
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(21, 101, 192, 0.12); color: #1565c0;">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="em-stat-vendors">0</span>
+                        <span class="em-stat-label">Total Vendors</span>
+                    </div>
+                </div>
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(255, 152, 0, 0.12); color: #1565c0;">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="em-stat-pending-vendors">0</span>
+                        <span class="em-stat-label">Pending</span>
+                    </div>
+                </div>
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(46, 125, 50, 0.12); color: #1565c0;">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="em-stat-attendees">0</span>
+                        <span class="em-stat-label">Attendees</span>
+                    </div>
+                </div>
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(123, 31, 162, 0.12); color: #1565c0;">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="em-stat-countdown">--</span>
+                        <span class="em-stat-label">Days Left</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="em-tabs">
+                <button class="em-tab active" data-emtab="overview">
+                    <i class="fa-solid fa-info-circle"></i> Overview
+                </button>
+                <button class="em-tab" data-emtab="vendors">
+                    <i class="fa-solid fa-store"></i> Vendors
+                </button>
+                <button class="em-tab" data-emtab="communication">
+                    <i class="fa-solid fa-comments"></i> Communication
+                </button>
+                <button class="em-tab" data-emtab="actions">
+                    <i class="fa-solid fa-gear"></i> Actions
+                </button>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div class="em-tab-content active" id="em-tab-overview">
+                <div class="em-overview-grid">
+                    <!-- Event Details Card -->
+                    <div class="em-detail-card em-card-blue">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-info-circle"></i> Event Details
+                        </div>
+                        <div class="em-detail-card-body">
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(21, 101, 192, 0.1); color: #1565c0;">
+                                    <i class="fa-solid fa-heading"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Title</span>
+                                    <span class="em-detail-value" id="em-ov-title">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(123, 31, 162, 0.1); color: #1565c0;">
+                                    <i class="fa-solid fa-tags"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Category</span>
+                                    <span class="em-detail-value" id="em-ov-category">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item" style="align-items: flex-start;">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(46, 125, 50, 0.1); color: #1565c0;">
+                                    <i class="fa-solid fa-align-left"></i>
+                                </div>
+                                <div class="em-detail-item-content" style="flex: 1;">
+                                    <span class="em-detail-label">Description</span>
+                                    <!-- Display mode -->
+                                    <div id="em-description-display"
+                                        style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                                        <span class="em-detail-value" id="em-ov-description" style="flex: 1;">—</span>
+                                        <button id="em-edit-desc-btn" title="Edit description"
+                                            style="flex-shrink: 0; background: none; border: 1px solid #d0d7de; border-radius: 6px; padding: 3px 8px; cursor: pointer; color: #555; font-size: 0.78rem; display: flex; align-items: center; gap: 4px; transition: all 0.2s;"
+                                            onmouseover="this.style.background='#f0f4ff';this.style.borderColor='#1565c0';this.style.color='#1565c0';"
+                                            onmouseout="this.style.background='none';this.style.borderColor='#d0d7de';this.style.color='#555';">
+                                            <i class="fa-solid fa-pen" style="font-size: 0.7rem;"></i> Edit
+                                        </button>
+                                    </div>
+                                    <!-- Edit mode (hidden by default) -->
+                                    <div id="em-description-edit"
+                                        style="display: none; flex-direction: column; gap: 0.5rem;">
+                                        <textarea id="em-desc-textarea" rows="4"
+                                            style="width: 100%; padding: 0.6rem 0.75rem; border: 1.5px solid #1565c0; border-radius: 8px; font-size: 0.9rem; font-family: inherit; resize: vertical; outline: none; color: #333; line-height: 1.5;"></textarea>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <button id="em-save-desc-btn" class="btn btn-sm btn-primary"
+                                                style="padding: 5px 14px; font-size: 0.8rem;">
+                                                <i class="fa-solid fa-check"></i> Save
+                                            </button>
+                                            <button id="em-cancel-desc-btn" class="btn btn-sm btn-outline"
+                                                style="padding: 5px 14px; font-size: 0.8rem;">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date & Location Card -->
+                    <div class="em-detail-card em-card-purple">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-calendar-days"></i> Date &amp; Location
+                        </div>
+                        <div class="em-detail-card-body">
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(123, 31, 162, 0.1); color: #7b1fa2;">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Date</span>
+                                    <span class="em-detail-value" id="em-ov-date">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(230, 81, 0, 0.1); color: #e65100;">
+                                    <i class="fa-regular fa-clock"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Time</span>
+                                    <span class="em-detail-value" id="em-ov-time">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(198, 40, 40, 0.1); color: #c62828;">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Location</span>
+                                    <span class="em-detail-value" id="em-ov-location">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Withdrawal Policy Card (Full Width) -->
+                    <div class="em-detail-card em-full-width em-card-green">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-shield-halved"></i> Withdrawal Policies
+                        </div>
+                        <div class="em-detail-card-body">
+                            <div class="em-policy-panels">
+                                <!-- Vendor Policy -->
+                                <div class="em-policy-panel">
+                                    <div class="em-policy-panel-title">
+                                        <i class="fa-solid fa-store"></i> Vendor Policy
+                                    </div>
+                                    <div id="em-ov-vendor-policy-badge" class="em-policy-badge em-policy-none">
+                                        <i class="fa-solid fa-circle-question"></i> Not Set
+                                    </div>
+                                    <p class="em-policy-desc" id="em-ov-vendor-policy-desc">Applies to vendors
+                                        participating in this event.</p>
+                                </div>
+                                <!-- Divider -->
+                                <div class="em-policy-divider"></div>
+                                <!-- Attendee Policy -->
+                                <div class="em-policy-panel">
+                                    <div class="em-policy-panel-title">
+                                        <i class="fa-solid fa-users"></i> Attendee Policy
+                                    </div>
+                                    <div id="em-ov-attendee-policy-badge" class="em-policy-badge em-policy-none">
+                                        <i class="fa-solid fa-circle-question"></i> Not Set
+                                    </div>
+                                    <p class="em-policy-desc" id="em-ov-attendee-policy-desc">Applies to attendees
+                                        purchasing tickets.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ticket Tiers Card (Full Width) -->
+                    <div class="em-detail-card em-full-width em-card-amber">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-ticket"></i> Ticket Tiers
+                        </div>
+                        <div class="em-detail-card-body" id="em-ov-tickets">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Vendors -->
+            <div class="em-tab-content" id="em-tab-vendors">
+                <div class="em-vendors-toolbar">
+                    <span id="em-vendors-count" class="em-vendors-count-label">0 vendors</span>
+                    <button class="btn btn-primary btn-sm" onclick="switchView('vendors')">
+                        <i class="fa-solid fa-plus"></i> Invite Vendor
+                    </button>
+                </div>
+                <div id="em-vendors-list" class="em-vendors-list">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Tab Content: Communication -->
+            <div class="em-tab-content" id="em-tab-communication">
+                <!-- Sub-tabs -->
+                <div class="em-comm-subtabs">
+                    <button class="em-comm-subtab active" data-commtab="vendor-msgs">
+                        <i class="fa-solid fa-comments"></i> Vendor Messages
+                    </button>
+                    <button class="em-comm-subtab" data-commtab="broadcasts">
+                        <i class="fa-solid fa-bullhorn"></i> Attendee Broadcast
+                    </button>
+                </div>
+
+                <!-- Vendor Messages Sub-panel -->
+                <div class="em-comm-panel active" id="em-comm-vendor-msgs">
+                    <div id="em-vendor-conversations" class="em-conversations-list">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Broadcasts Sub-panel -->
+                <div class="em-comm-panel" id="em-comm-broadcasts">
+                    <div class="em-broadcast-compose">
+                        <h4><i class="fa-solid fa-bullhorn"></i> New Broadcast to All Attendees</h4>
+                        <textarea id="em-broadcast-text" rows="3"
+                            placeholder="Type your announcement for all attendees..."></textarea>
+                        <button class="btn btn-primary btn-sm" id="em-send-broadcast-btn">
+                            <i class="fa-solid fa-paper-plane"></i> Send Broadcast
+                        </button>
+                    </div>
+                    <div class="em-broadcast-history">
+                        <h4><i class="fa-solid fa-clock-rotate-left"></i> Past Broadcasts</h4>
+                        <div id="em-broadcasts-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Actions -->
+            <div class="em-tab-content" id="em-tab-actions">
+                <div class="em-actions-grid">
+                    <div class="em-action-card" id="em-action-edit">
+                        <div class="em-action-icon" style="background: linear-gradient(135deg, #1565c0, #42a5f5);">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                        <h4>Edit Event</h4>
+                        <p>Modify event details, tickets, policies, and more.</p>
+                        <button class="btn btn-primary btn-sm" id="em-edit-btn">
+                            <i class="fa-solid fa-pen"></i> Edit
+                        </button>
+                    </div>
+                    <div class="em-action-card" id="em-action-delete">
+                        <div class="em-action-icon" style="background: linear-gradient(135deg, #c62828, #ef5350);">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+                        <h4>Delete Event</h4>
+                        <p>Permanently remove this event and all associated data.</p>
+                        <button class="btn btn-sm" id="em-delete-btn"
+                            style="background: #c62828; color: white; border: none;">
+                            <i class="fa-solid fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL: VENDOR CHAT -->
+        <div id="em-chat-modal" class="modal-overlay hidden" style="z-index: 1002;">
+            <div class="modal em-chat-modal-box">
+                <div class="em-chat-header">
+                    <div class="em-chat-header-info">
+                        <button class="em-chat-back" onclick="closeVendorChat()">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <div class="em-chat-vendor-avatar" id="em-chat-avatar">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <div>
+                            <div class="em-chat-vendor-name" id="em-chat-vendor-name">Vendor Name</div>
+                            <div class="em-chat-vendor-category" id="em-chat-vendor-cat">Category</div>
+                        </div>
+                    </div>
+                    <button class="em-chat-close" onclick="closeVendorChat()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="em-chat-body" id="em-chat-body">
+                    <!-- Messages populated via JS -->
+                </div>
+                <div class="em-chat-input-area">
+                    <input type="text" id="em-chat-input" placeholder="Type a message..." autocomplete="off">
+                    <button class="em-chat-send-btn" id="em-chat-send-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
         <section id="view-vendors" class="content-section">
 
             <!-- Search Hero Section -->
@@ -779,13 +1124,7 @@
 
     <script src="dummy_data.js"></script>
     <script src="app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof initDashboard === 'function') {
-                initDashboard();
-            }
-        });
-    </script>
+    <script src="organizer-logic.js"></script>
 </body>
 
 </html>

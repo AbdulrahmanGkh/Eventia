@@ -20,6 +20,7 @@ const DUMMY_EVENTS = [
         tickets: [{ name: 'Standard', price: '299' }, { name: 'VIP', price: '599' }],
         status: "Upcoming",
         withdrawalPolicy: "strict",
+        attendeeWithdrawalPolicy: "moderate",
         attendees: 1250
     },
     {
@@ -34,6 +35,7 @@ const DUMMY_EVENTS = [
         tickets: [{ name: 'General', price: '150' }],
         status: "Upcoming",
         withdrawalPolicy: "moderate",
+        attendeeWithdrawalPolicy: "flexible",
         attendees: 800
     },
     {
@@ -48,6 +50,7 @@ const DUMMY_EVENTS = [
         tickets: [{ name: 'Executive', price: '750' }, { name: 'Standard', price: '450' }],
         status: "Upcoming",
         withdrawalPolicy: "moderate",
+        attendeeWithdrawalPolicy: "moderate",
         attendees: 500
     },
     {
@@ -62,6 +65,7 @@ const DUMMY_EVENTS = [
         tickets: [{ name: 'General', price: '200' }, { name: 'VIP', price: '500' }],
         status: "Pending",
         withdrawalPolicy: "flexible",
+        attendeeWithdrawalPolicy: "flexible",
         attendees: 0
     },
     {
@@ -76,6 +80,7 @@ const DUMMY_EVENTS = [
         tickets: [{ name: 'Standard', price: '100' }],
         status: "Past",
         withdrawalPolicy: "strict",
+        attendeeWithdrawalPolicy: "strict",
         attendees: 350
     },
     {
@@ -90,6 +95,7 @@ const DUMMY_EVENTS = [
         tickets: [{ name: 'Participant', price: '50' }],
         status: "Upcoming",
         withdrawalPolicy: "non-refundable",
+        attendeeWithdrawalPolicy: "non-refundable",
         attendees: 2000
     },
     {
@@ -105,6 +111,7 @@ const DUMMY_EVENTS = [
         status: "Rejected",
         rejectionReason: "Safety concerns and lack of official authorization.",
         withdrawalPolicy: "flexible",
+        attendeeWithdrawalPolicy: "flexible",
         attendees: 0
     }
 ];
@@ -819,6 +826,70 @@ const DUMMY_INCOMING_REQUESTS = [
 
 
 // ============================================================================
+// DUMMY EVENT-VENDOR ASSIGNMENTS (which vendors are assigned to each event)
+// ============================================================================
+const DUMMY_EVENT_VENDORS = [
+    // === Ongoing Tech Expo (101) - 4 vendors ===
+    { eventId: "101", vendorId: "v1", status: "Confirmed", assignedDate: "2026-01-10" },
+    { eventId: "101", vendorId: "v20", status: "Confirmed", assignedDate: "2026-01-12" },
+    { eventId: "101", vendorId: "v33", status: "Confirmed", assignedDate: "2026-01-14" },
+    { eventId: "101", vendorId: "v17", status: "Pending", assignedDate: "2026-02-18" },
+    // === Riyadh Art Week (102) - 3 vendors ===
+    { eventId: "102", vendorId: "v2", status: "Confirmed", assignedDate: "2025-12-20" },
+    { eventId: "102", vendorId: "v26", status: "Confirmed", assignedDate: "2025-12-22" },
+    { eventId: "102", vendorId: "v44", status: "Pending", assignedDate: "2026-01-30" },
+    // === Business Leadership Summit (103) - 3 vendors ===
+    { eventId: "103", vendorId: "v1", status: "Confirmed", assignedDate: "2026-01-05" },
+    { eventId: "103", vendorId: "v33", status: "Confirmed", assignedDate: "2026-01-08" },
+    { eventId: "103", vendorId: "v50", status: "Declined", assignedDate: "2026-01-10" },
+    // === Riyadh Marathon (106) - 2 vendors ===
+    { eventId: "106", vendorId: "v1", status: "Confirmed", assignedDate: "2026-03-01" },
+    { eventId: "106", vendorId: "v39", status: "Pending", assignedDate: "2026-03-15" }
+];
+
+
+
+// ============================================================================
+// DUMMY MESSAGES (Organizer ↔ Vendor conversations per event)
+// ============================================================================
+const DUMMY_MESSAGES = [
+    // --- Tech Expo (101) + Luxe Catering (v1) ---
+    { id: "msg1", eventId: "101", vendorId: "v1", sender: "organizer", text: "Hi! We'd like to confirm catering for 200 VIP guests at the Tech Expo. Can you handle this?", timestamp: "2026-01-10T09:00:00" },
+    { id: "msg2", eventId: "101", vendorId: "v1", sender: "vendor", text: "Absolutely! We can provide a full premium buffet with live stations. Would you prefer Mediterranean or Asian fusion?", timestamp: "2026-01-10T09:45:00" },
+    { id: "msg3", eventId: "101", vendorId: "v1", sender: "organizer", text: "Mediterranean sounds perfect. Please send us the menu options and pricing breakdown.", timestamp: "2026-01-10T10:15:00" },
+    { id: "msg4", eventId: "101", vendorId: "v1", sender: "vendor", text: "Menu sent to your email! The package includes appetizers, 3 main courses, dessert station, and beverages. Total: 45,000 SAR for 200 guests.", timestamp: "2026-01-10T14:30:00" },
+    // --- Tech Expo (101) + TechAV Solutions (v20) ---
+    { id: "msg5", eventId: "101", vendorId: "v20", sender: "organizer", text: "We need 4 LED screens (65\"), a main stage projector, and wireless mic setup for the Tech Expo.", timestamp: "2026-01-12T08:00:00" },
+    { id: "msg6", eventId: "101", vendorId: "v20", sender: "vendor", text: "Got it. We'll provide 4x 65\" 4K LED displays, a 12,000 lumen projector, and 8 wireless lavalier mics. Delivery and setup included.", timestamp: "2026-01-12T10:00:00" },
+    { id: "msg7", eventId: "101", vendorId: "v20", sender: "organizer", text: "Great. What time will you arrive for setup? The venue opens at 6 AM on the event day.", timestamp: "2026-01-12T11:30:00" },
+    // --- Art Week (102) + Arabian Feast Catering (v2) ---
+    { id: "msg8", eventId: "102", vendorId: "v2", sender: "organizer", text: "Hello! We're planning the opening ceremony for Riyadh Art Week. Can you provide traditional Saudi cuisine for 150 guests?", timestamp: "2025-12-20T14:00:00" },
+    { id: "msg9", eventId: "102", vendorId: "v2", sender: "vendor", text: "We'd love to! Our Arabian Nights package includes mandi, kabsa, grilled meats, and a full dessert spread. Perfect for cultural events.", timestamp: "2025-12-20T15:30:00" },
+    { id: "msg10", eventId: "102", vendorId: "v2", sender: "organizer", text: "Sounds excellent. Please confirm availability for January 20th.", timestamp: "2025-12-20T16:00:00" },
+    // --- Business Summit (103) + Luxe Catering (v1) ---
+    { id: "msg11", eventId: "103", vendorId: "v1", sender: "organizer", text: "We need executive lunch service for the Business Leadership Summit — 50 VIP guests. What options do you have?", timestamp: "2026-01-05T10:00:00" },
+    { id: "msg12", eventId: "103", vendorId: "v1", sender: "vendor", text: "For an executive setting, I recommend our plated 3-course meal: grilled salmon, wagyu steak, or truffle risotto options. 850 SAR per guest.", timestamp: "2026-01-05T11:00:00" },
+    { id: "msg13", eventId: "103", vendorId: "v1", sender: "organizer", text: "Let's go with the mixed plated option. Please also include a coffee and pastry station for the morning session.", timestamp: "2026-01-05T11:30:00" }
+];
+
+
+
+// ============================================================================
+// DUMMY BROADCASTS (Organizer → All Attendees per event)
+// ============================================================================
+const DUMMY_BROADCASTS = [
+    { id: "bc1", eventId: "101", message: "🎉 Welcome to the Tech Expo! Gates open at 8:30 AM. Don't forget to bring your digital ticket for fast entry. See you there!", timestamp: "2026-02-22T07:00:00" },
+    { id: "bc2", eventId: "101", message: "📢 Reminder: The keynote speech by Dr. Sarah Al-Fahad starts at 10:00 AM in Hall A. Seats are limited — arrive early!", timestamp: "2026-02-22T09:30:00" },
+    { id: "bc3", eventId: "102", message: "🎨 Riyadh Art Week is just 2 days away! Parking info: use Gate 3 for the closest access. Free shuttles from King Abdullah Station.", timestamp: "2026-01-18T10:00:00" },
+    { id: "bc4", eventId: "103", message: "📋 Business Leadership Summit Schedule Update: The networking session has been moved to 3:00 PM in Conference Room B.", timestamp: "2026-02-14T16:00:00" },
+    // --- Riyadh Marathon (106) Broadcasts for Attendee Demo ---
+    { id: "bc5", eventId: "106", message: "🏃‍♂️ Welcome to the Riyadh Marathon 2026! Packet pickup begins tomorrow at the main stadium entrance from 9 AM to 6 PM. Please bring your Eventia digital ticket and a valid ID.", timestamp: "2026-02-23T10:00:00" },
+    { id: "bc6", eventId: "106", message: "⚠️ URGENT WEATHER UPDATE & ROUTE CHANGES: Due to expected high temperatures this weekend, we have decided to adjust the starting times and the route for the Full and Half Marathon categories. The Full Marathon will now start exactly at 5:00 AM instead of 6:30 AM, and the Half Marathon will begin at 5:45 AM. Additionally, we have added three more hydration and medical stations along the King Khalid Road stretch (at KM 12, KM 18, and KM 25). Please ensure you hydrate well 48 hours before the race and dress appropriately for the heat. Shuttle services will also begin operations an hour earlier at 3:30 AM from the designated remote parking lots. Your safety is our absolute priority, and we appreciate your flexibility. Let's make this a fantastic and safe race for everyone!", timestamp: "2026-02-23T14:30:00" }
+];
+
+
+
+// ============================================================================
 // SEED DATA FUNCTION - ACTIVE FOR PRESENTATION
 // ============================================================================
 (function seedDummyData() {
@@ -826,10 +897,16 @@ const DUMMY_INCOMING_REQUESTS = [
     const VENDORS_DB_KEY = 'eventia_vendors_db';
     const REQUESTS_DB_KEY = 'eventia_requests_db';
     const INCOMING_REQUESTS_KEY = 'eventia_incoming_requests';
+    const EVENT_VENDORS_KEY = 'eventia_event_vendors';
+    const MESSAGES_KEY = 'eventia_messages';
+    const BROADCASTS_KEY = 'eventia_broadcasts';
 
     console.log("Seeding Dummy Data for Presentation...");
     localStorage.setItem(EVENTS_DB_KEY, JSON.stringify(DUMMY_EVENTS));
     localStorage.setItem(VENDORS_DB_KEY, JSON.stringify(DUMMY_VENDORS));
     localStorage.setItem(REQUESTS_DB_KEY, JSON.stringify(DUMMY_REQUESTS));
     localStorage.setItem(INCOMING_REQUESTS_KEY, JSON.stringify(DUMMY_INCOMING_REQUESTS));
+    localStorage.setItem(EVENT_VENDORS_KEY, JSON.stringify(DUMMY_EVENT_VENDORS));
+    localStorage.setItem(MESSAGES_KEY, JSON.stringify(DUMMY_MESSAGES));
+    localStorage.setItem(BROADCASTS_KEY, JSON.stringify(DUMMY_BROADCASTS));
 })();
