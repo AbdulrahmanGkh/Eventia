@@ -829,22 +829,280 @@ const DUMMY_INCOMING_REQUESTS = [
 // DUMMY EVENT-VENDOR ASSIGNMENTS (which vendors are assigned to each event)
 // ============================================================================
 const DUMMY_EVENT_VENDORS = [
-    // === Ongoing Tech Expo (101) - 4 vendors ===
-    { eventId: "101", vendorId: "v1", status: "Confirmed", assignedDate: "2026-01-10" },
-    { eventId: "101", vendorId: "v20", status: "Confirmed", assignedDate: "2026-01-12" },
-    { eventId: "101", vendorId: "v33", status: "Confirmed", assignedDate: "2026-01-14" },
+
+    // =========================================================
+    // Ongoing Tech Expo (101) — 4 vendors, all 5 stages covered
+    // =========================================================
+
+    // v1 — "In Transit" stage, organizer has requested an update
+    {
+        eventId: "101", vendorId: "v1", status: "Confirmed",
+        assignedDate: "2026-01-10",
+        preparationStatus: "In Transit",
+        updateRequested: true,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2026-01-10T09:00:00",
+                source: "system"
+            },
+            {
+                status: "Preparing",
+                note: "Started prepping the Mediterranean buffet. Ingredients sourced and staff briefed for the 200-guest setup.",
+                timestamp: "2026-02-10T11:30:00",
+                source: "vendor"
+            },
+            {
+                status: "In Transit",
+                note: "Our catering truck is on the way — carrying all equipment and pre-prepared dishes. ETA to venue: 2 hours. Will call on arrival.",
+                timestamp: "2026-02-28T08:15:00",
+                source: "vendor"
+            }
+        ]
+    },
+
+    // v20 — TechAV Solutions — "Setting Up" stage, no update request
+    {
+        eventId: "101", vendorId: "v20", status: "Confirmed",
+        assignedDate: "2026-01-12",
+        preparationStatus: "Setting Up",
+        updateRequested: false,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2026-01-12T08:00:00",
+                source: "system"
+            },
+            {
+                status: "Preparing",
+                note: "All four 65\" 4K LED screens loaded and tested at our warehouse. Projector calibration done. Wireless mics charged and paired.",
+                timestamp: "2026-02-20T14:00:00",
+                source: "vendor"
+            },
+            {
+                status: "In Transit",
+                note: "Equipment loaded into two vans. Departed warehouse at 6 AM — on schedule for the 7 AM venue arrival.",
+                timestamp: "2026-02-28T06:05:00",
+                source: "vendor"
+            },
+            {
+                status: "Setting Up",
+                note: "Arrived at Hall A. LED screens are up, projector aligned. Running final sound-check for the mics now. Should be done by 9 AM.",
+                timestamp: "2026-02-28T07:40:00",
+                source: "vendor"
+            }
+        ]
+    },
+
+    // v33 — SafeGuard Security — fully "Ready" ✅
+    {
+        eventId: "101", vendorId: "v33", status: "Confirmed",
+        assignedDate: "2026-01-14",
+        preparationStatus: "Ready",
+        updateRequested: false,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2026-01-14T10:00:00",
+                source: "system"
+            },
+            {
+                status: "Preparing",
+                note: "Team briefed on event layout, entry/exit points, and emergency procedures. Uniforms and radios assigned to all 12 personnel.",
+                timestamp: "2026-02-15T09:00:00",
+                source: "vendor"
+            },
+            {
+                status: "In Transit",
+                note: "Team departed from HQ. Split into 3 groups heading to Gate 1, Gate 2, and the main hall.",
+                timestamp: "2026-02-28T05:30:00",
+                source: "vendor"
+            },
+            {
+                status: "Setting Up",
+                note: "All personnel at designated positions. Radios tested, perimeter walk completed, access control system online.",
+                timestamp: "2026-02-28T06:45:00",
+                source: "vendor"
+            },
+            {
+                status: "Ready",
+                note: "Security team is fully in position and operational. All systems are green. We are ready for attendee arrival. ✅",
+                timestamp: "2026-02-28T07:30:00",
+                source: "vendor"
+            }
+        ]
+    },
+
+    // v17 — Photo Magic Studios — still "Pending" approval (no timeline shown)
     { eventId: "101", vendorId: "v17", status: "Pending", assignedDate: "2026-02-18" },
-    // === Riyadh Art Week (102) - 3 vendors ===
-    { eventId: "102", vendorId: "v2", status: "Confirmed", assignedDate: "2025-12-20" },
-    { eventId: "102", vendorId: "v26", status: "Confirmed", assignedDate: "2025-12-22" },
+
+
+    // =========================================================
+    // Riyadh Art Week (102) — 3 vendors
+    // =========================================================
+
+    // v2 — Arabian Feast Catering — "Preparing" stage
+    {
+        eventId: "102", vendorId: "v2", status: "Confirmed",
+        assignedDate: "2025-12-20",
+        preparationStatus: "Preparing",
+        updateRequested: false,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2025-12-20T14:00:00",
+                source: "system"
+            },
+            {
+                status: "Preparing",
+                note: "Sourcing fresh ingredients for the mandi and kabsa. Custom dessert display stands are being assembled at our kitchen. On track for delivery.",
+                timestamp: "2026-01-15T10:30:00",
+                source: "vendor"
+            }
+        ]
+    },
+
+    // v26 — Bloom & Petal Florists — "Pending" prep (just confirmed, organizer requested update)
+    {
+        eventId: "102", vendorId: "v26", status: "Confirmed",
+        assignedDate: "2025-12-22",
+        preparationStatus: "Pending",
+        updateRequested: true,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2025-12-22T09:00:00",
+                source: "system"
+            }
+        ]
+    },
+
+    // v44 — Sparkle Cleaners — still Pending approval
     { eventId: "102", vendorId: "v44", status: "Pending", assignedDate: "2026-01-30" },
-    // === Business Leadership Summit (103) - 3 vendors ===
-    { eventId: "103", vendorId: "v1", status: "Confirmed", assignedDate: "2026-01-05" },
-    { eventId: "103", vendorId: "v33", status: "Confirmed", assignedDate: "2026-01-08" },
+
+
+    // =========================================================
+    // Business Leadership Summit (103) — 3 vendors
+    // =========================================================
+
+    // v1 — Luxe Catering — "Ready" ✅
+    {
+        eventId: "103", vendorId: "v1", status: "Confirmed",
+        assignedDate: "2026-01-05",
+        preparationStatus: "Ready",
+        updateRequested: false,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2026-01-05T10:00:00",
+                source: "system"
+            },
+            {
+                status: "Preparing",
+                note: "Executive plated menu confirmed: wagyu steak and truffle risotto. 3 chefs assigned, all ingredients sourced from premium suppliers.",
+                timestamp: "2026-02-12T09:00:00",
+                source: "vendor"
+            },
+            {
+                status: "In Transit",
+                note: "Leaving our kitchen now with all pre-prepared dishes and equipment. ETA to Summit venue: 45 minutes.",
+                timestamp: "2026-02-14T08:00:00",
+                source: "vendor"
+            },
+            {
+                status: "Setting Up",
+                note: "Plating station set up in the banquet kitchen. Coffee and pastry station assembled at the entrance lobby. Looks great!",
+                timestamp: "2026-02-14T09:15:00",
+                source: "vendor"
+            },
+            {
+                status: "Ready",
+                note: "Everything is set. Plated service ready for 50 VIP guests. Coffee station stocked. Team is standing by — we're all yours! ✅",
+                timestamp: "2026-02-14T10:00:00",
+                source: "vendor"
+            }
+        ]
+    },
+
+    // v33 — SafeGuard Security — "Setting Up" at Summit
+    {
+        eventId: "103", vendorId: "v33", status: "Confirmed",
+        assignedDate: "2026-01-08",
+        preparationStatus: "Setting Up",
+        updateRequested: false,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2026-01-08T10:00:00",
+                source: "system"
+            },
+            {
+                status: "Preparing",
+                note: "6-person team selected. Briefed on conference floor plan, VIP areas, and press zone access control.",
+                timestamp: "2026-02-10T13:00:00",
+                source: "vendor"
+            },
+            {
+                status: "In Transit",
+                note: "Team en route to the Conference Center. Will be on-site by 7:30 AM.",
+                timestamp: "2026-02-14T07:00:00",
+                source: "vendor"
+            },
+            {
+                status: "Setting Up",
+                note: "Positions taken at main entrance and VIP corridor. Scanning equipment tested. Final walk-through underway.",
+                timestamp: "2026-02-14T07:45:00",
+                source: "vendor"
+            }
+        ]
+    },
+
+    // v50 — Translation Services — Declined
     { eventId: "103", vendorId: "v50", status: "Declined", assignedDate: "2026-01-10" },
-    // === Riyadh Marathon (106) - 2 vendors ===
-    { eventId: "106", vendorId: "v1", status: "Confirmed", assignedDate: "2026-03-01" },
+
+
+    // =========================================================
+    // Riyadh Marathon (106) — 2 vendors
+    // =========================================================
+
+    // v1 — Luxe Catering at Marathon — "In Transit"
+    {
+        eventId: "106", vendorId: "v1", status: "Confirmed",
+        assignedDate: "2026-03-01",
+        preparationStatus: "In Transit",
+        updateRequested: false,
+        statusHistory: [
+            {
+                status: "Pending",
+                note: "Vendor confirmed for the event.",
+                timestamp: "2026-03-01T09:00:00",
+                source: "system"
+            },
+            {
+                status: "Preparing",
+                note: "Preparing 3 hydration stations with energy bars, bananas, and isotonic drinks. Ready by tomorrow morning.",
+                timestamp: "2026-03-28T15:00:00",
+                source: "vendor"
+            },
+            {
+                status: "In Transit",
+                note: "Truck loaded with all supplies for Stations A, B, and C along the route. Heading to the first drop-off point now.",
+                timestamp: "2026-03-29T05:00:00",
+                source: "vendor"
+            }
+        ]
+    },
+
+    // v39 — Event Medics — still Pending approval
     { eventId: "106", vendorId: "v39", status: "Pending", assignedDate: "2026-03-15" }
+
 ];
 
 

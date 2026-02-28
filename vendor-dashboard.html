@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="base.css?v=1">
     <link rel="stylesheet" href="dashboard.css?v=1">
     <link rel="stylesheet" href="vendor.css?v=1">
+    <link rel="stylesheet" href="organizer.css?v=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -27,6 +28,9 @@
             <a href="#" class="nav-item active" data-view="overview">
                 <i class="fa-solid fa-grid-2"></i> Dashboard
             </a>
+            <a href="#" class="nav-item" data-view="my-events">
+                <i class="fa-solid fa-calendar-check"></i> My Events
+            </a>
             <a href="#" class="nav-item" data-view="invitations">
                 <i class="fa-solid fa-envelope-open-text"></i> Invitations
                 <span id="sidebar-invite-badge"
@@ -34,9 +38,6 @@
             </a>
             <a href="#" class="nav-item" data-view="browse-events">
                 <i class="fa-solid fa-earth-americas"></i> Browse Events
-            </a>
-            <a href="#" class="nav-item" data-view="my-events">
-                <i class="fa-solid fa-calendar-check"></i> My Events
             </a>
             <a href="#" class="nav-item" data-view="profile">
                 <i class="fa-solid fa-user-gear"></i> Profile
@@ -423,16 +424,360 @@
             </div>
         </section>
 
-        <!-- VIEW: PROFILE (Placeholder) -->
+        <!-- VIEW: VENDOR EVENT MANAGEMENT -->
+        <section id="view-event-manage" class="content-section">
+            <!-- Header Bar -->
+            <div class="em-header">
+                <button class="em-back-btn" onclick="switchView('my-events')">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="em-header-info">
+                    <h2 id="vem-event-title">Event Title</h2>
+                </div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="em-status-bar">
+                <div class="em-status-item">
+                    <span class="em-status-label">Event Status</span>
+                    <span id="vem-event-state-badge" class="em-badge"></span>
+                </div>
+                <div class="em-status-item">
+                    <span class="em-status-label">Your Role</span>
+                    <span id="vem-role-badge" class="em-badge"
+                        style="background: rgba(21,101,192,0.15); color: #1565c0;">Vendor</span>
+                </div>
+            </div>
+
+            <!-- Quick Stats Row -->
+            <div class="em-stats-row">
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(21, 101, 192, 0.12); color: #1565c0;">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="vem-stat-organizer">—</span>
+                        <span class="em-stat-label">Organizer</span>
+                    </div>
+                </div>
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(255, 152, 0, 0.12); color: #ff9800;">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="vem-stat-service">—</span>
+                        <span class="em-stat-label">Your Service</span>
+                    </div>
+                </div>
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(46, 125, 50, 0.12); color: #2e7d32;">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="vem-stat-attendees">0</span>
+                        <span class="em-stat-label">Attendees</span>
+                    </div>
+                </div>
+                <div class="em-stat-card">
+                    <div class="em-stat-icon" style="background: rgba(123, 31, 162, 0.12); color: #7b1fa2;">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <div class="em-stat-info">
+                        <span class="em-stat-value" id="vem-stat-countdown">--</span>
+                        <span class="em-stat-label">Days Left</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="em-tabs">
+                <button class="em-tab active" data-vemtab="overview">
+                    <i class="fa-solid fa-info-circle"></i> Overview
+                </button>
+                <button class="em-tab" data-vemtab="communication">
+                    <i class="fa-solid fa-comments"></i> Communication
+                </button>
+                <button class="em-tab" data-vemtab="actions">
+                    <i class="fa-solid fa-gear"></i> Actions
+                </button>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div class="em-tab-content active" id="vem-tab-overview">
+                <!-- Update Request Banner (shown when organizer requests update) -->
+                <div id="vem-update-banner-container"></div>
+
+                <!-- Preparation Status Card -->
+                <div id="vem-preparation-card" style="margin-bottom: 1rem;"></div>
+
+                <div class="em-overview-grid">
+                    <!-- Event Details Card -->
+                    <div class="em-detail-card em-card-blue">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-info-circle"></i> Event Details
+                        </div>
+                        <div class="em-detail-card-body">
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(21, 101, 192, 0.1); color: #1565c0;">
+                                    <i class="fa-solid fa-heading"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Title</span>
+                                    <span class="em-detail-value" id="vem-ov-title">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(123, 31, 162, 0.1); color: #7b1fa2;">
+                                    <i class="fa-solid fa-tags"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Category</span>
+                                    <span class="em-detail-value" id="vem-ov-category">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item" style="align-items: flex-start;">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(46, 125, 50, 0.1); color: #2e7d32;">
+                                    <i class="fa-solid fa-align-left"></i>
+                                </div>
+                                <div class="em-detail-item-content" style="flex: 1;">
+                                    <span class="em-detail-label">Description</span>
+                                    <span class="em-detail-value" id="vem-ov-description">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date & Location Card -->
+                    <div class="em-detail-card em-card-purple">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-calendar-days"></i> Date &amp; Location
+                        </div>
+                        <div class="em-detail-card-body">
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(123, 31, 162, 0.1); color: #7b1fa2;">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Date</span>
+                                    <span class="em-detail-value" id="vem-ov-date">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(230, 81, 0, 0.1); color: #e65100;">
+                                    <i class="fa-regular fa-clock"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Time</span>
+                                    <span class="em-detail-value" id="vem-ov-time">—</span>
+                                </div>
+                            </div>
+                            <div class="em-detail-item">
+                                <div class="em-detail-item-icon"
+                                    style="background: rgba(198, 40, 40, 0.1); color: #c62828;">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div class="em-detail-item-content">
+                                    <span class="em-detail-label">Location</span>
+                                    <span class="em-detail-value" id="vem-ov-location">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Withdrawal Policy Card (Full Width) -->
+                    <div class="em-detail-card em-full-width em-card-green">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-shield-halved"></i> Vendor Withdrawal Policy
+                        </div>
+                        <div class="em-detail-card-body">
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <div id="vem-ov-vendor-policy-badge" class="em-policy-badge em-policy-none">
+                                    <i class="fa-solid fa-circle-question"></i> Not Set
+                                </div>
+                                <p class="em-policy-desc" id="vem-ov-vendor-policy-desc" style="margin: 0;">Applies to
+                                    vendors participating in this event.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ticket Tiers Card (Full Width) -->
+                    <div class="em-detail-card em-full-width em-card-amber">
+                        <div class="em-detail-card-header">
+                            <i class="fa-solid fa-ticket"></i> Ticket Tiers
+                        </div>
+                        <div class="em-detail-card-body" id="vem-ov-tickets">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Communication -->
+            <div class="em-tab-content" id="vem-tab-communication">
+                <div class="em-conversations-list">
+                    <div class="em-conversation-item" id="vem-organizer-conv" style="cursor: pointer;">
+                        <div class="em-conv-avatar" style="background: linear-gradient(135deg, #e8f0fe, #d0daf0);">
+                            <i class="fa-solid fa-user-tie" style="color: #1565c0;"></i>
+                        </div>
+                        <div class="em-conv-info">
+                            <h4 id="vem-org-conv-name">Event Organizer</h4>
+                            <p id="vem-org-conv-last-msg">No messages yet</p>
+                        </div>
+                        <div class="em-conv-meta">
+                            <span class="em-conv-time" id="vem-org-conv-time"></span>
+                            <span class="em-conv-count" id="vem-org-conv-count" style="display: none;">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Actions -->
+            <div class="em-tab-content" id="vem-tab-actions">
+                <div class="em-actions-grid">
+                    <div class="em-action-card">
+                        <div class="em-action-icon" style="background: linear-gradient(135deg, #c62828, #ef5350);">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </div>
+                        <h4>Withdraw from Event</h4>
+                        <p>Cancel your participation in this event. The organizer will be notified.</p>
+                        <button class="btn btn-sm" id="vem-withdraw-btn"
+                            style="background: #c62828; color: white; border: none;">
+                            <i class="fa-solid fa-xmark"></i> Withdraw
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: PROFILE -->
         <section id="view-profile" class="content-section">
-            <div style="text-align: center; padding: 4rem 2rem;">
-                <i class="fa-solid fa-user-gear"
-                    style="font-size: 4rem; color: var(--primary-light); margin-bottom: 1.5rem; opacity: 0.5;"></i>
-                <h2>Vendor Profile</h2>
-                <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem;">
-                    Manage your service listing, pricing, and gallery.
-                </p>
-                <button class="btn btn-primary" onclick="alert('Profile management coming soon!')">Edit Profile</button>
+            <div style="max-width: 700px; margin: 0 auto;">
+                <div
+                    style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid #e8e8e8;">
+                    <!-- Profile Header -->
+                    <div
+                        style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 2rem; text-align: center; position: relative;">
+                        <div id="vendor-profile-avatar"
+                            style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 4px solid white; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2.5rem; color: white; font-weight: 700; cursor: pointer; position: relative; overflow: hidden;"
+                            onclick="document.getElementById('vendor-pfp-upload').click()"
+                            title="Click to change photo">
+                            <span id="vendor-profile-avatar-text"><i class="fa-solid fa-store"></i></span>
+                            <img id="vendor-profile-avatar-img"
+                                style="position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;"
+                                alt="Profile">
+                            <div
+                                style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 0.65rem; padding: 4px; text-align: center;">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="vendor-pfp-upload" accept="image/*" style="display: none;">
+                        <h3 id="vendor-profile-display-name" style="color: white; margin: 0; font-size: 1.4rem;">Luxe
+                            Catering Co.
+                        </h3>
+                        <p style="color: rgba(255,255,255,0.8); margin: 0.25rem 0 0; font-size: 0.9rem;">Eventia
+                            Vendor</p>
+                    </div>
+
+                    <!-- Profile Form -->
+                    <div style="padding: 2rem;">
+                        <form id="vendor-profile-form">
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Business
+                                    Name</label>
+                                <input type="text" id="vendor-profile-bizname" value="Luxe Catering Co." required
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Contact
+                                    Person</label>
+                                <input type="text" id="vendor-profile-contact" value="Mohammed Al-Harbi" required
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Email
+                                    Address</label>
+                                <input type="email" id="vendor-profile-email" value="info@luxecatering.sa" required
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Phone
+                                    Number</label>
+                                <input type="tel" id="vendor-profile-phone" value="+966 50 123 4567" required
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Service
+                                    Category</label>
+                                <select id="vendor-profile-category"
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none; background: white;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                                    <option value="Catering" selected>Catering</option>
+                                    <option value="Venue">Venue</option>
+                                    <option value="Photography">Photography</option>
+                                    <option value="Decoration">Decoration</option>
+                                    <option value="AV Equipment">AV Equipment</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Security">Security</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Floral Design">Floral Design</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Service
+                                    Description</label>
+                                <textarea id="vendor-profile-description" rows="3"
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none; font-family: inherit; resize: vertical;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">Premium catering services for corporate events, weddings, and special occasions across Saudi Arabia.</textarea>
+                            </div>
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div>
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Password</label>
+                                    <input type="password" id="vendor-profile-password" value="********"
+                                        style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                                <div>
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Confirm
+                                        Password</label>
+                                    <input type="password" id="vendor-profile-password-confirm" value="********"
+                                        style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary"
+                                style="width: 100%; padding: 12px; font-size: 1rem;">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -678,6 +1023,70 @@
                 </div>
                 <div class="form-actions" style="justify-content: flex-end;">
                     <button type="button" class="btn btn-primary" onclick="closeMessageModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: VENDOR ORGANIZER CHAT -->
+    <div id="vem-chat-modal" class="modal-overlay hidden" style="z-index: 1002;">
+        <div class="modal em-chat-modal-box">
+            <div class="em-chat-header">
+                <div class="em-chat-header-info">
+                    <button class="em-chat-back" onclick="closeOrganizerChat()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="em-chat-vendor-avatar" id="vem-chat-avatar">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div>
+                        <div class="em-chat-vendor-name" id="vem-chat-org-name">Organizer</div>
+                        <div class="em-chat-vendor-category" id="vem-chat-event-name">Event</div>
+                    </div>
+                </div>
+                <button class="em-chat-close" onclick="closeOrganizerChat()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="em-chat-body" id="vem-chat-body">
+                <!-- Messages populated via JS -->
+            </div>
+            <div class="em-chat-input-area">
+                <input type="text" id="vem-chat-input" placeholder="Type a message..." autocomplete="off">
+                <button class="em-chat-send-btn" id="vem-chat-send-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: VENDOR STATUS UPDATE -->
+    <div id="vem-status-update-modal" class="modal-overlay hidden" style="z-index: 1003;">
+        <div class="modal vem-status-modal-box">
+            <div class="em-status-modal-header">
+                <h3><i class="fa-solid fa-arrow-up-right-dots"></i> Update Preparation Status</h3>
+                <button class="em-status-modal-close" onclick="closeVendorStatusUpdateModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div class="vem-status-current" id="vem-status-current-display">
+                    <!-- Populated via JS -->
+                </div>
+                <label
+                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.5rem; font-size: 0.88rem;">
+                    <i class="fa-solid fa-message" style="margin-right: 0.4rem; color: #1565c0;"></i>
+                    Progress Note <span style="color: #c62828;">*</span>
+                </label>
+                <textarea id="vem-status-note" class="vem-status-note-area" rows="3"
+                    placeholder="Describe your current progress, e.g., 'Food truck dispatched, ETA 2 hours...'"
+                    required></textarea>
+                <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                    <button class="btn btn-outline btn-sm" onclick="closeVendorStatusUpdateModal()">Cancel</button>
+                    <button class="vem-update-status-btn" id="vem-submit-status-btn"
+                        onclick="submitVendorStatusUpdate()">
+                        <i class="fa-solid fa-arrow-right"></i> Advance Status
+                    </button>
                 </div>
             </div>
         </div>

@@ -43,6 +43,9 @@
             <a href="#" class="nav-item" data-view="analytics">
                 <i class="fa-solid fa-chart-pie"></i> Analytics
             </a>
+            <a href="#" class="nav-item" data-view="profile">
+                <i class="fa-solid fa-user-gear"></i> Profile
+            </a>
         </nav>
 
         <div class="sidebar-footer">
@@ -182,9 +185,10 @@
                                 *</label>
                             <select id="event-withdrawal-policy" required>
                                 <option value="" disabled selected>Choose vendor policy...</option>
-                                <option value="flexible">Flexible — Vendors can withdraw until event start</option>
-                                <option value="moderate">Moderate — Up to 7 days before event</option>
-                                <option value="strict">Strict — Up to 14 days before event</option>
+                                <option value="flexible">Flexible — Vendors can withdraw up to 7 days before event
+                                </option>
+                                <option value="moderate">Moderate — Up to 14 days before event</option>
+                                <option value="strict">Strict — Up to 30 days before event</option>
                                 <option value="non-refundable">Non-refundable — No withdrawal allowed</option>
                             </select>
                             <small
@@ -636,6 +640,21 @@
             </div>
         </div>
 
+        <!-- MODAL: VENDOR STATUS DETAIL -->
+        <div id="em-status-modal" class="modal-overlay hidden" style="z-index: 1003;">
+            <div class="modal em-status-modal-box">
+                <div class="em-status-modal-header">
+                    <h3><i class="fa-solid fa-timeline"></i> <span id="em-status-modal-vendor-name">Vendor</span></h3>
+                    <button class="em-status-modal-close" onclick="closeVendorStatusModal()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="em-status-modal-body" id="em-status-modal-body">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+
 
         <section id="view-vendors" class="content-section">
 
@@ -1056,6 +1075,113 @@
                             <h3>--</h3>
                             <p>Revenue</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: PROFILE -->
+        <section id="view-profile" class="content-section">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <div
+                    style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid #e8e8e8;">
+                    <!-- Profile Header -->
+                    <div
+                        style="background: linear-gradient(135deg, #004e92, #4dabf7); padding: 2rem; text-align: center; position: relative;">
+                        <div id="org-profile-avatar"
+                            style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 4px solid white; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2.5rem; color: white; font-weight: 700; cursor: pointer; position: relative; overflow: hidden;"
+                            onclick="document.getElementById('org-pfp-upload').click()" title="Click to change photo">
+                            <span id="org-profile-avatar-text">A</span>
+                            <img id="org-profile-avatar-img"
+                                style="position: absolute; width: 100%; height: 100%; object-fit: cover; display: none;"
+                                alt="Profile">
+                            <div
+                                style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 0.65rem; padding: 4px; text-align: center;">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="org-pfp-upload" accept="image/*" style="display: none;">
+                        <h3 id="org-profile-display-name" style="color: white; margin: 0; font-size: 1.4rem;">Organizer
+                        </h3>
+                        <p style="color: rgba(255,255,255,0.8); margin: 0.25rem 0 0; font-size: 0.9rem;">Event
+                            Organizer</p>
+                    </div>
+
+                    <!-- Profile Form -->
+                    <div style="padding: 2rem;">
+                        <form id="org-profile-form">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">First
+                                        Name</label>
+                                    <input type="text" id="org-profile-firstname" value="Abdulrahman" required
+                                        style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                                <div>
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Last
+                                        Name</label>
+                                    <input type="text" id="org-profile-lastname" value="Al-Ghamdi" required
+                                        style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Organization
+                                    Name</label>
+                                <input type="text" id="org-profile-orgname" value="Eventia Events Co." required
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Email
+                                    Address</label>
+                                <input type="email" id="org-profile-email" value="abdulrahman@eventia.sa" required
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label
+                                    style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Phone
+                                    Number</label>
+                                <input type="tel" id="org-profile-phone" value="+966 55 987 6543" required
+                                    style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                    onfocus="this.style.borderColor='#004e92'"
+                                    onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div>
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Password</label>
+                                    <input type="password" id="org-profile-password" value="********"
+                                        style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                                <div>
+                                    <label
+                                        style="display: block; font-weight: 600; color: #333; margin-bottom: 0.4rem; font-size: 0.85rem;">Confirm
+                                        Password</label>
+                                    <input type="password" id="org-profile-password-confirm" value="********"
+                                        style="width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: border-color 0.2s; outline: none;"
+                                        onfocus="this.style.borderColor='#004e92'"
+                                        onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary"
+                                style="width: 100%; padding: 12px; font-size: 1rem;">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

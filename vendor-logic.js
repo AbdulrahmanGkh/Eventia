@@ -46,6 +46,7 @@ function initVendorDashboard() {
             'invitations': 'Manage Invitations',
             'browse-events': 'Browse Events',
             'my-events': 'My Events',
+            'event-manage': 'Event Management',
             'profile': 'Vendor Profile'
         };
         if (pageTitle) pageTitle.textContent = titles[viewId] || 'Dashboard';
@@ -61,6 +62,7 @@ function initVendorDashboard() {
         }
         if (viewId === 'browse-events') renderBrowseEvents();
         if (viewId === 'my-events') renderMyEvents();
+        // event-manage data is loaded by openVendorEventManage before switching
         if (viewId !== 'overview') updateStats();
 
         // Mobile Sidebar Close
@@ -363,7 +365,7 @@ function initVendorDashboard() {
 
                         <!-- Withdrawal Policy -->
                         ${(function () {
-                const policyLabels = { 'flexible': 'Flexible — Withdraw until event start', 'moderate': 'Moderate — Up to 7 days before event', 'strict': 'Strict — Up to 14 days before event', 'non-refundable': 'Non-refundable — No withdrawal allowed' };
+                const policyLabels = { 'flexible': 'Flexible — Up to 7 days before event', 'moderate': 'Moderate — Up to 14 days before event', 'strict': 'Strict — Up to 30 days before event', 'non-refundable': 'Non-refundable — No withdrawal allowed' };
                 const policyIcons = { 'flexible': 'fa-unlock', 'moderate': 'fa-clock', 'strict': 'fa-lock', 'non-refundable': 'fa-ban' };
                 const policyColors = { 'flexible': '#2e7d32', 'moderate': '#ff9800', 'strict': '#e65100', 'non-refundable': '#c62828' };
                 const policyBgs = { 'flexible': '#e8f5e9', 'moderate': '#fff3e0', 'strict': '#fbe9e7', 'non-refundable': '#ffebee' };
@@ -522,7 +524,7 @@ function initVendorDashboard() {
                         <span class="status-badge status-${eventStatus.toLowerCase()}">${eventStatus}</span>
                     </div>
                     <div>
-                        ${!isPast ? `<button class="btn btn-sm btn-outline vendor-my-events-withdraw" onclick="openWithdrawModal('${req.id}')">Withdraw</button>` : '<span class="vendor-my-events-completed">Completed</span>'}
+                        <button class="btn btn-sm btn-primary" onclick="openVendorEventManage('${req.eventId}', '${req.id}')" style="font-size: 0.78rem;"><i class="fa-solid fa-sliders"></i> Manage</button>
                     </div>
                 </div>`;
         }).join('');
@@ -674,7 +676,7 @@ function initVendorDashboard() {
 
     // Withdraw Logic — with policy enforcement
     function getWithdrawalPolicyInfo(policy, eventDate) {
-        const policyLabels = { 'flexible': 'Flexible — Withdraw until event start', 'moderate': 'Moderate — Up to 7 days before event', 'strict': 'Strict — Up to 14 days before event', 'non-refundable': 'Non-refundable — No withdrawal allowed' };
+        const policyLabels = { 'flexible': 'Flexible — Up to 7 days before event', 'moderate': 'Moderate — Up to 14 days before event', 'strict': 'Strict — Up to 30 days before event', 'non-refundable': 'Non-refundable — No withdrawal allowed' };
         const policyColors = { 'flexible': '#2e7d32', 'moderate': '#ff9800', 'strict': '#e65100', 'non-refundable': '#c62828' };
         const policyBgs = { 'flexible': '#e8f5e9', 'moderate': '#fff3e0', 'strict': '#fbe9e7', 'non-refundable': '#ffebee' };
         const policyIcons = { 'flexible': 'fa-unlock', 'moderate': 'fa-clock', 'strict': 'fa-lock', 'non-refundable': 'fa-ban' };
@@ -694,15 +696,15 @@ function initVendorDashboard() {
         if (policy === 'non-refundable') {
             allowed = false;
             reason = 'This request has a non-refundable withdrawal policy. You cannot withdraw.';
-        } else if (policy === 'strict' && daysUntilEvent < 14) {
+        } else if (policy === 'strict' && daysUntilEvent < 30) {
             allowed = false;
-            reason = `Withdrawal deadline has passed.Policy requires at least 14 days before the event(${daysUntilEvent} days remaining).`;
-        } else if (policy === 'moderate' && daysUntilEvent < 7) {
+            reason = `Withdrawal deadline has passed. Policy requires at least 30 days before the event (${daysUntilEvent} days remaining).`;
+        } else if (policy === 'moderate' && daysUntilEvent < 14) {
             allowed = false;
-            reason = `Withdrawal deadline has passed.Policy requires at least 7 days before the event(${daysUntilEvent} days remaining).`;
-        } else if (policy === 'flexible' && daysUntilEvent < 0) {
+            reason = `Withdrawal deadline has passed. Policy requires at least 14 days before the event (${daysUntilEvent} days remaining).`;
+        } else if (policy === 'flexible' && daysUntilEvent < 7) {
             allowed = false;
-            reason = `Event has already started or passed. You cannot withdraw.`;
+            reason = `Withdrawal deadline has passed. Policy requires at least 7 days before the event (${daysUntilEvent} days remaining).`;
         }
 
         return { label, color, bg, icon, allowed, reason, daysUntilEvent };
@@ -1171,6 +1173,460 @@ function initVendorDashboard() {
     renderInvitations();
     renderMyEvents();
     updateStats();
+
+    // ===================================================================
+    // VENDOR EVENT MANAGEMENT MODULE
+    // ===================================================================
+    const MESSAGES_KEY = 'eventia_messages';
+    const EVENT_VENDORS_KEY = 'eventia_event_vendors';
+    let currentManagedEventId = null;
+    let currentManagedRequestId = null;
+
+    function getMessages() {
+        return JSON.parse(localStorage.getItem(MESSAGES_KEY) || '[]');
+    }
+    function getEventVendors() {
+        return JSON.parse(localStorage.getItem(EVENT_VENDORS_KEY) || '[]');
+    }
+
+    // --- Preparation Status Config ---
+    const PREP_STATUSES = ['Pending', 'Preparing', 'In Transit', 'Setting Up', 'Ready'];
+    const PREP_ICONS = {
+        'Pending': 'fa-clock',
+        'Preparing': 'fa-wrench',
+        'In Transit': 'fa-truck',
+        'Setting Up': 'fa-tools',
+        'Ready': 'fa-check'
+    };
+    const PREP_COLORS = {
+        'Pending': '#e65100',
+        'Preparing': '#1565c0',
+        'In Transit': '#7b1fa2',
+        'Setting Up': '#ff8f00',
+        'Ready': '#2e7d32'
+    };
+
+    // --- Render Vendor Preparation Card (timeline stepper + update button) ---
+    function renderVendorPreparationCard(eventId) {
+        const container = document.getElementById('vem-preparation-card');
+        if (!container) return;
+
+        const evVendors = getEventVendors();
+        const ev = evVendors.find(v => v.eventId === eventId && v.vendorId === CURRENT_VENDOR_ID);
+        if (!ev || ev.status !== 'Confirmed') {
+            container.innerHTML = '';
+            return;
+        }
+
+        const prepStatus = ev.preparationStatus || 'Pending';
+        const currentIdx = PREP_STATUSES.indexOf(prepStatus);
+        const isReady = prepStatus === 'Ready';
+
+        // Build horizontal timeline
+        const steps = PREP_STATUSES.map((s, i) => {
+            let stepClass = 'upcoming';
+            if (i < currentIdx) stepClass = 'completed';
+            else if (i === currentIdx) stepClass = (i === PREP_STATUSES.length - 1) ? 'completed' : 'active';
+            const icon = PREP_ICONS[s];
+            return `<div class="em-timeline-step ${stepClass}">
+                <div class="em-timeline-circle"><i class="fa-solid ${icon}"></i></div>
+                <span class="em-timeline-label">${s}</span>
+            </div>`;
+        }).join('');
+
+        // Connectors
+        let connectors = '';
+        for (let i = 0; i < PREP_STATUSES.length - 1; i++) {
+            let connClass = 'upcoming';
+            if (i < currentIdx) connClass = 'completed';
+            else if (i === currentIdx) connClass = 'active';
+            const stepW = 100 / PREP_STATUSES.length;
+            const left = (stepW * i + stepW / 2);
+            connectors += `<div class="em-timeline-connector ${connClass}" style="left:${left}%;width:${stepW}%;"></div>`;
+        }
+
+        container.innerHTML = `
+            <div class="em-detail-card em-card-blue" style="border-left-color: ${PREP_COLORS[prepStatus]};">
+                <div class="em-detail-card-header">
+                    <i class="fa-solid fa-timeline"></i> Your Preparation Status
+                    <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+                        ${isReady
+                ? `<span style="font-size: 0.78rem; font-weight: 600; color: #2e7d32; background: rgba(46,125,50,0.1); padding: 4px 12px; border-radius: 12px;"><i class="fa-solid fa-check-circle"></i> Ready</span>`
+                : `<button class="vem-update-status-btn" onclick="openVendorStatusUpdateModal()"><i class="fa-solid fa-arrow-up-right-dots"></i> Update Status</button>`
+            }
+                    </div>
+                </div>
+                <div class="em-detail-card-body">
+                    <div class="em-vendor-timeline" style="position: relative; padding: 0.5rem 0;">
+                        ${connectors}
+                        ${steps}
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    // --- Render Update Request Banner ---
+    function renderUpdateRequestBanner(eventId) {
+        const container = document.getElementById('vem-update-banner-container');
+        if (!container) return;
+
+        const evVendors = getEventVendors();
+        const ev = evVendors.find(v => v.eventId === eventId && v.vendorId === CURRENT_VENDOR_ID);
+
+        if (ev && ev.updateRequested) {
+            container.innerHTML = `
+                <div class="vem-update-banner">
+                    <div class="vem-update-banner-icon"><i class="fa-solid fa-bell"></i></div>
+                    <div class="vem-update-banner-text">
+                        <strong>Status update requested!</strong><br>
+                        The event organizer would like you to update your preparation progress.
+                    </div>
+                    <button class="vem-update-banner-btn" onclick="openVendorStatusUpdateModal()">
+                        <i class="fa-solid fa-arrow-up-right-dots"></i> Update Now
+                    </button>
+                </div>`;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+    // --- Vendor Status Update Modal ---
+    window.openVendorStatusUpdateModal = function () {
+        const evVendors = getEventVendors();
+        const ev = evVendors.find(v => v.eventId === currentManagedEventId && v.vendorId === CURRENT_VENDOR_ID);
+        if (!ev) return;
+
+        const prepStatus = ev.preparationStatus || 'Pending';
+        const currentIdx = PREP_STATUSES.indexOf(prepStatus);
+        const nextStatus = currentIdx < PREP_STATUSES.length - 1 ? PREP_STATUSES[currentIdx + 1] : null;
+
+        if (!nextStatus) {
+            showToast('You are already at the final status: Ready!');
+            return;
+        }
+
+        // Populate modal
+        const displayEl = document.getElementById('vem-status-current-display');
+        displayEl.innerHTML = `
+            <div class="vem-status-current-dot" style="background: ${PREP_COLORS[prepStatus]};"></div>
+            <div class="vem-status-current-label">${prepStatus}</div>
+            <div style="color: #bbb; font-size: 1rem;"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="vem-status-current-dot" style="background: ${PREP_COLORS[nextStatus]};"></div>
+            <div class="vem-status-current-label" style="color: ${PREP_COLORS[nextStatus]};">${nextStatus}</div>
+        `;
+
+        // Clear note textarea
+        document.getElementById('vem-status-note').value = '';
+
+        // Update submit button text
+        const submitBtn = document.getElementById('vem-submit-status-btn');
+        submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right"></i> Advance to "${nextStatus}"`;
+
+        const modal = document.getElementById('vem-status-update-modal');
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+    };
+
+    window.closeVendorStatusUpdateModal = function () {
+        const modal = document.getElementById('vem-status-update-modal');
+        modal.classList.add('hidden');
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
+    };
+
+    window.submitVendorStatusUpdate = function () {
+        const note = document.getElementById('vem-status-note').value.trim();
+        if (!note) {
+            showToast('Please provide a progress note.');
+            return;
+        }
+
+        const evVendors = getEventVendors();
+        const idx = evVendors.findIndex(v => v.eventId === currentManagedEventId && v.vendorId === CURRENT_VENDOR_ID);
+        if (idx === -1) return;
+
+        const ev = evVendors[idx];
+        const currentIdx = PREP_STATUSES.indexOf(ev.preparationStatus || 'Pending');
+        const nextStatus = currentIdx < PREP_STATUSES.length - 1 ? PREP_STATUSES[currentIdx + 1] : null;
+        if (!nextStatus) return;
+
+        // Update status
+        ev.preparationStatus = nextStatus;
+        if (!ev.statusHistory) ev.statusHistory = [];
+        ev.statusHistory.push({
+            status: nextStatus,
+            note: note,
+            timestamp: new Date().toISOString(),
+            source: 'vendor'
+        });
+
+        // Clear update request
+        ev.updateRequested = false;
+
+        localStorage.setItem(EVENT_VENDORS_KEY, JSON.stringify(evVendors));
+
+        closeVendorStatusUpdateModal();
+        renderVendorPreparationCard(currentManagedEventId);
+        renderUpdateRequestBanner(currentManagedEventId);
+        showToast(`Status updated to "${nextStatus}"!`);
+    };
+
+    // Backdrop close for status update modal
+    const vemStatusModal = document.getElementById('vem-status-update-modal');
+    if (vemStatusModal) {
+        vemStatusModal.addEventListener('click', (e) => {
+            if (e.target === vemStatusModal) closeVendorStatusUpdateModal();
+        });
+    }
+
+    // --- Open Vendor Event Management ---
+    window.openVendorEventManage = function (eventId, requestId) {
+        const evt = events.find(e => e.id === eventId);
+        if (!evt) return;
+
+        const req = requests.find(r => r.id === requestId);
+        currentManagedEventId = eventId;
+        currentManagedRequestId = requestId;
+
+        // Header
+        document.getElementById('vem-event-title').textContent = evt.title;
+
+        // State badge
+        const todayStr = new Date().toISOString().split('T')[0];
+        let stateTxt, stateColor, stateBg;
+        if (evt.date === todayStr) { stateTxt = 'Ongoing'; stateColor = '#2e7d32'; stateBg = 'rgba(46,125,50,0.2)'; }
+        else if (evt.date > todayStr) { stateTxt = 'Upcoming'; stateColor = '#7b1fa2'; stateBg = 'rgba(123,31,162,0.2)'; }
+        else { stateTxt = 'Past'; stateColor = '#757575'; stateBg = 'rgba(117,117,117,0.2)'; }
+        const stateBadge = document.getElementById('vem-event-state-badge');
+        stateBadge.textContent = stateTxt;
+        stateBadge.style.background = stateBg;
+        stateBadge.style.color = stateColor;
+
+        // Role badge — show service type from the request
+        const roleBadge = document.getElementById('vem-role-badge');
+        if (req && req.serviceType) {
+            roleBadge.textContent = req.serviceType;
+        } else {
+            roleBadge.textContent = 'Vendor';
+        }
+
+        // Stats
+        document.getElementById('vem-stat-organizer').textContent = evt.organizer || 'Event Organizer';
+        document.getElementById('vem-stat-service').textContent = (req && req.serviceType) || currentVendor.category || '—';
+        document.getElementById('vem-stat-attendees').textContent = evt.attendees || 0;
+
+        // Countdown
+        const diffMs = new Date(evt.date) - new Date(todayStr);
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        const countdownEl = document.getElementById('vem-stat-countdown');
+        if (diffDays > 0) countdownEl.textContent = diffDays;
+        else if (diffDays === 0) countdownEl.textContent = 'Today';
+        else countdownEl.textContent = 'Ended';
+
+        // --- Overview tab data ---
+        document.getElementById('vem-ov-title').textContent = evt.title;
+        document.getElementById('vem-ov-category').textContent = evt.category;
+        document.getElementById('vem-ov-description').textContent = evt.description;
+        const dateFormatted = new Date(evt.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('vem-ov-date').textContent = dateFormatted;
+        document.getElementById('vem-ov-time').textContent = evt.time;
+        document.getElementById('vem-ov-location').textContent = evt.location;
+
+        // Tickets
+        const ticketsEl = document.getElementById('vem-ov-tickets');
+        if (evt.tickets && evt.tickets.length > 0) {
+            ticketsEl.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;">' +
+                evt.tickets.map(t => `<div class="em-ticket-tier"><span class="tier-name">${t.name}</span><span class="tier-price">${t.price > 0 ? t.price + ' SAR' : 'Free'}</span></div>`).join('') + '</div>';
+        } else {
+            ticketsEl.innerHTML = '<p style="color:#888;margin:0;">No ticket tiers defined.</p>';
+        }
+
+        // Withdrawal Policy
+        const policyMeta = {
+            'flexible': { label: '✦ Flexible', css: 'em-policy-flexible', desc: 'Withdrawal allowed up to 7 days before the event.' },
+            'moderate': { label: '✦ Moderate', css: 'em-policy-moderate', desc: 'Withdrawal allowed up to 14 days before the event.' },
+            'strict': { label: '✦ Strict', css: 'em-policy-strict', desc: 'Withdrawal allowed up to 30 days before the event.' },
+            'non-refundable': { label: '✦ Non-refundable', css: 'em-policy-non-refundable', desc: 'No withdrawal or cancellations permitted once confirmed.' }
+        };
+        const vendorBadgeEl = document.getElementById('vem-ov-vendor-policy-badge');
+        const vendorDescEl = document.getElementById('vem-ov-vendor-policy-desc');
+        const vendorPol = evt.withdrawalPolicy ? policyMeta[evt.withdrawalPolicy] : null;
+        vendorBadgeEl.className = 'em-policy-badge ' + (vendorPol ? vendorPol.css : 'em-policy-none');
+        vendorBadgeEl.textContent = vendorPol ? vendorPol.label : '— Not Set';
+        vendorDescEl.textContent = vendorPol ? vendorPol.desc : 'No vendor withdrawal policy has been configured for this event.';
+
+        // --- Communication tab ---
+        renderVendorOrgConversation(eventId);
+        renderVendorPreparationCard(eventId);
+        renderUpdateRequestBanner(eventId);
+
+        // --- Actions tab: Withdraw button ---
+        const isPast = new Date(evt.date) < new Date();
+        const withdrawBtn = document.getElementById('vem-withdraw-btn');
+        if (isPast) {
+            withdrawBtn.disabled = true;
+            withdrawBtn.style.opacity = '0.5';
+            withdrawBtn.style.cursor = 'not-allowed';
+            withdrawBtn.textContent = 'Event Ended';
+        } else {
+            withdrawBtn.disabled = false;
+            withdrawBtn.style.opacity = '1';
+            withdrawBtn.style.cursor = 'pointer';
+            withdrawBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Withdraw';
+            withdrawBtn.onclick = function () { openWithdrawModal(requestId); };
+        }
+
+        // Reset to Overview tab
+        document.querySelectorAll('[data-vemtab]').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('[id^="vem-tab-"]').forEach(tc => {
+            if (tc.classList.contains('em-tab-content')) tc.classList.remove('active');
+        });
+        const overviewTab = document.querySelector('[data-vemtab="overview"]');
+        if (overviewTab) overviewTab.classList.add('active');
+        const overviewContent = document.getElementById('vem-tab-overview');
+        if (overviewContent) overviewContent.classList.add('active');
+
+        switchView('event-manage');
+    };
+
+    // --- Tab switching for vendor event manage ---
+    document.querySelectorAll('[data-vemtab]').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('[data-vemtab]').forEach(t => t.classList.remove('active'));
+            document.getElementById('vem-tab-overview').classList.remove('active');
+            document.getElementById('vem-tab-communication').classList.remove('active');
+            document.getElementById('vem-tab-actions').classList.remove('active');
+            tab.classList.add('active');
+            document.getElementById('vem-tab-' + tab.dataset.vemtab).classList.add('active');
+        });
+    });
+
+    // --- Render organizer conversation preview ---
+    function renderVendorOrgConversation(eventId) {
+        const allMessages = getMessages();
+        const msgs = allMessages.filter(m => m.eventId === eventId && m.vendorId === CURRENT_VENDOR_ID)
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        const lastMsg = msgs.length > 0 ? msgs[msgs.length - 1] : null;
+
+        const evt = events.find(e => e.id === eventId);
+        const orgName = (evt && evt.organizer) || 'Event Organizer';
+
+        // Update conversation card
+        const convNameEl = document.getElementById('vem-org-conv-name');
+        const convMsgEl = document.getElementById('vem-org-conv-last-msg');
+        const convTimeEl = document.getElementById('vem-org-conv-time');
+        const convCountEl = document.getElementById('vem-org-conv-count');
+
+        if (convNameEl) convNameEl.textContent = orgName;
+        if (lastMsg) {
+            const lastMsgText = (lastMsg.sender === 'vendor' ? 'You: ' : '') + lastMsg.text;
+            if (convMsgEl) convMsgEl.textContent = lastMsgText;
+            if (convTimeEl) convTimeEl.textContent = new Date(lastMsg.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        } else {
+            if (convMsgEl) convMsgEl.textContent = 'No messages yet — tap to start the conversation';
+            if (convTimeEl) convTimeEl.textContent = '';
+        }
+
+        // Show count of organizer messages
+        const orgMsgCount = msgs.filter(m => m.sender === 'organizer').length;
+        if (convCountEl) {
+            if (orgMsgCount > 0) {
+                convCountEl.textContent = orgMsgCount;
+                convCountEl.style.display = 'flex';
+            } else {
+                convCountEl.style.display = 'none';
+            }
+        }
+
+        // Click handler on conversation card
+        const convItem = document.getElementById('vem-organizer-conv');
+        if (convItem) {
+            convItem.onclick = function () { openOrganizerChat(eventId); };
+        }
+    }
+
+    // --- Organizer Chat ---
+    window.openOrganizerChat = function (eventId) {
+        currentManagedEventId = eventId;
+        const evt = events.find(e => e.id === eventId);
+        const orgName = (evt && evt.organizer) || 'Event Organizer';
+
+        document.getElementById('vem-chat-org-name').textContent = orgName;
+        document.getElementById('vem-chat-event-name').textContent = evt ? evt.title : 'Event';
+
+        renderVendorChatMessages(eventId);
+
+        const modal = document.getElementById('vem-chat-modal');
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+    };
+
+    window.closeOrganizerChat = function () {
+        const modal = document.getElementById('vem-chat-modal');
+        modal.classList.add('hidden');
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
+        // Refresh conversation preview
+        if (currentManagedEventId) renderVendorOrgConversation(currentManagedEventId);
+    };
+
+    function renderVendorChatMessages(eventId) {
+        const msgs = getMessages().filter(m => m.eventId === eventId && m.vendorId === CURRENT_VENDOR_ID)
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        const body = document.getElementById('vem-chat-body');
+
+        if (msgs.length === 0) {
+            body.innerHTML = '<div class="em-empty-state" style="margin:auto;"><i class="fa-solid fa-comments"></i><p>No messages yet. Start the conversation!</p></div>';
+        } else {
+            body.innerHTML = msgs.map(m => {
+                // vendor's own messages are "sent", organizer messages are "received"
+                const cls = m.sender === 'vendor' ? 'sent' : 'received';
+                const time = new Date(m.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                return `<div class="em-chat-msg ${cls}">${m.text}<span class="em-chat-msg-time">${time}</span></div>`;
+            }).join('');
+        }
+
+        // Auto-scroll to bottom
+        setTimeout(() => { body.scrollTop = body.scrollHeight; }, 50);
+    }
+
+    // Send chat message as vendor
+    const vemChatSendBtn = document.getElementById('vem-chat-send-btn');
+    const vemChatInput = document.getElementById('vem-chat-input');
+    if (vemChatSendBtn && vemChatInput) {
+        function sendVendorChatMessage() {
+            const text = vemChatInput.value.trim();
+            if (!text || !currentManagedEventId) return;
+
+            const msgs = getMessages();
+            msgs.push({
+                id: 'msg_' + Date.now(),
+                eventId: currentManagedEventId,
+                vendorId: CURRENT_VENDOR_ID,
+                sender: 'vendor',
+                text: text,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem(MESSAGES_KEY, JSON.stringify(msgs));
+            vemChatInput.value = '';
+            renderVendorChatMessages(currentManagedEventId);
+        }
+
+        vemChatSendBtn.addEventListener('click', sendVendorChatMessage);
+        vemChatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); sendVendorChatMessage(); }
+        });
+    }
+
+    // Chat modal backdrop close
+    const vemChatModal = document.getElementById('vem-chat-modal');
+    if (vemChatModal) {
+        vemChatModal.addEventListener('click', (e) => {
+            if (e.target === vemChatModal) closeOrganizerChat();
+        });
+    }
 
     function showToast(msg) {
         const toast = document.createElement('div');

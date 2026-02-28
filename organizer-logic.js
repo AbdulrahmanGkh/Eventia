@@ -111,7 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'create-event': 'Create New Event',
                 'events-list': 'My Events',
                 'vendors': 'Vendor Marketplace',
-                'analytics': 'Event Analytics'
+                'analytics': 'Event Analytics',
+                'profile': 'My Profile'
             };
             if (pageTitle) pageTitle.textContent = titles[viewId] || 'Dashboard';
 
@@ -806,9 +807,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span style="padding: 2px 8px; border-radius: 12px; background: ${stateBg}; color: ${stateColor}; font-weight: 500; font-size: 0.75rem;">${evt.status}</span>
                         </div>
                     </div>
-                    <div class="event-actions">
-                        <button class="btn btn-sm btn-outline edit-btn" data-id="${evt.id}"><i class="fa-solid fa-pen"></i> Edit</button>
-                    </div>
                 </div>
             `;
         }
@@ -1268,7 +1266,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const sentDate = new Date(req.dateSent).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const eventDate = evt.date ? new Date(evt.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
-                const policyLabels = { 'flexible': 'Flexible', 'moderate': 'Moderate (7 days)', 'strict': 'Strict (14 days)', 'non-refundable': 'Non-refundable' };
+                const policyLabels = { 'flexible': 'Flexible', 'moderate': 'Moderate (14 days)', 'strict': 'Strict (30 days)', 'non-refundable': 'Non-refundable' };
                 const policyColors = { 'flexible': '#2e7d32', 'moderate': '#ff9800', 'strict': '#e65100', 'non-refundable': '#c62828' };
                 const pol = evt.withdrawalPolicy;
                 const policyLabel = policyLabels[pol] || 'Not set';
@@ -1529,7 +1527,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'event-manage': 'Event Management',
                 'vendors': 'Vendor Marketplace',
                 'requests': 'Manage Requests',
-                'analytics': 'Event Analytics'
+                'analytics': 'Event Analytics',
+                'profile': 'My Profile'
             };
             if (pageTitle) pageTitle.textContent = titles[viewId] || 'Dashboard';
 
@@ -1673,9 +1672,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Withdrawal Policies
             const policyMeta = {
-                'flexible': { label: '✦ Flexible', css: 'em-policy-flexible', desc: 'Vendors can withdraw at any time up until the event starts.' },
-                'moderate': { label: '✦ Moderate', css: 'em-policy-moderate', desc: 'Withdrawal allowed up to 7 days before the event.' },
-                'strict': { label: '✦ Strict', css: 'em-policy-strict', desc: 'Withdrawal allowed up to 14 days before the event.' },
+                'flexible': { label: '✦ Flexible', css: 'em-policy-flexible', desc: 'Vendors can withdraw up to 7 days before the event starts.' },
+                'moderate': { label: '✦ Moderate', css: 'em-policy-moderate', desc: 'Withdrawal allowed up to 14 days before the event.' },
+                'strict': { label: '✦ Strict', css: 'em-policy-strict', desc: 'Withdrawal allowed up to 30 days before the event.' },
                 'non-refundable': { label: '✦ Non-refundable', css: 'em-policy-non-refundable', desc: 'No withdrawal or cancellations permitted once confirmed.' }
             };
             const attendeePolicyMeta = {
@@ -1789,9 +1788,42 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        // --- Preparation Status Config ---
+        const PREP_STATUSES = ['Pending', 'Preparing', 'In Transit', 'Setting Up', 'Ready'];
+        const PREP_ICONS = {
+            'Pending': 'fa-clock',
+            'Preparing': 'fa-wrench',
+            'In Transit': 'fa-truck',
+            'Setting Up': 'fa-tools',
+            'Ready': 'fa-check'
+        };
+        const PREP_COLORS = {
+            'Pending': '#e65100',
+            'Preparing': '#1565c0',
+            'In Transit': '#7b1fa2',
+            'Setting Up': '#ff8f00',
+            'Ready': '#2e7d32'
+        };
+
+        // Helper: ensure vendor has preparation data
+        function ensurePreparationData(ev) {
+            if (!ev.preparationStatus) {
+                ev.preparationStatus = 'Pending';
+            }
+            if (!ev.statusHistory) {
+                ev.statusHistory = [{
+                    status: 'Pending',
+                    note: 'Vendor confirmed for the event.',
+                    timestamp: new Date().toISOString(),
+                    source: 'system'
+                }];
+            }
+            return ev;
+        }
+
         // --- Render Vendors for Event ---
         function renderEventManageVendors(eventId) {
-            const evVendors = getEventVendors().filter(v => v.eventId === eventId);
+            let evVendors = getEventVendors().filter(v => v.eventId === eventId);
             const allVendors = getVendors();
             const listEl = document.getElementById('em-vendors-list');
             const countEl = document.getElementById('em-vendors-count');
@@ -1803,9 +1835,108 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Ensure all vendors have preparation data
+            let needSave = false;
+            const allEvVendors = getEventVendors();
+            evVendors.forEach(ev => {
+                if (!ev.preparationStatus || !ev.statusHistory) {
+                    const idx = allEvVendors.findIndex(v => v.eventId === ev.eventId && v.vendorId === ev.vendorId);
+                    if (idx !== -1) {
+                        ensurePreparationData(allEvVendors[idx]);
+                        ev.preparationStatus = allEvVendors[idx].preparationStatus;
+                        ev.statusHistory = allEvVendors[idx].statusHistory;
+                        needSave = true;
+                    }
+                }
+            });
+            if (needSave) {
+                localStorage.setItem(EVENT_VENDORS_KEY, JSON.stringify(allEvVendors));
+            }
+
             listEl.innerHTML = evVendors.map(ev => {
                 const vendor = allVendors.find(v => v.id === ev.vendorId) || { name: 'Unknown', category: 'N/A', image: 'fa-store' };
                 const statusClass = ev.status.toLowerCase();
+                const prepStatus = ev.preparationStatus || 'Pending';
+                const isConfirmed = ev.status === 'Confirmed';
+
+                // Build timeline stepper HTML for confirmed vendors
+                let timelineHtml = '';
+                if (isConfirmed) {
+                    const currentIdx = PREP_STATUSES.indexOf(prepStatus);
+                    const steps = PREP_STATUSES.map((s, i) => {
+                        let stepClass = 'upcoming';
+                        if (i < currentIdx) stepClass = 'completed';
+                        else if (i === currentIdx) stepClass = (i === PREP_STATUSES.length - 1) ? 'completed' : 'active';
+                        const icon = PREP_ICONS[s];
+                        return `<div class="em-timeline-step ${stepClass}">
+                            <div class="em-timeline-circle"><i class="fa-solid ${icon}"></i></div>
+                            <span class="em-timeline-label">${s}</span>
+                        </div>`;
+                    }).join('');
+
+                    // Connector lines
+                    let connectors = '';
+                    for (let i = 0; i < PREP_STATUSES.length - 1; i++) {
+                        let connClass = 'upcoming';
+                        if (i < currentIdx) connClass = 'completed';
+                        else if (i === currentIdx) connClass = 'active';
+                        // Position: each step is (100 / n)% wide, connector spans between centers
+                        const stepW = 100 / PREP_STATUSES.length;
+                        const left = (stepW * i + stepW / 2);
+                        const width = stepW;
+                        connectors += `<div class="em-timeline-connector ${connClass}" style="left:${left}%;width:${width}%;"></div>`;
+                    }
+
+                    // Update requested badge
+                    const updateBadge = ev.updateRequested
+                        ? `<span class="em-update-requested-badge"><i class="fa-solid fa-bell"></i> Update Requested</span>`
+                        : '';
+
+                    // Latest vendor note
+                    const history = ev.statusHistory || [];
+                    const latestVendorEntry = [...history].reverse().find(h => h.source === 'vendor');
+                    let latestNoteHtml = '';
+                    if (latestVendorEntry && latestVendorEntry.note) {
+                        const noteTime = new Date(latestVendorEntry.timestamp).toLocaleString('en-US', {
+                            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        });
+                        latestNoteHtml = `
+                            <div style="margin-top: 0.65rem; padding: 0.6rem 0.85rem; background: #f5f7fa; border-radius: 10px; border-left: 3px solid ${PREP_COLORS[latestVendorEntry.status]};">
+                                <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.25rem;">
+                                    <i class="fa-solid fa-quote-left" style="font-size: 0.6rem; color: ${PREP_COLORS[latestVendorEntry.status]};"></i>
+                                    <span style="font-size: 0.7rem; font-weight: 700; color: ${PREP_COLORS[latestVendorEntry.status]};">${latestVendorEntry.status}</span>
+                                    <span style="font-size: 0.65rem; color: #aaa; margin-left: auto;">${noteTime}</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.8rem; color: #555; line-height: 1.45;">${latestVendorEntry.note}</p>
+                            </div>`;
+                    }
+
+                    timelineHtml = `
+                        <div class="em-vendor-timeline-wrap">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-size: 0.72rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.03em;">Preparation</span>
+                                    ${updateBadge}
+                                </div>
+                                <button class="em-view-timeline-btn" onclick="event.stopPropagation(); openVendorStatusModal('${eventId}', '${ev.vendorId}')">
+                                    <i class="fa-solid fa-timeline"></i> View Details
+                                </button>
+                            </div>
+                            <div class="em-vendor-timeline" style="position: relative;">
+                                ${connectors}
+                                ${steps}
+                            </div>
+                            ${latestNoteHtml}
+                        </div>`;
+                }
+
+                // Request update button for confirmed vendors
+                const requestUpdateBtn = isConfirmed
+                    ? (ev.updateRequested
+                        ? `<button class="em-request-update-btn requested" title="Update already requested"><i class="fa-solid fa-bell"></i> Requested</button>`
+                        : `<button class="em-request-update-btn" onclick="requestVendorUpdate('${eventId}', '${ev.vendorId}')" title="Ask vendor to update their status"><i class="fa-solid fa-bell"></i> Request Update</button>`)
+                    : '';
+
                 return `
                     <div class="em-vendor-card">
                         <div class="em-vendor-avatar"><i class="fa-solid ${vendor.image || 'fa-store'}"></i></div>
@@ -1815,9 +1946,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <span class="em-vendor-status ${statusClass}">${ev.status}</span>
                         <div class="em-vendor-actions">
+                            ${requestUpdateBtn}
                             <button class="btn btn-sm btn-outline" onclick="openVendorChat('${eventId}', '${ev.vendorId}')" title="Message"><i class="fa-solid fa-comment"></i></button>
                             <button class="btn btn-sm btn-outline" onclick="removeEventVendor('${eventId}', '${ev.vendorId}')" title="Remove" style="color:#c62828;border-color:#c62828;"><i class="fa-solid fa-user-minus"></i></button>
                         </div>
+                        ${timelineHtml}
                     </div>`;
             }).join('');
         }
@@ -1835,6 +1968,97 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('em-stat-pending-vendors').textContent = remaining.filter(v => v.status === 'Pending').length;
             showToast('Vendor removed from event.');
         };
+
+        // --- Request Vendor Update ---
+        window.requestVendorUpdate = function (eventId, vendorId) {
+            const evVendors = getEventVendors();
+            const idx = evVendors.findIndex(v => v.eventId === eventId && v.vendorId === vendorId);
+            if (idx === -1) return;
+
+            evVendors[idx].updateRequested = true;
+            localStorage.setItem(EVENT_VENDORS_KEY, JSON.stringify(evVendors));
+            renderEventManageVendors(eventId);
+            showToast('Update request sent to vendor!');
+        };
+
+        // --- Open Vendor Status Detail Modal ---
+        window.openVendorStatusModal = function (eventId, vendorId) {
+            const evVendors = getEventVendors();
+            const ev = evVendors.find(v => v.eventId === eventId && v.vendorId === vendorId);
+            if (!ev) return;
+
+            const allVendors = getVendors();
+            const vendor = allVendors.find(v => v.id === vendorId) || { name: 'Unknown' };
+
+            document.getElementById('em-status-modal-vendor-name').textContent = vendor.name + ' — Preparation';
+
+            const bodyEl = document.getElementById('em-status-modal-body');
+            const prepStatus = ev.preparationStatus || 'Pending';
+            const currentIdx = PREP_STATUSES.indexOf(prepStatus);
+            const history = ev.statusHistory || [];
+
+            // Build vertical history timeline
+            let historyHtml = '<div class="em-history-timeline">';
+            PREP_STATUSES.forEach((status, i) => {
+                let itemClass = 'upcoming';
+                let dotClass = 'upcoming';
+                if (i < currentIdx) { itemClass = 'completed'; dotClass = 'completed'; }
+                else if (i === currentIdx) { itemClass = 'active'; dotClass = 'active'; }
+
+                const icon = PREP_ICONS[status];
+                const historyEntry = history.find(h => h.status === status);
+
+                let noteHtml = '';
+                let timeHtml = '';
+                if (historyEntry) {
+                    if (historyEntry.note) {
+                        noteHtml = `<div class="em-history-note">${historyEntry.note}</div>`;
+                    }
+                    const time = new Date(historyEntry.timestamp).toLocaleString('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+                    const source = historyEntry.source === 'vendor' ? 'Updated by vendor' : (historyEntry.source === 'system' ? 'System' : 'Updated');
+                    timeHtml = `<div class="em-history-timestamp"><i class="fa-regular fa-clock"></i> ${time} · ${source}</div>`;
+                } else if (itemClass === 'upcoming') {
+                    noteHtml = `<div style="font-size: 0.78rem; color: #bbb; font-style: italic;">Awaiting this step</div>`;
+                }
+
+                historyHtml += `
+                    <div class="em-history-item ${itemClass}">
+                        <div class="em-history-dot ${dotClass}"><i class="fa-solid ${icon}"></i></div>
+                        <div class="em-history-card">
+                            <div class="em-history-status" style="color: ${PREP_COLORS[status]}">${status}</div>
+                            ${noteHtml}
+                            ${timeHtml}
+                        </div>
+                    </div>`;
+            });
+            historyHtml += '</div>';
+
+            bodyEl.innerHTML = historyHtml;
+
+            const modal = document.getElementById('em-status-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+        };
+
+        // --- Close Vendor Status Modal ---
+        window.closeVendorStatusModal = function () {
+            const modal = document.getElementById('em-status-modal');
+            modal.classList.add('hidden');
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        };
+
+        // Status modal backdrop close
+        const statusModal = document.getElementById('em-status-modal');
+        if (statusModal) {
+            statusModal.addEventListener('click', (e) => {
+                if (e.target === statusModal) closeVendorStatusModal();
+            });
+        }
 
         // --- Render Conversations ---
         function renderEventManageConversations(eventId) {

@@ -745,6 +745,14 @@
             return;
         }
 
+        // Attendee withdrawal policy metadata
+        const attendeePolicyMeta = {
+            'flexible': { label: 'Flexible', color: '#2e7d32', bg: '#e8f5e9', border: '#c8e6c9', desc: 'Full refund available up to 1 day before the event.' },
+            'moderate': { label: 'Moderate', color: '#e65100', bg: '#fff3e0', border: '#ffe0b2', desc: 'Full refund available up to 7 days before the event.' },
+            'strict': { label: 'Strict', color: '#c62828', bg: '#fbe9e7', border: '#ffccbc', desc: 'Full refund available up to 30 days before the event.' },
+            'non-refundable': { label: 'Non-refundable', color: '#b71c1c', bg: '#ffebee', border: '#ffcdd2', desc: 'No refunds allowed once tickets are purchased.' }
+        };
+
         container.innerHTML = upcomingRegs.map(reg => {
             const evt = events.find(e => e.id === reg.eventId);
             if (!evt) return '';
@@ -754,6 +762,8 @@
             const day = eventDate.getDate();
             const gradient = categoryGradients[evt.category] || categoryGradients['Other'];
             const barcodeId = 'ticket-barcode-' + reg.id.replace(/[^a-zA-Z0-9-_]/g, '_');
+
+
 
             return `
                 <div class="ticket-card">
@@ -779,6 +789,9 @@
                         <div style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 0.5rem;">Registered: ${reg.registeredDate}</div>
                         <button type="button" class="btn btn-primary btn-sm ticket-show-badge-btn" onclick="openBadgeModal('${reg.id}')" style="width: 100%; margin-top: 1rem;">
                             <i class="fa-solid fa-id-card"></i> Show my badge
+                        </button>
+                        <button type="button" onclick="openWithdrawModal('${reg.id}', '${evt.id}')" style="width:100%;margin-top:0.5rem;padding:9px;background:white;color:#c62828;border:1.5px solid #ffcdd2;border-radius:8px;font-weight:600;font-size:0.82rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#ffebee'" onmouseout="this.style.background='white'">
+                            <i class="fa-solid fa-right-from-bracket" style="margin-right:5px;"></i>Withdraw Registration
                         </button>
                     </div>
                 </div>
@@ -957,6 +970,72 @@
         document.getElementById('feedback-modal')?.remove();
         showToast('Thank you for your feedback!');
         renderHistory();
+    };
+
+    // --- WITHDRAW REGISTRATION ---
+    window.openWithdrawModal = function (regId, eventId) {
+        const events = getEvents();
+        const evt = events.find(e => e.id === eventId);
+        if (!evt) return;
+
+        const existing = document.getElementById('withdraw-modal');
+        if (existing) existing.remove();
+
+        const attendeePolicyMeta = {
+            'flexible': { label: 'Flexible', color: '#2e7d32', desc: 'Full refund available up to 1 day before the event.' },
+            'moderate': { label: 'Moderate', color: '#e65100', desc: 'Full refund available up to 7 days before the event.' },
+            'strict': { label: 'Strict', color: '#c62828', desc: 'Full refund available up to 30 days before the event.' },
+            'non-refundable': { label: 'Non-refundable', color: '#b71c1c', desc: 'No refunds allowed once tickets are purchased.' }
+        };
+
+        const pol = evt.attendeeWithdrawalPolicy;
+        const polMeta = pol ? attendeePolicyMeta[pol] : null;
+
+        const policySection = polMeta
+            ? `<div style="background:#fff8f8;border:1px solid #ffcdd2;border-radius:10px;padding:1rem;margin-bottom:1.25rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
+                    <i class="fa-solid fa-shield-halved" style="color:${polMeta.color};"></i>
+                    <span style="font-weight:700;color:${polMeta.color};font-size:0.9rem;">Refund Policy: ${polMeta.label}</span>
+                </div>
+                <p style="margin:0;font-size:0.82rem;color:#555;line-height:1.5;">${polMeta.desc}</p>
+               </div>`
+            : `<div style="background:#f5f5f5;border-radius:10px;padding:1rem;margin-bottom:1.25rem;">
+                <p style="margin:0;font-size:0.82rem;color:#777;"><i class="fa-solid fa-circle-info" style="margin-right:5px;"></i>No refund policy set for this event. Please contact the organizer.</p>
+               </div>`;
+
+        const modal = document.createElement('div');
+        modal.id = 'withdraw-modal';
+        modal.innerHTML = `
+            <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;justify-content:center;align-items:center;backdrop-filter:blur(3px);" onclick="if(event.target===this)document.getElementById('withdraw-modal').remove()">
+                <div style="background:white;border-radius:16px;width:90%;max-width:440px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:modalSlideIn 0.3s ease;">
+                    <div style="background:linear-gradient(135deg,#c62828,#ef5350);padding:1.75rem 2rem;text-align:center;">
+                        <div style="width:60px;height:60px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
+                            <i class="fa-solid fa-right-from-bracket" style="font-size:1.6rem;color:white;"></i>
+                        </div>
+                        <h3 style="color:white;font-size:1.2rem;margin:0 0 0.25rem;">Withdraw Registration</h3>
+                        <p style="color:rgba(255,255,255,0.85);margin:0;font-size:0.85rem;">${evt.title}</p>
+                    </div>
+                    <div style="padding:1.75rem 2rem;">
+                        <p style="margin:0 0 1.25rem;color:#333;font-size:0.9rem;line-height:1.6;">Are you sure you want to withdraw from this event? This action cannot be undone.</p>
+                        ${policySection}
+                        <div style="display:flex;gap:0.75rem;">
+                            <button onclick="document.getElementById('withdraw-modal').remove()" style="flex:1;padding:12px;background:white;color:#333;border:2px solid #e0e0e0;border-radius:8px;font-weight:600;cursor:pointer;">Cancel</button>
+                            <button onclick="confirmWithdraw('${regId}')" style="flex:1;padding:12px;background:linear-gradient(135deg,#c62828,#ef5350);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;"><i class="fa-solid fa-right-from-bracket" style="margin-right:6px;"></i>Confirm Withdrawal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    };
+
+    window.confirmWithdraw = function (regId) {
+        const regs = getRegistrations();
+        const filtered = regs.filter(r => r.id !== regId);
+        saveRegistrations(filtered);
+        document.getElementById('withdraw-modal')?.remove();
+        showToast('You have successfully withdrawn from this event.');
+        renderAll();
     };
 
     // --- PROFILE ---
