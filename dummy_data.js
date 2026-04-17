@@ -1148,6 +1148,68 @@ const DUMMY_BROADCASTS = [
 
 
 // ============================================================================
+// DUMMY ATTENDEE REGISTRATIONS (system-wide, for organizer analytics)
+// Simulates multiple attendees across events with birthday for age grouping.
+// ============================================================================
+const DUMMY_ALL_REGISTRATIONS = [
+    // --- Tech Expo (101) — 12 attendees ---
+    { id: "ar1",  eventId: "101", name: "Ahmed Al-Rashid",    birthday: "1998-05-12", ticketType: "VIP",      ticketPrice: "599", registeredDate: "2025-12-20", status: "Active" },
+    { id: "ar2",  eventId: "101", name: "Sara Al-Dosari",     birthday: "2001-08-23", ticketType: "Standard", ticketPrice: "299", registeredDate: "2025-12-22", status: "Active" },
+    { id: "ar3",  eventId: "101", name: "Khalid Al-Mutairi",  birthday: "1985-02-14", ticketType: "VIP",      ticketPrice: "599", registeredDate: "2025-12-25", status: "Active" },
+    { id: "ar4",  eventId: "101", name: "Nora Al-Harbi",      birthday: "1992-11-03", ticketType: "Standard", ticketPrice: "299", registeredDate: "2026-01-02", status: "Active" },
+    { id: "ar5",  eventId: "101", name: "Fahad Al-Otaibi",    birthday: "1975-06-30", ticketType: "Standard", ticketPrice: "299", registeredDate: "2026-01-05", status: "Active" },
+    { id: "ar6",  eventId: "101", name: "Layla Al-Zahrani",   birthday: "2003-01-18", ticketType: "Standard", ticketPrice: "299", registeredDate: "2026-01-08", status: "Active" },
+    { id: "ar7",  eventId: "101", name: "Omar Bin Saleh",     birthday: "1990-09-07", ticketType: "VIP",      ticketPrice: "599", registeredDate: "2026-01-10", status: "Active" },
+    { id: "ar8",  eventId: "101", name: "Reem Al-Shammari",   birthday: "1968-04-22", ticketType: "Standard", ticketPrice: "299", registeredDate: "2026-01-12", status: "Withdrawn", withdrawnDate: "2026-01-20" },
+    { id: "ar9",  eventId: "101", name: "Tariq Al-Qahtani",   birthday: "1995-12-01", ticketType: "Standard", ticketPrice: "299", registeredDate: "2026-01-14", status: "Withdrawn", withdrawnDate: "2026-01-18" },
+    { id: "ar10", eventId: "101", name: "Maha Al-Subaie",     birthday: "1988-07-15", ticketType: "VIP",      ticketPrice: "599", registeredDate: "2026-01-15", status: "Active" },
+    { id: "ar11", eventId: "101", name: "Youssef Al-Dossary", birthday: "2000-03-28", ticketType: "Standard", ticketPrice: "299", registeredDate: "2026-01-18", status: "Active" },
+    { id: "ar12", eventId: "101", name: "Huda Al-Enezi",      birthday: "1982-10-09", ticketType: "Standard", ticketPrice: "299", registeredDate: "2026-01-20", status: "Active" },
+
+    // --- Riyadh Art Week (102) — 8 attendees ---
+    { id: "ar13", eventId: "102", name: "Amal Al-Ghamdi",     birthday: "1997-04-05", ticketType: "General",  ticketPrice: "150", registeredDate: "2025-12-28", status: "Active" },
+    { id: "ar14", eventId: "102", name: "Saad Al-Tamimi",     birthday: "1980-12-19", ticketType: "General",  ticketPrice: "150", registeredDate: "2026-01-02", status: "Active" },
+    { id: "ar15", eventId: "102", name: "Dana Al-Rasheed",    birthday: "2004-06-11", ticketType: "General",  ticketPrice: "150", registeredDate: "2026-01-05", status: "Active" },
+    { id: "ar16", eventId: "102", name: "Mansour Al-Bloushi", birthday: "1965-09-25", ticketType: "General",  ticketPrice: "150", registeredDate: "2026-01-08", status: "Active" },
+    { id: "ar17", eventId: "102", name: "Lina Al-Yami",       birthday: "1993-02-14", ticketType: "General",  ticketPrice: "150", registeredDate: "2026-01-10", status: "Withdrawn", withdrawnDate: "2026-01-15" },
+    { id: "ar18", eventId: "102", name: "Faisal Al-Juhani",   birthday: "1999-08-30", ticketType: "General",  ticketPrice: "150", registeredDate: "2026-01-11", status: "Active" },
+    { id: "ar19", eventId: "102", name: "Nouf Al-Mutlaq",     birthday: "1987-05-17", ticketType: "General",  ticketPrice: "150", registeredDate: "2026-01-12", status: "Active" },
+    { id: "ar20", eventId: "102", name: "Bader Al-Harthy",    birthday: "1972-11-02", ticketType: "General",  ticketPrice: "150", registeredDate: "2026-01-13", status: "Active" },
+
+    // --- Business Summit (103) — 8 attendees ---
+    { id: "ar21", eventId: "103", name: "Sultan Al-Fahad",    birthday: "1978-03-08", ticketType: "Executive", ticketPrice: "750", registeredDate: "2026-01-20", status: "Active" },
+    { id: "ar22", eventId: "103", name: "Haifa Al-Subaihi",   birthday: "1991-07-22", ticketType: "Standard",  ticketPrice: "450", registeredDate: "2026-01-22", status: "Active" },
+    { id: "ar23", eventId: "103", name: "Abdulaziz Al-Nasr",  birthday: "1983-01-14", ticketType: "Executive", ticketPrice: "750", registeredDate: "2026-01-25", status: "Active" },
+    { id: "ar24", eventId: "103", name: "Mona Al-Shareef",    birthday: "1996-10-30", ticketType: "Standard",  ticketPrice: "450", registeredDate: "2026-01-28", status: "Withdrawn", withdrawnDate: "2026-02-05" },
+    { id: "ar25", eventId: "103", name: "Nawaf Al-Dosari",    birthday: "1970-06-18", ticketType: "Executive", ticketPrice: "750", registeredDate: "2026-01-30", status: "Active" },
+    { id: "ar26", eventId: "103", name: "Ghada Al-Otaibi",    birthday: "2002-09-05", ticketType: "Standard",  ticketPrice: "450", registeredDate: "2026-02-01", status: "Active" },
+    { id: "ar27", eventId: "103", name: "Rakan Al-Shehri",    birthday: "1986-04-12", ticketType: "Executive", ticketPrice: "750", registeredDate: "2026-02-03", status: "Active" },
+    { id: "ar28", eventId: "103", name: "Asma Al-Harthi",     birthday: "1994-12-28", ticketType: "Standard",  ticketPrice: "450", registeredDate: "2026-02-05", status: "Active" },
+
+    // --- Education Conference (105, Past) — 6 attendees ---
+    { id: "ar29", eventId: "105", name: "Ibrahim Al-Qahtani", birthday: "1989-08-11", ticketType: "Standard", ticketPrice: "100", registeredDate: "2025-10-20", status: "Active" },
+    { id: "ar30", eventId: "105", name: "Salma Al-Anzi",      birthday: "2001-02-06", ticketType: "Standard", ticketPrice: "100", registeredDate: "2025-10-22", status: "Active" },
+    { id: "ar31", eventId: "105", name: "Majid Al-Subaie",    birthday: "1974-05-19", ticketType: "Standard", ticketPrice: "100", registeredDate: "2025-10-25", status: "Active" },
+    { id: "ar32", eventId: "105", name: "Hadeel Al-Rashidi",  birthday: "1998-11-30", ticketType: "Standard", ticketPrice: "100", registeredDate: "2025-11-01", status: "Active" },
+    { id: "ar33", eventId: "105", name: "Turki Al-Malki",     birthday: "1967-03-14", ticketType: "Standard", ticketPrice: "100", registeredDate: "2025-11-05", status: "Withdrawn", withdrawnDate: "2025-11-10" },
+    { id: "ar34", eventId: "105", name: "Wafa Al-Mutairi",    birthday: "1993-07-08", ticketType: "Standard", ticketPrice: "100", registeredDate: "2025-11-08", status: "Active" },
+
+    // --- Riyadh Marathon (106) — 10 attendees ---
+    { id: "ar35", eventId: "106", name: "Hassan Al-Shehri",   birthday: "1995-01-20", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-01", status: "Active" },
+    { id: "ar36", eventId: "106", name: "Fatimah Al-Dosari",  birthday: "2000-06-15", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-05", status: "Active" },
+    { id: "ar37", eventId: "106", name: "Sami Al-Harbi",      birthday: "1988-09-22", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-08", status: "Active" },
+    { id: "ar38", eventId: "106", name: "Reema Al-Qahtani",   birthday: "1979-03-11", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-10", status: "Active" },
+    { id: "ar39", eventId: "106", name: "Abdulrahman Nasser", birthday: "2003-12-05", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-12", status: "Active" },
+    { id: "ar40", eventId: "106", name: "Maryam Al-Bloushi",  birthday: "1971-08-18", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-15", status: "Active" },
+    { id: "ar41", eventId: "106", name: "Badr Al-Ghamdi",     birthday: "1997-04-27", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-18", status: "Withdrawn", withdrawnDate: "2026-02-25" },
+    { id: "ar42", eventId: "106", name: "Njoud Al-Otaibi",    birthday: "1984-10-13", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-20", status: "Active" },
+    { id: "ar43", eventId: "106", name: "Meshaal Al-Enezi",   birthday: "2005-07-01", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-22", status: "Active" },
+    { id: "ar44", eventId: "106", name: "Atheer Al-Zahrani",  birthday: "1991-11-09", ticketType: "Participant", ticketPrice: "50", registeredDate: "2026-02-25", status: "Active" }
+];
+
+
+
+// ============================================================================
 // SEED DATA FUNCTION - ACTIVE FOR PRESENTATION
 // ============================================================================
 (function seedDummyData() {
@@ -1158,6 +1220,7 @@ const DUMMY_BROADCASTS = [
     const EVENT_VENDORS_KEY = 'eventia_event_vendors';
     const MESSAGES_KEY = 'eventia_messages';
     const BROADCASTS_KEY = 'eventia_broadcasts';
+    const ALL_REGISTRATIONS_KEY = 'eventia_all_registrations';
 
     console.log("Seeding Dummy Data for Presentation...");
     localStorage.setItem(EVENTS_DB_KEY, JSON.stringify(DUMMY_EVENTS));
@@ -1167,4 +1230,5 @@ const DUMMY_BROADCASTS = [
     localStorage.setItem(EVENT_VENDORS_KEY, JSON.stringify(DUMMY_EVENT_VENDORS));
     localStorage.setItem(MESSAGES_KEY, JSON.stringify(DUMMY_MESSAGES));
     localStorage.setItem(BROADCASTS_KEY, JSON.stringify(DUMMY_BROADCASTS));
+    localStorage.setItem(ALL_REGISTRATIONS_KEY, JSON.stringify(DUMMY_ALL_REGISTRATIONS));
 })();

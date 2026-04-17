@@ -1578,31 +1578,108 @@
     border-color: #1565c0;
 }
 
-/* --- Responsive --- */
+/* ================================================================
+   ORGANIZER RESPONSIVE
+   ================================================================ */
 @media (max-width: 768px) {
+    /* Create event form */
+    .create-event-form {
+        max-width: 100%;
+    }
+
+    .form-section {
+        padding: 1rem;
+    }
+
+    /* Event Management header */
+    .em-header {
+        padding: 1rem;
+        border-radius: 12px;
+        flex-wrap: wrap;
+    }
+
+    .em-header-info h2 {
+        font-size: 1.05rem;
+    }
+
+    .em-header-badges {
+        gap: 0.35rem;
+    }
+
+    /* Stats row: 2 columns */
     .em-stats-row {
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
     }
 
-    .em-overview-grid {
-        grid-template-columns: 1fr;
+    .em-stat-card {
+        padding: 0.85rem;
+        gap: 0.6rem;
     }
 
+    .em-stat-value {
+        font-size: 1.15rem;
+    }
+
+    .em-stat-label {
+        font-size: 0.72rem;
+    }
+
+    /* Tabs: scrollable row, hide icons */
     .em-tabs {
         gap: 0;
+        border-radius: 10px;
+        -webkit-overflow-scrolling: touch;
     }
 
     .em-tab {
-        padding: 0.6rem 0.5rem;
+        padding: 0.55rem 0.5rem;
         font-size: 0.78rem;
+        min-width: 0;
     }
 
     .em-tab i {
         display: none;
     }
 
+    /* Overview grid: single column */
+    .em-overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .em-detail-card-body {
+        padding: 0.85rem;
+    }
+
+    /* Status bar: wrap */
+    .em-status-bar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+    }
+
+    /* Policy panels: stack */
+    .em-policy-panels {
+        flex-direction: column;
+    }
+
+    .em-policy-divider {
+        width: auto;
+        height: 1px;
+    }
+
+    /* Vendor cards */
     .em-vendor-card {
         flex-wrap: wrap;
+        padding: 0.9rem;
+        gap: 0.75rem;
+    }
+
+    .em-vendor-avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+        border-radius: 10px;
     }
 
     .em-vendor-actions {
@@ -1610,34 +1687,616 @@
         justify-content: flex-end;
     }
 
-    .em-header {
-        padding: 1.1rem 1.25rem;
+    /* Communication subtabs: scroll */
+    .em-comm-subtabs {
+        flex-wrap: wrap;
+        gap: 0.35rem;
     }
 
-    .em-header-info h2 {
-        font-size: 1.1rem;
+    .em-comm-subtab {
+        padding: 0.5rem 0.85rem;
+        font-size: 0.8rem;
     }
 
+    /* Conversation items */
+    .em-conversation-item {
+        padding: 0.85rem 1rem;
+        gap: 0.75rem;
+    }
+
+    /* Chat modal: full screen */
     .em-chat-modal-box {
         width: 100%;
         max-width: 100%;
-        height: 100vh;
-        max-height: 100vh;
+        height: 100dvh;
+        max-height: 100dvh;
         border-radius: 0;
+    }
+
+    /* Broadcast */
+    .em-broadcast-compose {
+        padding: 1rem;
+    }
+
+    /* Actions grid */
+    .em-actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Status modal */
+    .em-status-modal-box,
+    .vem-status-modal-box {
+        width: 100%;
+        max-width: 100%;
+        max-height: 95dvh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    /* Update banner: stack if needed */
+    .vem-update-banner {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .vem-update-banner-text {
+        font-size: 0.82rem;
+    }
+
+    /* Vendor timeline: smaller circles */
+    .em-timeline-circle {
+        width: 24px;
+        height: 24px;
+        font-size: 0.55rem;
+    }
+
+    .em-timeline-label {
+        font-size: 0.55rem;
+        max-width: 54px;
+    }
+
+    .em-timeline-connector {
+        top: 12px;
     }
 }
 
 @media (max-width: 480px) {
+    .em-header {
+        padding: 0.85rem;
+        border-radius: 10px;
+    }
+
+    .em-header-info h2 {
+        font-size: 0.95rem;
+    }
+
+    .em-badge {
+        font-size: 0.65rem;
+        padding: 2px 7px;
+    }
+
     .em-stats-row {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.6rem;
+        gap: 0.45rem;
     }
 
     .em-stat-card {
-        padding: 0.85rem;
+        padding: 0.7rem;
+    }
+
+    .em-stat-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+    }
+
+    .em-stat-value {
+        font-size: 1rem;
+    }
+
+    .em-tab {
+        padding: 0.5rem 0.4rem;
+        font-size: 0.72rem;
+    }
+
+    .em-detail-card-header {
+        padding: 0.7rem 0.85rem;
+        font-size: 0.82rem;
     }
 
     .em-comm-subtabs {
         flex-direction: column;
+    }
+
+    .em-comm-subtab {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+/* ================================================================
+   ANALYTICS DASHBOARD
+   ================================================================ */
+
+#view-analytics {
+    border-radius: 16px;
+}
+
+.analytics-dashboard {
+    max-width: 1100px;
+}
+
+/* ===================== KPI CARD GRID ===================== */
+.ana-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.ana-kpi-card {
+    border-radius: 12px;
+    padding: 1.15rem 1rem 1.15rem 1.15rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e0e8f0;
+    border-left: 4px solid #004e92;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ana-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 78, 146, 0.1);
+}
+.ana-kpi-card > i {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #004e92;
+}
+.ana-kpi-value {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+.ana-kpi-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #636e72;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.3rem;
+}
+
+/* Withdrawal KPI accent */
+.ana-kpi-warn {
+    border-left-color: #e17055;
+}
+.ana-kpi-warn > i {
+    color: #e17055;
+}
+
+/* Event-report KPI (reuses same light style) */
+.evt-kpi {
+    border-radius: 12px;
+    padding: 0.9rem 0.75rem 0.9rem 0.9rem;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e0e8f0;
+    border-left: 4px solid #004e92;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.evt-kpi > i {
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+    display: block;
+    color: #004e92;
+}
+.evt-kpi-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    line-height: 1.2;
+}
+.evt-kpi-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #636e72;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.2rem;
+}
+.evt-kpi.ana-kpi-warn {
+    border-left-color: #e17055;
+}
+.evt-kpi.ana-kpi-warn > i {
+    color: #e17055;
+}
+
+/* ===================== HIGHLIGHT CARDS ===================== */
+.ana-highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.ana-highlight-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 1.1rem;
+    background: #ffffff;
+    border: 1px solid #e0e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.ana-highlight-icon {
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
+    background: rgba(0, 78, 146, 0.08);
+    color: #004e92;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.ana-highlight-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #636e72;
+}
+.ana-highlight-value {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-top: 0.15rem;
+    line-height: 1.35;
+}
+
+/* ===================== TAB-BASED CHART PANEL ===================== */
+.ana-chart-panel {
+    background: #ffffff;
+    border: 1px solid #e0e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.ana-tab-bar {
+    display: flex;
+    gap: 0;
+    background: #f5f8fb;
+    border-bottom: 1px solid #e0e8f0;
+    overflow-x: auto;
+}
+
+.ana-tab {
+    padding: 0.85rem 1.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #636e72;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+}
+.ana-tab:hover {
+    color: #004e92;
+    background: rgba(0, 78, 146, 0.04);
+}
+.ana-tab.active {
+    color: #004e92;
+    border-bottom-color: #004e92;
+    background: #ffffff;
+}
+
+.ana-chart-area {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    max-height: 400px;
+    padding: 1.25rem;
+    background: #ffffff;
+}
+.ana-chart-area canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ===================== PER-EVENT REPORT ===================== */
+.evt-report {
+    max-width: 1000px;
+}
+.evt-report-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+.evt-report-header h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.evt-report-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.evt-report-chart-panel {
+    border: 1px solid #e0e8f0;
+    background: #ffffff;
+}
+.evt-report-chart-panel .ana-chart-area {
+    height: 300px;
+    max-height: 340px;
+}
+
+/* ===================== MAIN-LEVEL TABS (Overview / Event Report) ===================== */
+.ana-main-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.ana-main-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.7rem 1.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #636e72;
+    background: #ffffff;
+    border: 1px solid #d0dbe6;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.ana-main-tab:hover {
+    color: #004e92;
+    border-color: #4dabf7;
+    background: #f0f7ff;
+}
+.ana-main-tab.active {
+    color: #ffffff;
+    background: #004e92;
+    border-color: #004e92;
+}
+.ana-main-tab i {
+    font-size: 0.85rem;
+}
+
+.ana-main-panel {
+    display: none;
+}
+.ana-main-panel.active {
+    display: block;
+    animation: anaFadeIn 0.25s ease;
+}
+
+/* ===================== EXPORT PDF BUTTONS ===================== */
+.ana-export-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+.ana-export-pdf-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+.ana-export-pdf-btn i {
+    font-size: 0.9rem;
+}
+.ana-export-pdf-btn.ana-export-pdf-outline {
+    background: #ffffff;
+    color: #004e92;
+    border: 1px solid #d0dbe6;
+}
+.ana-export-pdf-btn.ana-export-pdf-outline:hover {
+    background: #f0f7ff;
+    border-color: #4dabf7;
+}
+.ana-export-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+}
+
+/* ===================== EVENT TITLE BANNER ===================== */
+.ana-evt-title-banner {
+    background: linear-gradient(135deg, #004e92, #4dabf7);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.ana-evt-title-info h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+}
+.ana-evt-title-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+.ana-evt-title-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.ana-evt-title-meta i {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+/* ===================== EVENT REPORT ON ANALYTICS PAGE ===================== */
+.ana-event-report-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+.ana-event-report-header h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.ana-event-report-header h3 i {
+    color: #004e92;
+}
+
+.ana-event-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.ana-event-selector label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #636e72;
+    white-space: nowrap;
+}
+.ana-event-selector select {
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d0dbe6;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #2d3436;
+    background: #ffffff;
+    min-width: 220px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+.ana-event-selector select:focus {
+    outline: none;
+    border-color: #004e92;
+    box-shadow: 0 0 0 3px rgba(0, 78, 146, 0.1);
+}
+
+.ana-event-report-body {
+    animation: anaFadeIn 0.3s ease;
+}
+
+/* Used only during PDF export — html2canvas snapshots after layout is boosted for readability */
+.analytics-dashboard.pdf-export-capture-pdf #ana-panel-overview,
+.analytics-dashboard.pdf-export-capture-pdf .ana-event-report-body {
+    min-width: 980px !important;
+    max-width: none !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .evt-report-chart-panel .ana-chart-area {
+    height: 400px !important;
+    min-height: 400px !important;
+    max-height: 460px !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .ana-chart-panel:not(.evt-report-chart-panel) .ana-chart-area {
+    height: 400px !important;
+    min-height: 400px !important;
+    max-height: 460px !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .evt-kpi-value,
+.analytics-dashboard.pdf-export-capture-pdf .ana-kpi-value {
+    font-size: 1.45rem !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .evt-kpi-label,
+.analytics-dashboard.pdf-export-capture-pdf .ana-kpi-label {
+    font-size: 0.85rem !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .ana-evt-title-banner h2 {
+    font-size: 1.35rem !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .ana-evt-title-meta {
+    font-size: 0.9rem !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .ana-tab {
+    font-size: 0.88rem !important;
+    padding: 0.65rem 1.1rem !important;
+}
+@keyframes anaFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.ana-event-report-placeholder {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #b0bec5;
+}
+.ana-event-report-placeholder i {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    opacity: 0.5;
+}
+.ana-event-report-placeholder p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+    .ana-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .ana-highlight-grid {
+        grid-template-columns: 1fr;
+    }
+    .ana-tab {
+        padding: 0.75rem 1rem;
+        font-size: 0.78rem;
+    }
+    .ana-chart-area {
+        height: 280px;
+        max-height: 320px;
+        padding: 1rem;
+    }
+    .evt-report-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .ana-event-report-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .ana-event-selector select {
+        min-width: 100%;
     }
 }

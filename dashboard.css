@@ -9,7 +9,8 @@
     background-color: #f0f4f8;
     display: flex;
     overflow: hidden;
-    max-height: 100vh;
+    min-height: 100dvh;
+    max-height: 100dvh;
 }
 
 /* --- Sidebar --- */
@@ -20,7 +21,7 @@
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
-    height: 100vh;
+    height: 100dvh;
     transition: all 0.3s ease;
     z-index: 100;
     position: relative;
@@ -123,7 +124,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 2rem;
-    height: 100vh;
+    height: 100dvh;
     position: relative;
 }
 
@@ -1273,12 +1274,58 @@
     color: var(--primary-dark);
 }
 
+/* Sidebar close button (hidden on desktop) */
+.sidebar-close-btn {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.sidebar-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Sidebar backdrop overlay (tap outside to close) */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 199;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-backdrop.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ================================================================
+   RESPONSIVE: Tablet (<=992px) — sidebar becomes off-canvas overlay
+   ================================================================ */
 @media (max-width: 992px) {
     .sidebar {
         position: fixed;
         left: -280px;
-        height: 100vh;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        top: 0;
+        height: 100dvh;
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
+        z-index: 200;
     }
 
     .sidebar.open {
@@ -1288,10 +1335,270 @@
     .mobile-toggle {
         display: block;
     }
+
+    #sidebar-toggle {
+        display: block;
+    }
+
+    .sidebar-close-btn {
+        display: flex;
+    }
+
+    .dashboard-main {
+        width: 100%;
+    }
 }
 
-@media (max-width: 700px) {
+/* ================================================================
+   RESPONSIVE: Phone (<=768px) — tighter spacing, stacked layouts
+   ================================================================ */
+@media (max-width: 768px) {
+    .dashboard-main {
+        padding: 0.75rem;
+    }
+
+    .dashboard-header {
+        padding: 0.85rem 1rem;
+        margin-bottom: 1rem;
+        gap: 0.5rem;
+    }
+
+    .header-title h1 {
+        font-size: 1.2rem;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+
+    .header-profile .profile-info {
+        display: none;
+    }
+
+    .content-section {
+        padding: 1rem;
+        border-radius: 14px;
+        margin-bottom: 1rem;
+    }
+
+    .section-header {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.1rem;
+    }
+
+    /* Stats grid: 2 columns on phones */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 0.85rem;
+        gap: 0.75rem;
+    }
+
+    .stat-card:hover {
+        transform: none;
+    }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.4rem;
+    }
+
+    .stat-info p {
+        font-size: 0.8rem;
+    }
+
+    /* Event list items: stack vertically */
+    .event-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .event-info-main {
+        width: 100%;
+    }
+
+    .event-actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* Request system: filters wrap better */
+    .req-filter-bar {
+        gap: 0.5rem;
+    }
+
+    .req-filter-select {
+        min-width: 0;
+        flex: 1;
+        font-size: 0.85rem;
+        padding: 8px 32px 8px 10px;
+    }
+
+    .req-filter-label {
+        width: 100%;
+        font-size: 0.85rem;
+    }
+
+    /* Request cards grid: single column */
     .request-cards-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Request card chips: stack */
+    .req-card-vendor-name,
+    .req-card-vendor-sub {
+        max-width: 140px;
+    }
+
+    .req-chip-value {
+        max-width: 120px;
+    }
+
+    /* Request detail modal: nearly full-screen */
+    .req-detail-modal-box {
+        max-width: 100%;
+        width: 100%;
+        border-radius: 0;
+        max-height: 100dvh;
+    }
+
+    /* Blue date box: slightly smaller */
+    .blue-date-box {
+        min-width: 52px;
+        padding: 0.4rem;
+    }
+
+    .blue-date-box span:last-child,
+    .blue-date-box .date-day {
+        font-size: 1.2rem;
+    }
+
+    /* Organizer list date box: make it smaller on phones */
+    .event-date-box {
+        padding: 0.55rem 0.65rem;
+        min-width: 60px;
+        border-radius: 10px;
+        text-align: center;
+        align-self: flex-start;
+    }
+
+    .event-date-box .date-month {
+        font-size: 0.65rem;
+    }
+
+    .event-date-box .date-day {
+        font-size: 1.2rem;
+    }
+}
+
+/* ================================================================
+   RESPONSIVE: Small Phone (<=480px) — maximum density
+   ================================================================ */
+@media (max-width: 480px) {
+    .sidebar {
+        width: 260px;
+        left: -260px;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .sidebar-brand {
+        font-size: 1.15rem;
+    }
+
+    .sidebar-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .nav-item {
+        padding: 0.85rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-main {
+        padding: 0.5rem;
+    }
+
+    .dashboard-header {
+        padding: 0.75rem 0.85rem;
+        margin-bottom: 0.75rem;
+        border-radius: 10px;
+    }
+
+    .header-title h1 {
+        font-size: 1.05rem;
+    }
+
+    .content-section {
+        padding: 0.75rem;
+        border-radius: 12px;
+    }
+
+    .stats-grid {
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .stat-card {
+        padding: 0.7rem;
+        gap: 0.6rem;
+        border-radius: 10px;
+    }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 0.95rem;
+    }
+
+    .stat-info h3 {
+        font-size: 1.15rem;
+    }
+
+    .stat-info p {
+        font-size: 0.72rem;
+    }
+
+    .section-header h2 {
+        font-size: 1rem;
+        padding-left: 0.75rem;
+    }
+
+    /* Request card actions: full width */
+    .req-card-actions .btn {
+        font-size: 0.78rem;
+        padding: 0.45rem 0.5rem;
+    }
+
+    /* Further compact Organizer date box */
+    .event-date-box {
+        padding: 0.5rem 0.55rem;
+        min-width: 52px;
+        text-align: center;
+        align-self: flex-start;
+    }
+
+    .event-date-box .date-month {
+        font-size: 0.6rem;
+    }
+
+    .event-date-box .date-day {
+        font-size: 1.05rem;
     }
 }

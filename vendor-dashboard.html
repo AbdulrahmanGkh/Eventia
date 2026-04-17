@@ -13,15 +13,82 @@
     <link rel="stylesheet" href="vendor.css?v=1">
     <link rel="stylesheet" href="organizer.css?v=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Mobile overrides for inline-styled elements */
+        @media (max-width: 768px) {
+            /* Request / invitation tab cards: single column */
+            #view-requests > div:first-child,
+            #view-invitations > div:first-child {
+                grid-template-columns: 1fr !important;
+            }
+            .request-tab {
+                padding: 1rem !important;
+            }
+            .request-tab div:first-child {
+                width: 40px !important;
+                height: 40px !important;
+            }
+            /* Browse events grid: single column */
+            #browse-events-container {
+                grid-template-columns: 1fr !important;
+            }
+            /* Invitations/upcoming cards */
+            #invitations-cards-container,
+            #upcoming-events-container {
+                gap: 0.75rem !important;
+            }
+            /* Inline grid sections */
+            [style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+            [style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            /* Profile container */
+            #view-profile > div {
+                max-width: 100% !important;
+            }
+            /* Status bar flex wrap */
+            .em-status-bar {
+                flex-wrap: wrap !important;
+                gap: 0.75rem !important;
+            }
+            /* Section filter headers */
+            .section-header > div[style*="display: flex"] {
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .request-tab {
+                padding: 0.85rem !important;
+                gap: 0.75rem !important;
+            }
+            .request-tab div:first-child {
+                width: 36px !important;
+                height: 36px !important;
+            }
+            [style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 </head>
 
 <body class="dashboard-body">
+
+    <!-- Sidebar Backdrop (tap to close on mobile) -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
     <!-- Sidebar Navigation -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <img src="assets/eventia_logo_new.png" alt="Eventia" class="sidebar-logo">
             <span class="sidebar-brand">EVENTIA VENDOR</span>
+            <button class="sidebar-close-btn" id="sidebar-close" aria-label="Close sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
         <nav class="sidebar-nav">
@@ -207,7 +274,7 @@
                             onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
                             <option value="all">All Invitations</option>
                             <option value="Pending" selected>Pending</option>
-                            <option value="Approved">Approved</option>
+                            <option value="Approved">Confirmed</option>
                             <option value="Rejected">Rejected</option>
                         </select>
                     </div>

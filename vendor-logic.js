@@ -3,6 +3,8 @@
  * Handles specific functionality for vendor-dashboard.html
  */
 
+const SAR_ICON = '<img src="assets/sar_symbol.svg" class="sar-icon" alt="SAR">';
+
 function initVendorDashboard() {
     console.log("Initializing Vendor Dashboard...");
 
@@ -24,6 +26,11 @@ function initVendorDashboard() {
     const currentVendor = vendors.find(v => v.id === CURRENT_VENDOR_ID);
     if (currentVendor) {
         document.getElementById('vendor-name-display').textContent = currentVendor.name;
+    }
+
+    /** Display label for invitation request status (data still uses Approved). */
+    function invitationStatusLabel(status) {
+        return status === 'Approved' ? 'Confirmed' : status;
     }
 
     // --- VIEW SWITCHING ---
@@ -67,7 +74,7 @@ function initVendorDashboard() {
 
         // Mobile Sidebar Close
         if (window.innerWidth < 992) {
-            sidebar.classList.remove('open');
+            closeSidebar();
         }
     };
 
@@ -80,11 +87,30 @@ function initVendorDashboard() {
         });
     });
 
-    // Sidebar Toggle
+    // Sidebar Toggle + Close + Backdrop
+    const sidebarClose = document.getElementById('sidebar-close');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+    }
+
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
+            if (sidebar.classList.contains('open')) closeSidebar();
+            else openSidebar();
         });
+    }
+    if (sidebarClose) {
+        sidebarClose.addEventListener('click', closeSidebar);
+    }
+    if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', closeSidebar);
     }
 
     // --- DATA RENDERING ---
@@ -200,7 +226,7 @@ function initVendorDashboard() {
                         const statusColor = req.status === 'Approved' ? '#2e7d32' : '#c62828';
                         const statusBg = req.status === 'Approved' ? 'rgba(46, 125, 50, 0.1)' : 'rgba(198, 40, 40, 0.1)';
                         actionButtons = `
-                            <span style="padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: ${statusBg}; color: ${statusColor};">${req.status}</span>
+                            <span style="padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: ${statusBg}; color: ${statusColor};">${invitationStatusLabel(req.status)}</span>
                         `;
                     }
 
@@ -281,11 +307,11 @@ function initVendorDashboard() {
                 ticketInfo = event.tickets.map(t =>
                     `<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
                         <span>${t.name}</span>
-                        <strong>${t.price} SAR</strong>
+                        <strong>${t.price} ${SAR_ICON}</strong>
                     </div>`
                 ).join('');
             } else {
-                ticketInfo = `<div style="color: #1976d2; font-weight: 600; font-size: 1.1rem;"><i class="fa-solid fa-ticket" style="margin-right: 6px;"></i>${event.price} SAR</div>`;
+                ticketInfo = `<div style="color: #1976d2; font-weight: 600; font-size: 1.1rem;"><i class="fa-solid fa-ticket" style="margin-right: 6px;"></i>${event.price} ${SAR_ICON}</div>`;
             }
         }
 
@@ -1205,6 +1231,16 @@ function initVendorDashboard() {
         'Setting Up': '#ff8f00',
         'Ready': '#2e7d32'
     };
+    const PREP_LABELS = {
+        'Pending': 'Pending',
+        'Preparing': 'Start preparing at premises',
+        'In Transit': 'Finish preparing at premises',
+        'Setting Up': 'Setting up in location',
+        'Ready': 'Ready'
+    };
+    function prepStatusLabel(key) {
+        return PREP_LABELS[key] || key;
+    }
 
     // --- Render Vendor Preparation Card (timeline stepper + update button) ---
     function renderVendorPreparationCard(eventId) {
@@ -1230,7 +1266,7 @@ function initVendorDashboard() {
             const icon = PREP_ICONS[s];
             return `<div class="em-timeline-step ${stepClass}">
                 <div class="em-timeline-circle"><i class="fa-solid ${icon}"></i></div>
-                <span class="em-timeline-label">${s}</span>
+                <span class="em-timeline-label">${prepStatusLabel(s)}</span>
             </div>`;
         }).join('');
 
@@ -1301,7 +1337,7 @@ function initVendorDashboard() {
         const nextStatus = currentIdx < PREP_STATUSES.length - 1 ? PREP_STATUSES[currentIdx + 1] : null;
 
         if (!nextStatus) {
-            showToast('You are already at the final status: Ready!');
+            showToast(`You are already at the final status: ${prepStatusLabel('Ready')}!`);
             return;
         }
 
@@ -1309,10 +1345,10 @@ function initVendorDashboard() {
         const displayEl = document.getElementById('vem-status-current-display');
         displayEl.innerHTML = `
             <div class="vem-status-current-dot" style="background: ${PREP_COLORS[prepStatus]};"></div>
-            <div class="vem-status-current-label">${prepStatus}</div>
+            <div class="vem-status-current-label">${prepStatusLabel(prepStatus)}</div>
             <div style="color: #bbb; font-size: 1rem;"><i class="fa-solid fa-arrow-right"></i></div>
             <div class="vem-status-current-dot" style="background: ${PREP_COLORS[nextStatus]};"></div>
-            <div class="vem-status-current-label" style="color: ${PREP_COLORS[nextStatus]};">${nextStatus}</div>
+            <div class="vem-status-current-label" style="color: ${PREP_COLORS[nextStatus]};">${prepStatusLabel(nextStatus)}</div>
         `;
 
         // Clear note textarea
@@ -1320,7 +1356,7 @@ function initVendorDashboard() {
 
         // Update submit button text
         const submitBtn = document.getElementById('vem-submit-status-btn');
-        submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right"></i> Advance to "${nextStatus}"`;
+        submitBtn.innerHTML = `<i class="fa-solid fa-arrow-right"></i> Advance to "${prepStatusLabel(nextStatus)}"`;
 
         const modal = document.getElementById('vem-status-update-modal');
         modal.classList.remove('hidden');
@@ -1369,7 +1405,7 @@ function initVendorDashboard() {
         closeVendorStatusUpdateModal();
         renderVendorPreparationCard(currentManagedEventId);
         renderUpdateRequestBanner(currentManagedEventId);
-        showToast(`Status updated to "${nextStatus}"!`);
+        showToast(`Status updated to "${prepStatusLabel(nextStatus)}"!`);
     };
 
     // Backdrop close for status update modal
@@ -1437,7 +1473,7 @@ function initVendorDashboard() {
         const ticketsEl = document.getElementById('vem-ov-tickets');
         if (evt.tickets && evt.tickets.length > 0) {
             ticketsEl.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;">' +
-                evt.tickets.map(t => `<div class="em-ticket-tier"><span class="tier-name">${t.name}</span><span class="tier-price">${t.price > 0 ? t.price + ' SAR' : 'Free'}</span></div>`).join('') + '</div>';
+                evt.tickets.map(t => `<div class="em-ticket-tier"><span class="tier-name">${t.name}</span><span class="tier-price">${t.price > 0 ? t.price + ' ' + SAR_ICON : 'Free'}</span></div>`).join('') + '</div>';
         } else {
             ticketsEl.innerHTML = '<p style="color:#888;margin:0;">No ticket tiers defined.</p>';
         }

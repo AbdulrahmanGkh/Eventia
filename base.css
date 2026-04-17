@@ -43,6 +43,18 @@ body {
     min-height: 100vh;
 }
 
+/* --- Saudi Riyal Currency Symbol (Inline Icon) --- */
+.sar-icon {
+    height: 0.85em;
+    width: auto;
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 2px;
+}
+.sar-icon-light {
+    filter: brightness(0) invert(1);
+}
+
 /* --- Navigation --- */
 .navbar {
     background: rgba(255, 255, 255, 0.95);
@@ -818,7 +830,6 @@ html[dir="rtl"] .ltr-input {
 /* --- Base Responsive --- */
 @media (max-width: 768px) {
     .navbar {
-        padding: 0 1rem;
         height: 60px;
         padding: 0 0.5rem;
     }
@@ -839,11 +850,11 @@ html[dir="rtl"] .ltr-input {
     .hero-section {
         flex-direction: column;
         text-align: center;
-        padding-top: 2rem;
+        padding: 2rem 5%;
     }
 
     .hero-text h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .hero-image-placeholder {
@@ -852,6 +863,7 @@ html[dir="rtl"] .ltr-input {
 
     .hero-buttons {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .events-container {
@@ -860,5 +872,93 @@ html[dir="rtl"] .ltr-input {
 
     .events-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Forms: stack vertically */
+    .form-row {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .date-inputs-wrapper {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    /* Tables: horizontal scroll wrapper handles overflow, cells wrap text */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .data-table {
+        min-width: 500px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.6rem 0.65rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .data-table th {
+        font-size: 0.7rem;
+    }
+
+    /* Modals: full-width, scrollable */
+    .modal-overlay {
+        align-items: flex-end;
+    }
+
+    .modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92dvh;
+        overflow-y: auto;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .modal-header {
+        padding: 1.1rem;
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 1;
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    /* Section actions: wrap for small screens */
+    .section-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 1.6rem;
+    }
+
+    .hero-text p {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.8rem;
+    }
+
+    .events-container {
+        padding: 1.5rem 0.75rem 3rem;
     }
 }

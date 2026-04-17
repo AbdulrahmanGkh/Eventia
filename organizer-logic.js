@@ -5,6 +5,8 @@
 // Loaded by organizer-dashboard.html only.
 // ============================================================
 
+const SAR_ICON = '<img src="assets/sar_symbol.svg" class="sar-icon" alt="SAR">';
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- DASHBOARD LOGIC ---
@@ -81,10 +83,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Sidebar Toggle (Mobile)
+        const sidebarClose = document.getElementById('sidebar-close');
+        const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+        }
+
         if (sidebarToggle) {
             sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
+                if (sidebar.classList.contains('open')) closeSidebar();
+                else openSidebar();
             });
+        }
+        if (sidebarClose) {
+            sidebarClose.addEventListener('click', closeSidebar);
+        }
+        if (sidebarBackdrop) {
+            sidebarBackdrop.addEventListener('click', closeSidebar);
         }
 
         // View Switching Logic
@@ -118,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Close sidebar on mobile after selection
             if (window.innerWidth < 992) {
-                sidebar.classList.remove('open');
+                closeSidebar();
             }
 
             // Refresh data if needed
@@ -322,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     container.innerHTML = `
                         <div class="ticket-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
                             <input type="text" class="ticket-name" placeholder="Name (e.g. General)" value="Standard" required style="flex: 2;">
-                            <input type="number" class="ticket-price" placeholder="Price (SAR)" min="0" required style="flex: 1;">
+                            <input type="number" class="ticket-price" placeholder="Price" min="0" required style="flex: 1;">
                             <input type="number" class="ticket-capacity" placeholder="Max Attendees" min="1" style="flex: 1;">
                             <button type="button" class="btn btn-sm btn-outline remove-ticket-btn" style="color: var(--danger-color); border-color: var(--danger-color);"><i class="fa-solid fa-trash"></i></button>
                         </div>
@@ -381,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px;';
                 row.innerHTML = `
                     <input type="text" class="ticket-name" placeholder="Name (e.g. General)" value="${ticket.name}" required style="flex: 2;">
-                    <input type="number" class="ticket-price" placeholder="Price (SR)" value="${ticket.price}" min="0" required style="flex: 1;">
+                    <input type="number" class="ticket-price" placeholder="Price" value="${ticket.price}" min="0" required style="flex: 1;">
                     <input type="number" class="ticket-capacity" placeholder="Max Attendees" value="${ticket.capacity || ''}" min="1" style="flex: 1;">
                     <button type="button" class="btn btn-sm btn-outline remove-ticket-btn" style="color: var(--danger-color); border-color: var(--danger-color);"><i class="fa-solid fa-trash"></i></button>
                 `;
@@ -424,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     row.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px;';
                     row.innerHTML = `
                         <input type="text" class="ticket-name" placeholder="Name (e.g. General)" required style="flex: 2;">
-                        <input type="number" class="ticket-price" placeholder="Price (SR)" min="0" required style="flex: 1;">
+                        <input type="number" class="ticket-price" placeholder="Price" min="0" required style="flex: 1;">
                         <input type="number" class="ticket-capacity" placeholder="Max Attendees" min="1" style="flex: 1;">
                         <button type="button" class="btn btn-sm btn-outline remove-ticket-btn" style="color: var(--danger-color); border-color: var(--danger-color);"><i class="fa-solid fa-trash"></i></button>
                     `;
@@ -772,9 +793,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Price Display Logic
             let priceDisplay = 'Free';
             if (evt.price > 0) {
-                priceDisplay = `${evt.price} SAR`;
+                priceDisplay = `${evt.price} ${SAR_ICON}`;
                 if (evt.tickets && evt.tickets.length > 1) {
-                    priceDisplay = `From ${evt.price} SAR`;
+                    priceDisplay = `From ${evt.price} ${SAR_ICON}`;
                 }
             }
 
@@ -819,9 +840,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Price Display Logic
             let priceDisplay = 'Free';
             if (evt.price > 0) {
-                priceDisplay = `${evt.price} SAR`;
+                priceDisplay = `${evt.price} ${SAR_ICON}`;
                 if (evt.tickets && evt.tickets.length > 1) {
-                    priceDisplay = `From ${evt.price} SAR`;
+                    priceDisplay = `From ${evt.price} ${SAR_ICON}`;
                 }
             }
 
@@ -963,6 +984,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- REQUESTS LOGIC ---
         const REQUESTS_DB_KEY = 'eventia_requests_db';
 
+        function invitationStatusLabel(status) {
+            return status === 'Approved' ? 'Confirmed' : status;
+        }
+
         function getRequests() {
             const stored = localStorage.getItem(REQUESTS_DB_KEY);
             return stored ? JSON.parse(stored) : [];
@@ -1040,7 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <span class="req-table-vendor-cat">${vendor.category}</span>
                                 </div>
                             </td>
-                            <td><span class="status-badge ${statusClass}">${statusIcon} ${req.status}</span></td>
+                            <td><span class="status-badge ${statusClass}">${statusIcon} ${invitationStatusLabel(req.status)}</span></td>
                             <td class="req-table-details-cell">
                                 <button type="button" class="btn btn-sm btn-outline req-btn-view" onclick="openRequestDetailModal('${req.id}', 'outgoing')">
                                     <i class="fa-solid fa-eye"></i> View
@@ -1294,7 +1319,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (req.status === 'Approved') { statusClass = 'status-approved'; statusIcon = '<i class="fa-solid fa-check-circle"></i>'; }
                 else if (req.status === 'Rejected') { statusClass = 'status-rejected'; statusIcon = '<i class="fa-solid fa-circle-xmark"></i>'; }
                 statusEl.className = 'status-badge ' + statusClass;
-                statusEl.innerHTML = statusIcon + ' ' + req.status;
+                statusEl.innerHTML = statusIcon + ' ' + invitationStatusLabel(req.status);
             } else {
                 const requests = getIncomingRequests();
                 const req = requests.find(r => r.id === requestId);
@@ -1534,7 +1559,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Close sidebar on mobile
             if (window.innerWidth < 992) {
-                sidebar.classList.remove('open');
+                closeSidebar();
             }
 
             // Data Refresh
@@ -1547,6 +1572,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (typeof populateRequestEventFilters === 'function') populateRequestEventFilters();
                 renderRequests();
                 renderIncomingRequests();
+            } else if (viewId === 'analytics') {
+                if (typeof window.renderAnalytics === 'function') window.renderAnalytics();
             } else if (viewId === 'event-manage') {
                 // Data is loaded by openEventManage before switching
             }
@@ -1613,6 +1640,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!evt) return;
 
             currentManagedEventId = eventId;
+            window._currentEventManageId = eventId;
 
             // Populate Header
             document.getElementById('em-event-title').textContent = evt.title;
@@ -1665,7 +1693,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ticketsEl = document.getElementById('em-ov-tickets');
             if (evt.tickets && evt.tickets.length > 0) {
                 ticketsEl.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:0.5rem;">' +
-                    evt.tickets.map(t => `<div class="em-ticket-tier"><span class="tier-name">${t.name}</span><span class="tier-price">${t.price > 0 ? t.price + ' SAR' : 'Free'}</span></div>`).join('') + '</div>';
+                    evt.tickets.map(t => `<div class="em-ticket-tier"><span class="tier-name">${t.name}</span><span class="tier-price">${t.price > 0 ? t.price + ' ' + SAR_ICON : 'Free'}</span></div>`).join('') + '</div>';
             } else {
                 ticketsEl.innerHTML = '<p style="color:#888;margin:0;">No ticket tiers defined.</p>';
             }
@@ -1804,6 +1832,16 @@ document.addEventListener('DOMContentLoaded', () => {
             'Setting Up': '#ff8f00',
             'Ready': '#2e7d32'
         };
+        const PREP_LABELS = {
+            'Pending': 'Pending',
+            'Preparing': 'Start preparing at premises',
+            'In Transit': 'Finish preparing at premises',
+            'Setting Up': 'Setting up in location',
+            'Ready': 'Ready'
+        };
+        function prepStatusLabel(key) {
+            return PREP_LABELS[key] || key;
+        }
 
         // Helper: ensure vendor has preparation data
         function ensurePreparationData(ev) {
@@ -1870,7 +1908,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const icon = PREP_ICONS[s];
                         return `<div class="em-timeline-step ${stepClass}">
                             <div class="em-timeline-circle"><i class="fa-solid ${icon}"></i></div>
-                            <span class="em-timeline-label">${s}</span>
+                            <span class="em-timeline-label">${prepStatusLabel(s)}</span>
                         </div>`;
                     }).join('');
 
@@ -1904,7 +1942,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div style="margin-top: 0.65rem; padding: 0.6rem 0.85rem; background: #f5f7fa; border-radius: 10px; border-left: 3px solid ${PREP_COLORS[latestVendorEntry.status]};">
                                 <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.25rem;">
                                     <i class="fa-solid fa-quote-left" style="font-size: 0.6rem; color: ${PREP_COLORS[latestVendorEntry.status]};"></i>
-                                    <span style="font-size: 0.7rem; font-weight: 700; color: ${PREP_COLORS[latestVendorEntry.status]};">${latestVendorEntry.status}</span>
+                                    <span style="font-size: 0.7rem; font-weight: 700; color: ${PREP_COLORS[latestVendorEntry.status]};">${prepStatusLabel(latestVendorEntry.status)}</span>
                                     <span style="font-size: 0.65rem; color: #aaa; margin-left: auto;">${noteTime}</span>
                                 </div>
                                 <p style="margin: 0; font-size: 0.8rem; color: #555; line-height: 1.45;">${latestVendorEntry.note}</p>
@@ -2028,7 +2066,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="em-history-item ${itemClass}">
                         <div class="em-history-dot ${dotClass}"><i class="fa-solid ${icon}"></i></div>
                         <div class="em-history-card">
-                            <div class="em-history-status" style="color: ${PREP_COLORS[status]}">${status}</div>
+                            <div class="em-history-status" style="color: ${PREP_COLORS[status]}">${prepStatusLabel(status)}</div>
                             ${noteHtml}
                             ${timeHtml}
                         </div>
@@ -2235,3 +2273,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+

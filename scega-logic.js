@@ -4,6 +4,8 @@
  * Separated from app.js to ensure stability and isolation.
  */
 
+const SAR_ICON = '<img src="assets/sar_symbol.svg" class="sar-icon" alt="SAR">';
+
 window.initScegaDashboard = function () {
     console.log("Initializing SCEGA Dashboard...");
 
@@ -63,7 +65,7 @@ window.initScegaDashboard = function () {
 
         // Mobile Sidebar
         if (window.innerWidth < 992 && sidebar) {
-            sidebar.classList.remove('open');
+            closeSidebar();
         }
     };
 
@@ -291,11 +293,11 @@ window.initScegaDashboard = function () {
                 ticketInfo = evt.tickets.map(t =>
                     `<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
                         <span>${t.name}</span>
-                        <strong>${t.price} SAR</strong>
+                        <strong>${t.price} ${SAR_ICON}</strong>
                     </div>`
                 ).join('');
             } else {
-                ticketInfo = `<div style="color: #1976d2; font-weight: 600; font-size: 1.1rem;">🎟️ ${evt.price} SAR</div>`;
+                ticketInfo = `<div style="color: #1976d2; font-weight: 600; font-size: 1.1rem;">🎟️ ${evt.price} ${SAR_ICON}</div>`;
             }
         }
 
@@ -456,12 +458,31 @@ window.initScegaDashboard = function () {
         });
     });
 
-    // Mobile Sidebar Toggle
+    // Sidebar Toggle + Close + Backdrop
     const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarClose = document.getElementById('sidebar-close');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+    function openSidebar() {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+    }
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+    }
+
     if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
+            if (sidebar.classList.contains('open')) closeSidebar();
+            else openSidebar();
         });
+    }
+    if (sidebarClose) {
+        sidebarClose.addEventListener('click', closeSidebar);
+    }
+    if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', closeSidebar);
     }
 
     // Initial Render

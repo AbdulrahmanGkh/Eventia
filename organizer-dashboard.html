@@ -13,15 +13,93 @@
     <link rel="stylesheet" href="organizer.css?v=1">
     <link rel="stylesheet" href="vendor.css?v=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Mobile overrides for inline-styled elements */
+        @media (max-width: 768px) {
+            /* Request tab cards: single column */
+            #view-requests > div:first-child {
+                grid-template-columns: 1fr !important;
+            }
+            .request-tab {
+                padding: 1rem !important;
+            }
+            .request-tab div:first-child {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            /* Event list items: stack vertically on mobile */
+            .event-list-item {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.75rem !important;
+            }
+            .events-list-header {
+                display: none !important;
+            }
+            .scega-status-column {
+                text-align: left !important;
+            }
+            .event-actions {
+                width: 100% !important;
+                flex-direction: column !important;
+                justify-content: flex-start !important;
+                align-items: stretch !important;
+                gap: 0.5rem !important;
+            }
+
+            .event-actions .manage-btn {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+
+            /* Profile grid sections */
+            [style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+            [style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            /* Profile container */
+            #view-profile > div {
+                max-width: 100% !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .request-tab {
+                padding: 0.85rem !important;
+                gap: 0.75rem !important;
+            }
+            .request-tab div:first-child {
+                width: 36px !important;
+                height: 36px !important;
+            }
+            [style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body class="dashboard-body">
+
+    <!-- Sidebar Backdrop (tap to close on mobile) -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
     <!-- Sidebar Navigation -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <img src="assets/logo_fixed.png" alt="Eventia" class="sidebar-logo">
             <span class="sidebar-brand">EVENTIA</span>
+            <button class="sidebar-close-btn" id="sidebar-close" aria-label="Close sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
         <nav class="sidebar-nav">
@@ -43,12 +121,12 @@
             <a href="#" class="nav-item" data-view="analytics">
                 <i class="fa-solid fa-chart-pie"></i> Analytics
             </a>
-            <a href="#" class="nav-item" data-view="profile">
-                <i class="fa-solid fa-user-gear"></i> Profile
-            </a>
         </nav>
 
         <div class="sidebar-footer">
+            <a href="#" class="nav-item" data-view="profile">
+                <i class="fa-solid fa-user-gear"></i> Profile
+            </a>
             <a href="login.html" class="nav-item">
                 <i class="fa-solid fa-right-from-bracket"></i> Logout
             </a>
@@ -225,7 +303,7 @@
                             <div class="ticket-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
                                 <input type="text" class="ticket-name" placeholder="Name (e.g. General)"
                                     value="Standard" required style="flex: 2;">
-                                <input type="number" class="ticket-price" placeholder="Price (SR)" min="0" required
+                                <input type="number" class="ticket-price" placeholder="Price" min="0" required
                                     style="flex: 1;">
                                 <input type="number" class="ticket-capacity" placeholder="Max Attendees" min="1"
                                     style="flex: 1;">
@@ -580,6 +658,7 @@
                 </div>
             </div>
 
+
             <!-- Tab Content: Actions -->
             <div class="em-tab-content" id="em-tab-actions">
                 <div class="em-actions-grid">
@@ -866,7 +945,7 @@
                     <select id="request-status-filter" class="req-filter-select">
                         <option value="all">All Status</option>
                         <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
+                        <option value="Approved">Confirmed</option>
                         <option value="Rejected">Rejected</option>
                     </select>
                     <span id="outgoing-count" class="req-count-label"></span>
@@ -1048,35 +1127,189 @@
         </div>
         </div>
 
-        <!-- VIEW: ANALYTICS (Future) -->
+        <!-- VIEW: ANALYTICS -->
         <section id="view-analytics" class="content-section">
-            <div style="text-align: center; padding: 4rem 2rem;">
-                <i class="fa-solid fa-chart-pie"
-                    style="font-size: 4rem; color: var(--primary-light); margin-bottom: 1.5rem; opacity: 0.5;"></i>
-                <h2>Event Analytics</h2>
-                <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem;">
-                    Deep insights into your event performance, attendee demographics, and ticket sales.
-                </p>
-                <div class="stats-grid" style="opacity: 0.5; pointer-events: none; margin-top: 2rem;">
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>--</h3>
-                            <p>Page Views</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>--</h3>
-                            <p>Conversion</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>--</h3>
-                            <p>Revenue</p>
-                        </div>
-                    </div>
+            <div class="analytics-dashboard">
+
+                <!-- Top-level tab bar -->
+                <div class="ana-main-tabs">
+                    <button class="ana-main-tab active" data-ana-main="overview">
+                        <i class="fa-solid fa-chart-bar"></i> Overview
+                    </button>
+                    <button class="ana-main-tab" data-ana-main="event-report">
+                        <i class="fa-solid fa-file-lines"></i> Event Report
+                    </button>
                 </div>
+
+                <!-- ======== PANEL: OVERVIEW ======== -->
+                <div class="ana-main-panel active" id="ana-panel-overview">
+
+                    <!-- KPI Cards -->
+                    <div class="ana-kpi-grid">
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <div class="ana-kpi-value" id="kpi-total-events">--</div>
+                            <div class="ana-kpi-label">Total Events</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-users"></i>
+                            <div class="ana-kpi-value" id="kpi-total-attendees">--</div>
+                            <div class="ana-kpi-label">Total Attendees</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                            <div class="ana-kpi-value" id="kpi-total-revenue">--</div>
+                            <div class="ana-kpi-label">Est. Revenue</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <div class="ana-kpi-value" id="kpi-avg-attendance">--</div>
+                            <div class="ana-kpi-label">Avg. Attendance</div>
+                        </div>
+                        <div class="ana-kpi-card ana-kpi-warn">
+                            <i class="fa-solid fa-store-slash"></i>
+                            <div class="ana-kpi-value" id="kpi-vendor-withdrawals">--</div>
+                            <div class="ana-kpi-label">Vendor Withdrawals</div>
+                        </div>
+                        <div class="ana-kpi-card ana-kpi-warn">
+                            <i class="fa-solid fa-user-minus"></i>
+                            <div class="ana-kpi-value" id="kpi-attendee-withdrawals">--</div>
+                            <div class="ana-kpi-label">Attendee Withdrawals</div>
+                        </div>
+                    </div>
+
+                    <!-- Highlight Cards -->
+                    <div class="ana-highlight-grid">
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-trophy"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Top Event</div>
+                                <div class="ana-highlight-value" id="highlight-top-event">--</div>
+                            </div>
+                        </div>
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-star"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Most Booked Service</div>
+                                <div class="ana-highlight-value" id="highlight-top-service">--</div>
+                            </div>
+                        </div>
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-ranking-star"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Best Category</div>
+                                <div class="ana-highlight-value" id="highlight-top-category">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart tabs -->
+                    <div class="ana-chart-panel">
+                        <div class="ana-tab-bar">
+                            <button class="ana-tab active" data-ana-tab="attendance">Attendance</button>
+                            <button class="ana-tab" data-ana-tab="revenue">Revenue</button>
+                            <button class="ana-tab" data-ana-tab="services">Services</button>
+                            <button class="ana-tab" data-ana-tab="categories">Categories</button>
+                            <button class="ana-tab" data-ana-tab="age-groups">Age Groups</button>
+                        </div>
+                        <div class="ana-chart-area">
+                            <canvas id="ana-chart-canvas"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ana-export-row">
+                        <button class="ana-export-pdf-btn ana-export-pdf-outline" id="ana-overview-export-pdf" title="Export Overview as PDF">
+                            <i class="fa-solid fa-file-pdf"></i> Export Overview PDF
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- ======== PANEL: EVENT REPORT ======== -->
+                <div class="ana-main-panel" id="ana-panel-event-report">
+
+                    <div class="ana-event-report-header">
+                        <h3><i class="fa-solid fa-file-lines"></i> Event Report</h3>
+                        <div class="ana-event-selector">
+                            <label for="ana-event-select">Select Event</label>
+                            <select id="ana-event-select">
+                                <option value="">— Choose an event —</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="ana-event-report-body" class="ana-event-report-body" style="display:none;">
+
+                        <!-- Event title banner -->
+                        <div class="ana-evt-title-banner">
+                            <div class="ana-evt-title-info">
+                                <h2 id="ana-evt-title-name">Event Name</h2>
+                                <div class="ana-evt-title-meta">
+                                    <span id="ana-evt-title-date"><i class="fa-regular fa-calendar"></i> --</span>
+                                    <span id="ana-evt-title-category"><i class="fa-solid fa-tag"></i> --</span>
+                                    <span id="ana-evt-title-status"><i class="fa-solid fa-circle-info"></i> --</span>
+                                </div>
+                            </div>
+                            <button class="ana-export-pdf-btn" id="ana-evt-export-pdf" title="Export as PDF">
+                                <i class="fa-solid fa-file-pdf"></i> Export PDF
+                            </button>
+                        </div>
+
+                        <!-- Per-event KPIs -->
+                        <div class="evt-report-kpi-grid">
+                            <div class="evt-kpi">
+                                <i class="fa-solid fa-users"></i>
+                                <div class="evt-kpi-value" id="ana-evt-kpi-attendees">--</div>
+                                <div class="evt-kpi-label">Attendees</div>
+                            </div>
+                            <div class="evt-kpi">
+                                <i class="fa-solid fa-sack-dollar"></i>
+                                <div class="evt-kpi-value" id="ana-evt-kpi-revenue">--</div>
+                                <div class="evt-kpi-label">Total Revenue</div>
+                            </div>
+                            <div class="evt-kpi">
+                                <i class="fa-solid fa-shield-check"></i>
+                                <div class="evt-kpi-value" id="ana-evt-kpi-retention">--</div>
+                                <div class="evt-kpi-label">Retention Rate</div>
+                            </div>
+                            <div class="evt-kpi">
+                                <i class="fa-solid fa-handshake"></i>
+                                <div class="evt-kpi-value" id="ana-evt-kpi-vendors">--</div>
+                                <div class="evt-kpi-label">Vendors</div>
+                            </div>
+                            <div class="evt-kpi ana-kpi-warn">
+                                <i class="fa-solid fa-store-slash"></i>
+                                <div class="evt-kpi-value" id="ana-evt-kpi-vendor-wd">--</div>
+                                <div class="evt-kpi-label">Vendor WD</div>
+                            </div>
+                            <div class="evt-kpi ana-kpi-warn">
+                                <i class="fa-solid fa-user-minus"></i>
+                                <div class="evt-kpi-value" id="ana-evt-kpi-attendee-wd">--</div>
+                                <div class="evt-kpi-label">Attendee WD</div>
+                            </div>
+                        </div>
+
+                        <!-- Per-event chart tabs -->
+                        <div class="ana-chart-panel evt-report-chart-panel">
+                            <div class="ana-tab-bar">
+                                <button class="ana-tab active" data-ana-evt-tab="revenue-tier">Revenue by Tier</button>
+                                <button class="ana-tab" data-ana-evt-tab="age-groups">Age Groups</button>
+                                <button class="ana-tab" data-ana-evt-tab="reg-timeline">Registration Timeline</button>
+                                <button class="ana-tab" data-ana-evt-tab="vendor-services">Vendor Services</button>
+                            </div>
+                            <div class="ana-chart-area">
+                                <canvas id="ana-evt-report-chart-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="ana-event-report-placeholder" class="ana-event-report-placeholder">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <p>Select an event above to view its detailed report.</p>
+                    </div>
+
+                </div>
+
             </div>
         </section>
 
@@ -1251,6 +1484,7 @@
     <script src="dummy_data.js"></script>
     <script src="app.js"></script>
     <script src="organizer-logic.js"></script>
+    <script src="organizer-analytics.js"></script>
 </body>
 
 </html>

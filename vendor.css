@@ -102,6 +102,7 @@
     flex: 1;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -211,9 +212,6 @@
     color: #475569;
     border: 1px solid #e2e8f0;
 }
-
-.vendor-my-events-col-date {}
-.vendor-my-events-col-details {}
 
 .vendor-my-events-col-status {
     text-align: center;
@@ -569,7 +567,11 @@
     gap: 0.5rem;
 }
 
-/* --- Vendor My-Events Responsive --- */
+/* ================================================================
+   VENDOR RESPONSIVE
+   ================================================================ */
+
+/* Tablet: 3-column grid for my-events */
 @media (max-width: 900px) {
     .vendor-my-events-list-header,
     .vendor-my-events-list .event-card-horizontal {
@@ -577,8 +579,162 @@
     }
 
     .vendor-my-events-col-actions,
-    .vendor-my-events-list .event-card-horizontal>div:last-child {
+    .vendor-my-events-list .event-card-horizontal > div:last-child {
         grid-column: 1 / -1;
         text-align: left;
+    }
+}
+
+/* Phone: marketplace, my-events, browse, apply modal */
+@media (max-width: 768px) {
+    /* Vendor marketplace: single column */
+    .vendors-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .vendor-card {
+        max-width: 100%;
+    }
+
+    .vendor-image {
+        height: 140px;
+    }
+
+    .vendor-details {
+        padding: 1rem;
+    }
+
+    .vendor-details h3 {
+        font-size: 1.1rem;
+    }
+
+    .vendor-footer {
+        flex-wrap: wrap;
+    }
+
+    /* My-events hero */
+    .vendor-my-events-hero {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    .vendor-my-events-hero-title {
+        font-size: 1.15rem;
+    }
+
+    .vendor-my-events-hero-desc {
+        font-size: 0.85rem;
+    }
+
+    .vendor-my-events-search-wrap {
+        max-width: 100%;
+    }
+
+    /* My-events list: hide header, stack cards like organizer */
+    .vendor-my-events-list-header {
+        display: none;
+    }
+
+    .vendor-my-events-list .event-card-horizontal {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem 0.85rem;
+    }
+
+    .vendor-my-events-list .event-card-horizontal .status-badge {
+        margin: 0;
+    }
+
+    .vendor-my-events-list .event-card-horizontal .blue-date-box {
+        min-width: auto;
+    }
+
+    .vendor-my-events-list .event-card-horizontal > div:last-child {
+        width: 100%;
+        text-align: left;
+    }
+
+    .vendor-my-events-list .event-card-horizontal > div:nth-child(3) {
+        width: 100%;
+        text-align: left;
+    }
+
+    .vendor-my-events-list .event-card-horizontal > div:last-child button {
+        width: 100%;
+    }
+
+    /* Apply modal: full width bottom sheet */
+    .apply-modal-card {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .apply-modal-header {
+        padding: 1.25rem 1.25rem 1rem;
+    }
+
+    .apply-modal-title {
+        font-size: 1.15rem;
+    }
+
+    .apply-modal-body {
+        padding: 1rem 1.25rem 1.25rem;
+    }
+
+    .apply-form-actions {
+        flex-direction: column;
+    }
+
+    .apply-form-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .vendor-my-events-hero {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .vendor-my-events-hero-title {
+        font-size: 1.05rem;
+    }
+
+    .vendor-my-events-search-input {
+        font-size: 0.88rem;
+        padding: 10px 14px 10px 38px;
+    }
+
+    .vendor-my-events-list .event-card-horizontal {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.85rem 0.75rem;
+    }
+
+    .vendor-my-events-list .event-card-horizontal > div:last-child button {
+        width: 100%;
+    }
+
+    .vendor-image {
+        height: 120px;
+    }
+
+    .vendor-details {
+        padding: 0.85rem;
+    }
+
+    .vendor-details h3 {
+        font-size: 1rem;
+    }
+
+    .vendor-description {
+        font-size: 0.82rem;
+        margin-bottom: 1rem;
     }
 }

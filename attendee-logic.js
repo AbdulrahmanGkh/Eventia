@@ -3,6 +3,8 @@
  * Handles all FR3.0 features: Browse, Register, Tickets, Profile, History, Feedback
  */
 
+const SAR_ICON = '<img src="assets/sar_symbol.svg" class="sar-icon" alt="SAR">';
+
 (function () {
     const EVENTS_DB = 'eventia_events_db';
     const REGISTRATIONS_DB = 'eventia_registrations_db';
@@ -169,8 +171,8 @@
         grid.innerHTML = filtered.map(evt => {
             const gradient = categoryGradients[evt.category] || categoryGradients['Other'];
             const icon = categoryIcons[evt.category] || 'fa-calendar';
-            const isRegistered = registrations.some(r => r.eventId === evt.id);
-            const priceDisplay = evt.price && parseInt(evt.price) > 0 ? `From ${evt.price} SR` : 'Free';
+            const isRegistered = registrations.some(r => r.eventId === evt.id && r.status !== 'Withdrawn');
+            const priceDisplay = evt.price && parseInt(evt.price) > 0 ? `From ${evt.price} ${SAR_ICON}` : 'Free';
 
             const eventDate = new Date(evt.date);
             const dateFormatted = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -212,18 +214,18 @@
         if (existing) existing.remove();
 
         const registrations = getRegistrations();
-        const isRegistered = registrations.some(r => r.eventId === evt.id);
+        const isRegistered = registrations.some(r => r.eventId === evt.id && r.status !== 'Withdrawn');
 
         let ticketInfo = '<div style="color: #2e7d32; font-weight: 600;"><i class="fa-solid fa-ticket" style="margin-right: 6px;"></i>Free Event</div>';
         if (evt.price && parseInt(evt.price) > 0) {
             if (evt.tickets && evt.tickets.length > 0) {
                 ticketInfo = evt.tickets.map(t =>
                     `<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
-                        <span>${t.name}</span><strong>${t.price} SAR</strong>
+                        <span>${t.name}</span><strong>${t.price} ${SAR_ICON}</strong>
                     </div>`
                 ).join('');
             } else {
-                ticketInfo = `<div style="color: #1976d2; font-weight: 600;"><i class="fa-solid fa-ticket" style="margin-right: 6px;"></i>${evt.price} SAR</div>`;
+                ticketInfo = `<div style="color: #1976d2; font-weight: 600;"><i class="fa-solid fa-ticket" style="margin-right: 6px;"></i>${evt.price} ${SAR_ICON}</div>`;
             }
         }
 
@@ -302,7 +304,7 @@
         let ticketOptions = '<option value="Standard|0">Standard - Free</option>';
         if (evt.tickets && evt.tickets.length > 0) {
             ticketOptions = evt.tickets.map(t =>
-                `<option value="${t.name}|${t.price}">${t.name} - ${parseInt(t.price) > 0 ? t.price + ' SAR' : 'Free'}</option>`
+                `<option value="${t.name}|${t.price}">${t.name} - ${parseInt(t.price) > 0 ? t.price + ' ' + SAR_ICON : 'Free'}</option>`
             ).join('');
         }
 
@@ -342,7 +344,7 @@
                         <div id="reg-price-summary" style="background:#f0f7ff;border:1px solid #bbdefb;border-radius:12px;padding:1rem;margin-bottom:1.25rem;">
                             <div style="display:flex;justify-content:space-between;align-items:center;">
                                 <span style="color:#555;font-size:0.9rem;">Ticket Price</span>
-                                <span id="reg-price-display" style="font-size:1.1rem;font-weight:700;color:#004e92;">${basePrice > 0 ? basePrice + ' SAR' : 'Free'}</span>
+                                <span id="reg-price-display" style="font-size:1.1rem;font-weight:700;color:#004e92;">${basePrice > 0 ? basePrice + ' ' + SAR_ICON : 'Free'}</span>
                             </div>
                         </div>
                         <div style="display:flex;gap:0.75rem;">
@@ -482,10 +484,10 @@
         if (!sel) return;
         const [name, price] = sel.value.split('|');
         const p = parseInt(price) || 0;
-        if (priceEl) priceEl.textContent = p > 0 ? p + ' SAR' : 'Free';
+        if (priceEl) priceEl.innerHTML = p > 0 ? p + ' ' + SAR_ICON : 'Free';
         if (summaryTicket) summaryTicket.textContent = name + ' ticket';
-        if (summaryPrice) summaryPrice.textContent = p > 0 ? p + ' SAR' : 'Free';
-        if (summaryTotal) summaryTotal.textContent = p > 0 ? p + ' SAR' : 'Free';
+        if (summaryPrice) summaryPrice.innerHTML = p > 0 ? p + ' ' + SAR_ICON : 'Free';
+        if (summaryTotal) summaryTotal.innerHTML = p > 0 ? p + ' ' + SAR_ICON : 'Free';
     };
 
     window.regFormatCard = function (input) {
@@ -572,7 +574,7 @@
             const p = parseInt(ticketPrice) || 0;
             if (rcCode) rcCode.textContent = ticketCode;
             if (rcType) rcType.textContent = ticketName;
-            if (rcAmount) rcAmount.textContent = p > 0 ? p + ' SAR' : 'Free';
+            if (rcAmount) rcAmount.innerHTML = p > 0 ? p + ' ' + SAR_ICON : 'Free';
 
             // Show success
             document.getElementById('reg-step-3').style.display = 'none';
@@ -732,6 +734,7 @@
         const events = getEvents();
         const registrations = getRegistrations();
         const upcomingRegs = registrations.filter(r => {
+            if (r.status === 'Withdrawn') return false;
             const evt = events.find(e => e.id === r.eventId);
             return evt && new Date(evt.date) >= new Date();
         });
@@ -820,6 +823,7 @@
         const events = getEvents();
         const registrations = getRegistrations();
         const pastRegs = registrations.filter(r => {
+            if (r.status === 'Withdrawn') return false;
             const evt = events.find(e => e.id === r.eventId);
             return evt && new Date(evt.date) < new Date();
         });
@@ -1031,8 +1035,12 @@
 
     window.confirmWithdraw = function (regId) {
         const regs = getRegistrations();
-        const filtered = regs.filter(r => r.id !== regId);
-        saveRegistrations(filtered);
+        const reg = regs.find(r => r.id === regId);
+        if (reg) {
+            reg.status = 'Withdrawn';
+            reg.withdrawnDate = new Date().toISOString().split('T')[0];
+            saveRegistrations(regs);
+        }
         document.getElementById('withdraw-modal')?.remove();
         showToast('You have successfully withdrawn from this event.');
         renderAll();
