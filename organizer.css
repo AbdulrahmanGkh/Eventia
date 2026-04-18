@@ -1827,6 +1827,13 @@
     max-width: 1100px;
 }
 
+#ana-panel-overview {
+    --ana-overview-primary: #004e92;
+    --ana-overview-secondary: #1565c0;
+    --ana-overview-light: #4dabf7;
+    --ana-overview-surface: #f5f9ff;
+}
+
 /* ===================== KPI CARD GRID ===================== */
 .ana-kpi-grid {
     display: grid;
@@ -1875,10 +1882,10 @@
 
 /* Withdrawal KPI accent */
 .ana-kpi-warn {
-    border-left-color: #e17055;
+    border-left-color: #ef4444;
 }
 .ana-kpi-warn > i {
-    color: #e17055;
+    color: #ef4444;
 }
 
 /* Event-report KPI (reuses same light style) */
@@ -1912,10 +1919,10 @@
     margin-top: 0.2rem;
 }
 .evt-kpi.ana-kpi-warn {
-    border-left-color: #e17055;
+    border-left-color: #ef4444;
 }
 .evt-kpi.ana-kpi-warn > i {
-    color: #e17055;
+    color: #ef4444;
 }
 
 /* ===================== HIGHLIGHT CARDS ===================== */
@@ -1960,6 +1967,11 @@
     line-height: 1.35;
 }
 
+#ana-panel-overview .ana-highlight-icon {
+    background: linear-gradient(135deg, rgba(0, 78, 146, 0.12), rgba(77, 171, 247, 0.2));
+    box-shadow: inset 0 0 0 1px rgba(77, 171, 247, 0.14);
+}
+
 /* ===================== TAB-BASED CHART PANEL ===================== */
 .ana-chart-panel {
     background: #ffffff;
@@ -1969,12 +1981,23 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
+#ana-panel-overview .ana-chart-panel {
+    border-color: rgba(21, 101, 192, 0.14);
+    box-shadow: 0 14px 34px rgba(0, 78, 146, 0.08);
+    background: linear-gradient(180deg, rgba(245, 249, 255, 0.92), #ffffff 34%);
+}
+
 .ana-tab-bar {
     display: flex;
     gap: 0;
     background: #f5f8fb;
     border-bottom: 1px solid #e0e8f0;
     overflow-x: auto;
+}
+
+#ana-panel-overview .ana-tab-bar {
+    background: linear-gradient(135deg, rgba(0, 78, 146, 0.08), rgba(77, 171, 247, 0.06));
+    border-bottom-color: rgba(21, 101, 192, 0.12);
 }
 
 .ana-tab {
@@ -2000,6 +2023,21 @@
     background: #ffffff;
 }
 
+#ana-panel-overview .ana-tab {
+    color: #587084;
+}
+
+#ana-panel-overview .ana-tab:hover {
+    color: var(--ana-overview-primary);
+    background: rgba(255, 255, 255, 0.56);
+}
+
+#ana-panel-overview .ana-tab.active {
+    color: #0f3558;
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom-color: var(--ana-overview-secondary);
+}
+
 .ana-chart-area {
     position: relative;
     width: 100%;
@@ -2007,6 +2045,12 @@
     max-height: 400px;
     padding: 1.25rem;
     background: #ffffff;
+}
+
+#ana-panel-overview .ana-chart-area {
+    background:
+        radial-gradient(circle at top right, rgba(77, 171, 247, 0.16), transparent 28%),
+        linear-gradient(180deg, rgba(245, 249, 255, 0.92), #ffffff 36%);
 }
 .ana-chart-area canvas {
     width: 100% !important;
@@ -2251,6 +2295,91 @@
     font-size: 0.88rem !important;
     padding: 0.65rem 1.1rem !important;
 }
+/* Freeze all animations/transitions during PDF capture.
+   html2canvas clones the DOM and restarts CSS animations from frame 0,
+   which would otherwise snapshot the report body mid-fade (opacity < 1)
+   and make charts/KPIs/banner look washed out or "hidden". */
+.analytics-dashboard.pdf-export-capture-pdf,
+.analytics-dashboard.pdf-export-capture-pdf *,
+.analytics-dashboard.pdf-export-capture-pdf *::before,
+.analytics-dashboard.pdf-export-capture-pdf *::after {
+    animation: none !important;
+    transition: none !important;
+}
+.analytics-dashboard.pdf-export-capture-pdf .ana-main-panel.active,
+.analytics-dashboard.pdf-export-capture-pdf .ana-event-report-body,
+.analytics-dashboard.pdf-export-capture-pdf #ana-panel-overview {
+    opacity: 1 !important;
+    transform: none !important;
+}
+/* ===================== PDF STAGING CONTAINER ===================== */
+.pdf-staging-container {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    width: 980px;
+    background: #f5f8fc;
+    padding: 2rem 2.5rem;
+    font-family: 'Inter', sans-serif;
+    color: #2d3436;
+    z-index: -1;
+}
+.pdf-staging-container * {
+    animation: none !important;
+    transition: none !important;
+}
+.pdf-report-title-banner {
+    background: linear-gradient(135deg, #004e92, #4dabf7);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.75rem;
+    color: #ffffff;
+}
+.pdf-report-title-banner h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 0.35rem 0;
+}
+.pdf-report-title-banner p {
+    font-size: 0.85rem;
+    margin: 0;
+    opacity: 0.85;
+}
+.pdf-section-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f3558;
+    margin: 1.75rem 0 0.75rem 0;
+    padding-bottom: 0.45rem;
+    border-bottom: 2px solid #e0e8f0;
+    letter-spacing: 0.01em;
+}
+.pdf-chart-wrapper {
+    background: #ffffff;
+    border: 1px solid #e0e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+.pdf-chart-wrapper img {
+    border-radius: 8px;
+}
+.pdf-staging-container .ana-kpi-grid {
+    margin-bottom: 0.5rem;
+}
+.pdf-staging-container .ana-highlight-grid {
+    margin-bottom: 0.5rem;
+}
+.pdf-staging-container .evt-report-kpi-grid {
+    margin-bottom: 0.5rem;
+}
+.pdf-staging-container .ana-evt-title-banner {
+    margin-bottom: 1.5rem;
+}
+.pdf-staging-container .ana-evt-title-banner .ana-export-pdf-btn {
+    display: none;
+}
+
 @keyframes anaFadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -2270,6 +2399,261 @@
 .ana-event-report-placeholder p {
     font-size: 0.9rem;
     margin: 0;
+}
+
+/* ===================== LOYAL ATTENDEES ===================== */
+.att-loyalty-section {
+    margin-top: 1.5rem;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e0e8f0;
+    overflow: hidden;
+}
+.att-loyalty-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e8eef4;
+    background: linear-gradient(135deg, rgba(253, 203, 110, 0.1), rgba(225, 112, 85, 0.05));
+}
+.att-loyalty-header h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2d3436;
+}
+.att-loyalty-header h3 i {
+    color: #f59e0b;
+    margin-right: 0.4rem;
+}
+.att-loyalty-header p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #636e72;
+}
+.att-loyalty-list {
+    padding: 1rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.att-loyalty-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e8eef4;
+    transition: all 0.2s ease;
+}
+.att-loyalty-card:hover {
+    border-color: #d0dbe6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.att-loyalty-rank {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    background: #e8eef4;
+    color: #636e72;
+}
+.att-loyalty-rank.rank-1 {
+    background: linear-gradient(135deg, #f9ca24, #f0932b);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(249, 202, 36, 0.4);
+}
+.att-loyalty-rank.rank-2 {
+    background: linear-gradient(135deg, #b2bec3, #95a5a6);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(149, 165, 166, 0.3);
+}
+.att-loyalty-rank.rank-3 {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+.att-loyalty-info {
+    flex: 1;
+    min-width: 0;
+}
+.att-loyalty-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #2d3436;
+    margin-bottom: 0.15rem;
+}
+.att-loyalty-meta {
+    font-size: 0.8rem;
+    color: #636e72;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.att-loyalty-meta span i {
+    margin-right: 0.25rem;
+}
+.att-loyalty-badge {
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.att-loyalty-badge.badge-gold {
+    background: linear-gradient(135deg, #f9ca24, #f0932b);
+    color: #fff;
+}
+.att-loyalty-badge.badge-silver {
+    background: linear-gradient(135deg, #b2bec3, #95a5a6);
+    color: #fff;
+}
+.att-loyalty-badge.badge-bronze {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+}
+.att-loyalty-badge.badge-regular {
+    background: #e8eef4;
+    color: #636e72;
+}
+.att-loyalty-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #b0bec5;
+    font-size: 0.9rem;
+}
+.att-loyalty-empty i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+}
+
+/* ===================== VENDOR ANALYTICS TABLE ===================== */
+.vnd-table-section {
+    margin-top: 1.5rem;
+    background: #fff;
+    border: 1px solid #e0e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+}
+.vnd-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e8eef4;
+    background: #f8fafc;
+}
+.vnd-table-header h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2d3436;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.vnd-table-header h4 i {
+    color: #004e92;
+}
+.vnd-performance-table {
+    max-height: 420px;
+    overflow-y: auto;
+}
+.vnd-perf-row {
+    display: grid;
+    grid-template-columns: 2.5fr 1.2fr 0.8fr 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    align-items: center;
+    border-bottom: 1px solid #f0f4f8;
+    transition: background 0.15s;
+}
+.vnd-perf-row:last-child {
+    border-bottom: none;
+}
+.vnd-perf-row:hover {
+    background: #f0f6ff;
+}
+.vnd-perf-row-head {
+    background: #f0f4f8;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #636e72;
+    border-bottom: 1px solid #e0e8f0;
+}
+.vnd-perf-row-head:hover {
+    background: #f0f4f8;
+}
+.vnd-perf-name {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 500;
+    color: #2d3436;
+    font-size: 0.88rem;
+}
+.vnd-perf-name .vnd-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #004e92, #4dabf7);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+.vnd-perf-category {
+    font-size: 0.8rem;
+    color: #636e72;
+    padding: 3px 10px;
+    background: #f0f4f8;
+    border-radius: 12px;
+    display: inline-block;
+    white-space: nowrap;
+}
+.vnd-perf-rating {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #f59e0b;
+}
+.vnd-perf-bookings {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #004e92;
+}
+.vnd-perf-events {
+    font-size: 0.8rem;
+    color: #636e72;
+}
+.vnd-perf-status-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.vnd-perf-status-pill.confirmed {
+    background: rgba(0, 184, 148, 0.12);
+    color: #00b894;
+}
+.vnd-perf-status-pill.pending {
+    background: rgba(255, 152, 0, 0.12);
+    color: #ff9800;
+}
+.vnd-perf-status-pill.declined {
+    background: rgba(214, 48, 49, 0.12);
+    color: #d63031;
 }
 
 /* ===================== RESPONSIVE ===================== */
@@ -2298,5 +2682,24 @@
     }
     .ana-event-selector select {
         min-width: 100%;
+    }
+    .att-loyalty-card {
+        flex-wrap: wrap;
+    }
+    .att-loyalty-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .vnd-perf-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .vnd-perf-row-head {
+        display: none;
+    }
+    .vnd-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 }

@@ -1139,6 +1139,15 @@
                     <button class="ana-main-tab" data-ana-main="event-report">
                         <i class="fa-solid fa-file-lines"></i> Event Report
                     </button>
+                    <button class="ana-main-tab" data-ana-main="attendees">
+                        <i class="fa-solid fa-users"></i> Attendees
+                    </button>
+                    <button class="ana-main-tab" data-ana-main="vendors">
+                        <i class="fa-solid fa-store"></i> Vendors
+                    </button>
+                    <button class="ana-main-tab" data-ana-main="market-insights">
+                        <i class="fa-solid fa-lightbulb"></i> Market Insights
+                    </button>
                 </div>
 
                 <!-- ======== PANEL: OVERVIEW ======== -->
@@ -1201,6 +1210,13 @@
                                 <div class="ana-highlight-value" id="highlight-top-category">--</div>
                             </div>
                         </div>
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-face-smile"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Avg. Satisfaction</div>
+                                <div class="ana-highlight-value" id="highlight-avg-satisfaction">--</div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Chart tabs -->
@@ -1208,9 +1224,8 @@
                         <div class="ana-tab-bar">
                             <button class="ana-tab active" data-ana-tab="attendance">Attendance</button>
                             <button class="ana-tab" data-ana-tab="revenue">Revenue</button>
-                            <button class="ana-tab" data-ana-tab="services">Services</button>
+                            <button class="ana-tab" data-ana-tab="services">Services Distribution</button>
                             <button class="ana-tab" data-ana-tab="categories">Categories</button>
-                            <button class="ana-tab" data-ana-tab="age-groups">Age Groups</button>
                         </div>
                         <div class="ana-chart-area">
                             <canvas id="ana-chart-canvas"></canvas>
@@ -1221,6 +1236,65 @@
                         <button class="ana-export-pdf-btn ana-export-pdf-outline" id="ana-overview-export-pdf" title="Export Overview as PDF">
                             <i class="fa-solid fa-file-pdf"></i> Export Overview PDF
                         </button>
+                    </div>
+
+                </div>
+
+                <!-- ======== PANEL: ATTENDEES ======== -->
+                <div class="ana-main-panel" id="ana-panel-attendees">
+
+                    <div class="ana-event-report-header" style="margin-bottom:1.5rem;">
+                        <h3><i class="fa-solid fa-users"></i> Attendees</h3>
+                    </div>
+
+                    <!-- Attendees KPI row -->
+                    <div class="ana-kpi-grid" style="margin-bottom:1.5rem;">
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-users"></i>
+                            <div class="ana-kpi-value" id="att-kpi-total">--</div>
+                            <div class="ana-kpi-label">Total Attendees</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-user-check"></i>
+                            <div class="ana-kpi-value" id="att-kpi-active">--</div>
+                            <div class="ana-kpi-label">Confirmed Attendees</div>
+                        </div>
+                        <div class="ana-kpi-card ana-kpi-warn">
+                            <i class="fa-solid fa-user-minus"></i>
+                            <div class="ana-kpi-value" id="att-kpi-withdrawn">--</div>
+                            <div class="ana-kpi-label">Withdrawn</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-percent"></i>
+                            <div class="ana-kpi-value" id="att-kpi-retention">--</div>
+                            <div class="ana-kpi-label">Retention Rate</div>
+                        </div>
+                    </div>
+
+                    <!-- Attendees chart tabs -->
+                    <div class="ana-chart-panel">
+                        <div class="ana-tab-bar">
+                            <button class="ana-tab active" data-ana-att-tab="age-groups">Age Groups</button>
+                            <button class="ana-tab" data-ana-att-tab="ticket-types">Ticket Types</button>
+                            <button class="ana-tab" data-ana-att-tab="satisfaction-category">Satisfaction by Category</button>
+                            <button class="ana-tab" data-ana-att-tab="loyalty">Loyalty</button>
+                        </div>
+                        <div class="ana-chart-area">
+                            <canvas id="ana-att-chart-canvas"></canvas>
+                        </div>
+                        <div id="att-loyalty-content" style="display:none;">
+                            <div class="att-loyalty-section">
+                                <div class="att-loyalty-header">
+                                    <div>
+                                        <h3><i class="fa-solid fa-crown"></i> Loyal Attendees</h3>
+                                        <p>Attendees who registered for multiple events — your most dedicated supporters.</p>
+                                    </div>
+                                </div>
+                                <div id="att-loyalty-list" class="att-loyalty-list">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -1287,6 +1361,11 @@
                                 <div class="evt-kpi-value" id="ana-evt-kpi-attendee-wd">--</div>
                                 <div class="evt-kpi-label">Attendee WD</div>
                             </div>
+                            <div class="evt-kpi">
+                                <i class="fa-solid fa-face-smile"></i>
+                                <div class="evt-kpi-value" id="ana-evt-kpi-satisfaction">--</div>
+                                <div class="evt-kpi-label">Satisfaction</div>
+                            </div>
                         </div>
 
                         <!-- Per-event chart tabs -->
@@ -1306,6 +1385,127 @@
                     <div id="ana-event-report-placeholder" class="ana-event-report-placeholder">
                         <i class="fa-solid fa-chart-pie"></i>
                         <p>Select an event above to view its detailed report.</p>
+                    </div>
+
+                </div>
+
+                <!-- ======== PANEL: MARKET INSIGHTS ======== -->
+                <div class="ana-main-panel" id="ana-panel-market-insights">
+
+                    <div class="ana-event-report-header" style="margin-bottom:1.5rem;">
+                        <h3><i class="fa-solid fa-lightbulb"></i> Market Insights</h3>
+                    </div>
+
+                    <div class="ana-chart-panel">
+                        <div class="ana-tab-bar" style="display:flex;align-items:center;">
+                            <button class="ana-tab active" data-ana-market-tab="events-month">Events by Month</button>
+                            <button class="ana-tab" data-ana-market-tab="avg-price">Avg. Ticket Price</button>
+                            <button class="ana-tab" data-ana-market-tab="revenue-potential">Revenue Potential</button>
+                            <div id="ana-market-tier-filter" style="display:none;margin-left:auto;padding-right:1rem;">
+                                <select id="ana-market-tier-select" class="req-filter-select" style="font-size:0.82rem;padding:0.4rem 0.7rem;border-radius:8px;border:1px solid #d0dbe6;font-family:'Inter',sans-serif;color:#2d3436;cursor:pointer;">
+                                    <option value="all">All Tiers</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="ana-chart-area">
+                            <canvas id="ana-market-chart-canvas"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ======== PANEL: VENDORS ======== -->
+                <div class="ana-main-panel" id="ana-panel-vendors">
+
+                    <div class="ana-event-report-header" style="margin-bottom:1.5rem;">
+                        <h3><i class="fa-solid fa-store"></i> Vendor Analytics</h3>
+                    </div>
+
+                    <!-- Vendor KPI row -->
+                    <div class="ana-kpi-grid" style="margin-bottom:1.5rem;">
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-store"></i>
+                            <div class="ana-kpi-value" id="vnd-kpi-total">--</div>
+                            <div class="ana-kpi-label">Total Vendors</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-handshake"></i>
+                            <div class="ana-kpi-value" id="vnd-kpi-confirmed">--</div>
+                            <div class="ana-kpi-label">Confirmed</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                            <div class="ana-kpi-value" id="vnd-kpi-pending">--</div>
+                            <div class="ana-kpi-label">Pending</div>
+                        </div>
+                        <div class="ana-kpi-card ana-kpi-warn">
+                            <i class="fa-solid fa-store-slash"></i>
+                            <div class="ana-kpi-value" id="vnd-kpi-declined">--</div>
+                            <div class="ana-kpi-label">Declined / Withdrawn</div>
+                        </div>
+                        <div class="ana-kpi-card">
+                            <i class="fa-solid fa-percent"></i>
+                            <div class="ana-kpi-value" id="vnd-kpi-acceptance">--</div>
+                            <div class="ana-kpi-label">Acceptance Rate</div>
+                        </div>
+                    </div>
+
+                    <!-- Highlight cards -->
+                    <div class="ana-highlight-grid" style="margin-bottom:1.5rem;">
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-trophy"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Most Booked Vendor</div>
+                                <div class="ana-highlight-value" id="vnd-highlight-top-vendor">--</div>
+                            </div>
+                        </div>
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-star"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Highest Rated Vendor</div>
+                                <div class="ana-highlight-value" id="vnd-highlight-top-rated">--</div>
+                            </div>
+                        </div>
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-ranking-star"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Top Category</div>
+                                <div class="ana-highlight-value" id="vnd-highlight-top-category">--</div>
+                            </div>
+                        </div>
+                        <div class="ana-highlight-card">
+                            <div class="ana-highlight-icon"><i class="fa-solid fa-chart-simple"></i></div>
+                            <div class="ana-highlight-body">
+                                <div class="ana-highlight-label">Avg. Vendors per Event</div>
+                                <div class="ana-highlight-value" id="vnd-highlight-avg-per-event">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vendor chart tabs -->
+                    <div class="ana-chart-panel">
+                        <div class="ana-tab-bar">
+                            <button class="ana-tab active" data-ana-vnd-tab="category-dist">Category Distribution</button>
+                            <button class="ana-tab" data-ana-vnd-tab="status-breakdown">Status Breakdown</button>
+                            <button class="ana-tab" data-ana-vnd-tab="vendors-per-event">Vendors per Event</button>
+                            <button class="ana-tab" data-ana-vnd-tab="all-vendors">All Vendors</button>
+                        </div>
+                        <div class="ana-chart-area">
+                            <canvas id="ana-vnd-chart-canvas"></canvas>
+                        </div>
+                        <div id="vnd-all-vendors-content" style="display:none;">
+                            <div class="att-loyalty-section">
+                                <div class="att-loyalty-header">
+                                    <div>
+                                        <h3><i class="fa-solid fa-store"></i> All Vendors</h3>
+                                        <p>Complete list of vendors ordered by number of event participations.</p>
+                                    </div>
+                                </div>
+                                <div id="vnd-all-vendors-list" class="att-loyalty-list">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
