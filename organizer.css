@@ -2322,7 +2322,8 @@
     padding: 2rem 2.5rem;
     font-family: 'Inter', sans-serif;
     color: #2d3436;
-    z-index: -1;
+    /* Must stack above the page background so html2canvas captures pixels (negative z-index often rasterizes blank). */
+    z-index: 2147483000;
 }
 .pdf-staging-container * {
     animation: none !important;

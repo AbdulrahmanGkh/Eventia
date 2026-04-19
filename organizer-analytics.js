@@ -943,7 +943,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const catCount = {};
         d.events.forEach(e => {
             if (!e.category) return;
-            const minPrice = Math.min(...(e.tickets || []).map(t => parseFloat(t.price) || 0));
+            const prices = (e.tickets || []).map(t => parseFloat(t.price) || 0);
+            const minPrice = prices.length ? Math.min(...prices) : 0;
             const revenue = (e.attendees || 0) * minPrice;
             catRevenue[e.category] = (catRevenue[e.category] || 0) + revenue;
             catCount[e.category] = (catCount[e.category] || 0) + 1;
@@ -1798,14 +1799,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function runFullPDFExport(stagingPromise, filename, triggerBtn, metaTitle) {
         const btn = triggerBtn || null;
-        const isOverview = metaTitle && metaTitle.includes('Overview');
+        const originalHTML = btn ? btn.innerHTML : '';
 
         function resetExportButton() {
             if (!btn) return;
             btn.disabled = false;
-            btn.innerHTML = isOverview
-                ? '<i class="fa-solid fa-file-pdf"></i> Export Overview PDF'
-                : '<i class="fa-solid fa-file-pdf"></i> Export PDF';
+            btn.innerHTML = originalHTML;
         }
 
         if (btn) {
@@ -1898,33 +1897,189 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    function initExportButtons() {
-        const overviewBtn = document.getElementById('ana-overview-export-pdf');
-        if (overviewBtn) {
-            overviewBtn.addEventListener('click', (e) => {
-                runFullPDFExport(
-                    pdfBuildOverviewStaging(),
-                    'Eventia_Overview_Report.pdf',
-                    e.currentTarget,
-                    'Eventia — Overview Report'
-                );
-            });
+    /* ----------------------------------------------------------
+       PDF STAGING — Attendees panel
+    ---------------------------------------------------------- */
+    function pdfBuildAttendeesStaging() {
+        const d = loadData();
+        if (!d) return Promise.resolve(null);
+
+        /* Match on-screen KPIs (same as switching to this panel). */
+        renderAttendeesPanel();
+
+        const stage = document.createElement('div');
+        stage.className = 'pdf-staging-container';
+
+        const titleBanner = document.createElement('div');
+        titleBanner.className = 'pdf-report-title-banner';
+        titleBanner.innerHTML = '<h2><i class="fa-solid fa-users"></i> Eventia — Attendees Report</h2>' +
+            '<p>Generated on ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + '</p>';
+        stage.appendChild(titleBanner);
+
+        const kpiSource = document.querySelector('#ana-panel-attendees .ana-kpi-grid');
+        if (kpiSource) {
+            stage.appendChild(pdfSectionHeading('Key Performance Indicators'));
+            stage.appendChild(kpiSource.cloneNode(true));
         }
 
-        const evtBtn = document.getElementById('ana-evt-export-pdf');
-        if (evtBtn) {
-            evtBtn.addEventListener('click', (e) => {
-                if (!selectedEventId) return;
-                const evtNameEl = document.getElementById('ana-evt-title-name');
-                const name = evtNameEl ? evtNameEl.textContent.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_') : 'Event';
-                runFullPDFExport(
-                    pdfBuildEventStaging(selectedEventId),
-                    'Eventia_Report_' + name + '.pdf',
-                    e.currentTarget,
-                    'Eventia — ' + (evtNameEl ? evtNameEl.textContent.trim() : 'Event Report')
-                );
-            });
+        const attendeeCharts = [
+            { label: 'Attendees by Age Group',        fn: ctx => chartAgeGroups(ctx, d) },
+            { label: 'Ticket Type Distribution',      fn: ctx => chartTicketTypes(ctx, d) },
+            { label: 'Satisfaction by Event Category', fn: ctx => chartSatisfactionByCategory(ctx, d) }
+        ];
+
+        return attendeeCharts.reduce(
+            (p, c) => p.then(() => pdfAppendChartSection(stage, c.label, c.fn)),
+            Promise.resolve()
+        ).then(() => stage);
+    }
+
+    /* ----------------------------------------------------------
+       PDF STAGING — Vendors panel
+    ---------------------------------------------------------- */
+    function pdfBuildVendorsStaging() {
+        const d = loadData();
+        if (!d) return Promise.resolve(null);
+
+        renderVendorsPanel();
+
+        const stage = document.createElement('div');
+        stage.className = 'pdf-staging-container';
+
+        const titleBanner = document.createElement('div');
+        titleBanner.className = 'pdf-report-title-banner';
+        titleBanner.innerHTML = '<h2><i class="fa-solid fa-store"></i> Eventia — Vendor Analytics Report</h2>' +
+            '<p>Generated on ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + '</p>';
+        stage.appendChild(titleBanner);
+
+        const kpiSource = document.querySelector('#ana-panel-vendors .ana-kpi-grid');
+        if (kpiSource) {
+            stage.appendChild(pdfSectionHeading('Key Performance Indicators'));
+            stage.appendChild(kpiSource.cloneNode(true));
         }
+
+        const hlSource = document.querySelector('#ana-panel-vendors .ana-highlight-grid');
+        if (hlSource) {
+            stage.appendChild(pdfSectionHeading('Highlights'));
+            stage.appendChild(hlSource.cloneNode(true));
+        }
+
+        const vendorCharts = [
+            { label: 'Category Distribution',   fn: ctx => vndChartCategoryDist(ctx, d) },
+            { label: 'Status Breakdown',        fn: ctx => vndChartStatusBreakdown(ctx, d) },
+            { label: 'Vendors per Event',       fn: ctx => vndChartVendorsPerEvent(ctx, d) }
+        ];
+
+        return vendorCharts.reduce(
+            (p, c) => p.then(() => pdfAppendChartSection(stage, c.label, c.fn)),
+            Promise.resolve()
+        ).then(() => stage);
+    }
+
+    /* ----------------------------------------------------------
+       PDF STAGING — Market Insights panel
+    ---------------------------------------------------------- */
+    function pdfBuildMarketStaging() {
+        const d = loadData();
+        if (!d) return Promise.resolve(null);
+
+        const tierForPdf = document.getElementById('ana-market-tier-select')?.value || 'all';
+
+        const stage = document.createElement('div');
+        stage.className = 'pdf-staging-container';
+
+        const titleBanner = document.createElement('div');
+        titleBanner.className = 'pdf-report-title-banner';
+        titleBanner.innerHTML = '<h2><i class="fa-solid fa-lightbulb"></i> Eventia — Market Insights Report</h2>' +
+            '<p>Generated on ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + '</p>';
+        stage.appendChild(titleBanner);
+
+        const avgPriceLabel = tierForPdf === 'all'
+            ? 'Average Ticket Price by Category'
+            : 'Average Ticket Price by Category (' + tierForPdf + ')';
+
+        const marketCharts = [
+            { label: 'Number of Events by Month',                fn: ctx => chartEventsPerMonth(ctx, d) },
+            { label: avgPriceLabel,                              fn: ctx => chartAvgTicketPrice(ctx, d, tierForPdf) },
+            { label: 'Revenue Potential per Event by Category',  fn: ctx => chartRevenuePotential(ctx, d) }
+        ];
+
+        return marketCharts.reduce(
+            (p, c) => p.then(() => pdfAppendChartSection(stage, c.label, c.fn)),
+            Promise.resolve()
+        ).then(() => stage);
+    }
+
+    /* Delegated click routing — a single document-level handler dispatches
+       each analytics export button by id. Using delegation makes the export
+       buttons immune to DOM timing, panel visibility, or re-renders. */
+    const EXPORT_ROUTES = {
+        'ana-overview-export-pdf': (btn) => {
+            runFullPDFExport(
+                pdfBuildOverviewStaging(),
+                'Eventia_Overview_Report.pdf',
+                btn,
+                'Eventia — Overview Report'
+            );
+        },
+        'ana-evt-export-pdf': (btn) => {
+            if (!selectedEventId) return;
+            const evtNameEl = document.getElementById('ana-evt-title-name');
+            const name = evtNameEl
+                ? evtNameEl.textContent.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_')
+                : 'Event';
+            runFullPDFExport(
+                pdfBuildEventStaging(selectedEventId),
+                'Eventia_Report_' + name + '.pdf',
+                btn,
+                'Eventia — ' + (evtNameEl ? evtNameEl.textContent.trim() : 'Event Report')
+            );
+        },
+        'ana-attendees-export-pdf': (btn) => {
+            runFullPDFExport(
+                pdfBuildAttendeesStaging(),
+                'Eventia_Attendees_Report.pdf',
+                btn,
+                'Eventia — Attendees Report'
+            );
+        },
+        'ana-vendors-export-pdf': (btn) => {
+            runFullPDFExport(
+                pdfBuildVendorsStaging(),
+                'Eventia_Vendors_Report.pdf',
+                btn,
+                'Eventia — Vendor Analytics Report'
+            );
+        },
+        'ana-market-export-pdf': (btn) => {
+            runFullPDFExport(
+                pdfBuildMarketStaging(),
+                'Eventia_Market_Insights_Report.pdf',
+                btn,
+                'Eventia — Market Insights Report'
+            );
+        }
+    };
+
+    function initExportButtons() {
+        if (document.__eventiaExportDelegated) return;
+        document.__eventiaExportDelegated = true;
+
+        document.addEventListener('click', (e) => {
+            const btn = e.target && e.target.closest
+                ? e.target.closest('.ana-export-pdf-btn')
+                : null;
+            if (!btn || btn.disabled) return;
+            const route = EXPORT_ROUTES[btn.id];
+            if (!route) return;
+            e.preventDefault();
+            try {
+                route(btn);
+            } catch (err) {
+                console.error('Export button failed:', err);
+                alert('Could not start export. See console for details.');
+            }
+        });
     }
 
     /* ----------------------------------------------------------

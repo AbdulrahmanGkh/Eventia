@@ -1233,7 +1233,7 @@
                     </div>
 
                     <div class="ana-export-row">
-                        <button class="ana-export-pdf-btn ana-export-pdf-outline" id="ana-overview-export-pdf" title="Export Overview as PDF">
+                        <button type="button" class="ana-export-pdf-btn ana-export-pdf-outline" id="ana-overview-export-pdf" title="Export Overview as PDF">
                             <i class="fa-solid fa-file-pdf"></i> Export Overview PDF
                         </button>
                     </div>
@@ -1297,6 +1297,12 @@
                         </div>
                     </div>
 
+                    <div class="ana-export-row">
+                        <button type="button" class="ana-export-pdf-btn ana-export-pdf-outline" id="ana-attendees-export-pdf" title="Export Attendees Report as PDF">
+                            <i class="fa-solid fa-file-pdf"></i> Export Attendees PDF
+                        </button>
+                    </div>
+
                 </div>
 
                 <!-- ======== PANEL: EVENT REPORT ======== -->
@@ -1324,7 +1330,7 @@
                                     <span id="ana-evt-title-status"><i class="fa-solid fa-circle-info"></i> --</span>
                                 </div>
                             </div>
-                            <button class="ana-export-pdf-btn" id="ana-evt-export-pdf" title="Export as PDF">
+                            <button type="button" class="ana-export-pdf-btn" id="ana-evt-export-pdf" title="Export as PDF">
                                 <i class="fa-solid fa-file-pdf"></i> Export PDF
                             </button>
                         </div>
@@ -1410,6 +1416,12 @@
                         <div class="ana-chart-area">
                             <canvas id="ana-market-chart-canvas"></canvas>
                         </div>
+                    </div>
+
+                    <div class="ana-export-row">
+                        <button type="button" class="ana-export-pdf-btn ana-export-pdf-outline" id="ana-market-export-pdf" title="Export Market Insights as PDF">
+                            <i class="fa-solid fa-file-pdf"></i> Export Market Insights PDF
+                        </button>
                     </div>
 
                 </div>
@@ -1506,6 +1518,12 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="ana-export-row">
+                        <button type="button" class="ana-export-pdf-btn ana-export-pdf-outline" id="ana-vendors-export-pdf" title="Export Vendors Report as PDF">
+                            <i class="fa-solid fa-file-pdf"></i> Export Vendors PDF
+                        </button>
                     </div>
 
                 </div>
@@ -1681,10 +1699,10 @@
         }
     </style>
 
-    <script src="dummy_data.js"></script>
-    <script src="app.js"></script>
-    <script src="organizer-logic.js"></script>
-    <script src="organizer-analytics.js"></script>
+    <script src="dummy_data.js?v=2"></script>
+    <script src="app.js?v=2"></script>
+    <script src="organizer-logic.js?v=2"></script>
+    <script src="organizer-analytics.js?v=2"></script>
 </body>
 
 </html>
